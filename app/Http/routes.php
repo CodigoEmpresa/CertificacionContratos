@@ -32,7 +32,9 @@ session_start();
 Route::group(['middleware' => ['web']], function () {
 
 
-	
-	
-	/*************************************************/
+	/********************ADMINISTRACION***************************/
+
+	/********************Asignación de personas***************************/
+//	Route::get('persona_tipo','AdministracionController@index');
+//	Route::post('AddPersonaTipo', 'AdministracionController@AgregarPersonaTipo');
 });
