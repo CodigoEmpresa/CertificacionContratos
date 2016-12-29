@@ -38,5 +38,5 @@ Route::group(['middleware' => ['web']], function () {
 //	Route::get('persona_tipo','AdministracionController@index');
 //	Route::post('AddPersonaTipo', 'AdministracionController@AgregarPersonaTipo');
 
-
+jchjbd
 });
