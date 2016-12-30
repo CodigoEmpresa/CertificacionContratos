@@ -95,19 +95,13 @@
             <ul class="nav navbar-nav">
               <li class="dropdown">
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="themes">Administración <span class="caret"></span></a>
-                <!--<ul class="dropdown-menu" aria-labelledby="themes">
+                <ul class="dropdown-menu" aria-labelledby="themes">
                   <li><a href="#" style="color:#1995dc">Gestor de personas</a></li>
                   <li class="divider"></li>
                   
-                      <li class=”{{ Request::is( 'personas') ? 'active' : '' }}”><a href="{{ URL::to( 'personas') }}">Gestión de personas</a></li>                  
+                      <li class=”{{ Request::is( 'gestor_tabla') ? 'active' : '' }}”><a href="{{ URL::to( 'gestor_tabla') }}">Gestión de datos</a></li>
                   
-                      <li class=”{{ Request::is( 'persona_tipo') ? 'active' : '' }}”><a href="{{ URL::to( 'persona_tipo') }}">Asignación tipo persona</a></li>                  
-                  
-                      <li class=”{{ Request::is( 'persona_permiso') ? 'active' : '' }}”><a href="{{ URL::to( 'persona_permiso') }}">Asignación de permisos</a></li>                  
-                  
-                      <li class=”{{ Request::is( 'metodologo_agrupacion') ? 'active' : '' }}”><a href="{{ URL::to( 'metodologo_agrupacion') }}">Administración Metodólogos</a></li>                  
-                  
-                </ul>-->
+                </ul>
               </li>
              <!-- <li>
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="themes">SIAB <span class="caret"></span></a>

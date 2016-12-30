@@ -71,21 +71,7 @@ return [
             'prefix' => '',
             'strict' => false,
             'engine' => null,
-        ],
-
-        'db_clubes' => [
-            'driver' => 'mysql',
-            'host' => env('DB_HOST3'),
-            'port' => env('DB_PORT3'),
-            'database' => env('DB_CLUBES'),
-            'username' => env('DB_USERNAME3'),
-            'password' => env('DB_PASSWORD3'),
-            'charset' => 'utf8',
-            'collation' => 'utf8_unicode_ci',
-            'prefix' => '',
-            'strict' => false,
-            'engine' => null,
-        ]
+        ],       
     ],
 
     /*

@@ -35,8 +35,10 @@ Route::group(['middleware' => ['web']], function () {
 	/********************ADMINISTRACION***************************/
 
 	/********************Asignación de personas***************************/
-//	Route::get('persona_tipo','AdministracionController@index');
-//	Route::post('AddPersonaTipo', 'AdministracionController@AgregarPersonaTipo');
+	Route::get('gestor_tabla','GestorDatosController@index');
 
-jchjbd
+	Route::post('revAdicion', 'GestorDatosController@RevisionAdicion');
+	Route::post('revProrroga', 'GestorDatosController@RevisionProrroga');
+	
+//	Route::post('AddPersonaTipo', 'AdministracionController@AgregarPersonaTipo');
 });
