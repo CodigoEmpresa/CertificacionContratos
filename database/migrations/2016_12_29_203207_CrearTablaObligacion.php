@@ -16,6 +16,7 @@ class CrearTablaObligacion extends Migration
 
             $table->increments('Id');
             $table->integer('Contrato_Id')->unsigned();
+            $table->integer('Numero_Obligacion');
             $table->string('Objeto_Obligacion');
             $table->timestamps();
 

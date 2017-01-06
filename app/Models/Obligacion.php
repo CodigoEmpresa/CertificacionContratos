@@ -8,7 +8,7 @@ class Obligacion extends Model
 {
     protected $table = 'obligacion';
     protected $primaryKey = 'Id';
-    protected $fillable = ['Contrato_Id', 'Objeto_Obligacion'];
+    protected $fillable = ['Contrato_Id', 'Numero_Obligacion', 'Objeto_Obligacion'];
 
     public function contrato(){
         return $this->belongsTo('App\Models\Contrato', 'Contrato_Id');
