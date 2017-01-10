@@ -44,8 +44,16 @@ Route::group(['middleware' => ['web']], function () {
 	Route::post('revObligacion', 'GestorDatosController@RevisionObligacion');
 
 	Route::post('AddContrato', 'GestorDatosController@AgregarContrato');
+	Route::post('EditContrato', 'GestorDatosController@ModificarContrato');
+	Route::post('DeleteContrato', 'GestorDatosController@EliminarContrato');	
 
 	Route::get('getContrato','GestorDatosController@GetContrato');	
 	Route::get('getContratoOne/{id_contrato}','GestorDatosController@GetContratoOne');	
+
+	Route::post('revAdicionM', 'GestorDatosController@RevisionAdicionM');
+	Route::post('revProrrogaM', 'GestorDatosController@RevisionProrrogaM');
+	Route::post('revSuspencionM', 'GestorDatosController@RevisionSuspencionM');
+	Route::post('revCesionM', 'GestorDatosController@RevisionCesionM');
+	Route::post('revObligacionM', 'GestorDatosController@RevisionObligacionM');
 	
 });

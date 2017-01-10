@@ -30,18 +30,20 @@
             <table id="datosTabla" class="display nowrap" cellspacing="0" width="100%">
                 <thead>
                     <tr>
-                        <th>CÉDULA</th>
-                        <th>DV</th>
+                        <th>CÉDULA</th>                        
                         <th>CONTRATISTA</th>
+                        <th>N° DE CONTRATO</th>
+                        <th>AÑO DE CONTRATO</th>
                         <th>OPCIONES</th>
                     </tr>
                 </thead>
                 <tbody>    
                     @foreach($Contrato as $Contratos)
                         <tr>
-                            <td>{{ $Contratos['Cedula']}}</td>
-                            <td>{{ $Contratos['Dv'] }}</td>
+                            <td>{{ $Contratos['Cedula']}}</td>                            
                             <td>{{ $Contratos['Nombre_Contratista'] }}</td>
+                            <td>{{ $Contratos['Numero_Contrato'] }}</td>
+                            <td>{{ $Contratos['Fecha_Inicio'] }}</td>
                             <td>                                
                                 <button type="button" class="btn btn-info"  data-funcion="verContrato" value="{{$Contratos['Id']}}" >
                                     <span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span>
@@ -51,7 +53,7 @@
                                     <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
                                 </button>
 
-                                <button type="button" class="btn btn-danger" value="{{$Contratos['Id']}}" >
+                                <button type="button" class="btn btn-danger" data-funcion="eliminarContrato" value="{{$Contratos['Id']}}" >
                                     <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                                 </button>                                
                             </td>
@@ -918,7 +920,8 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h3 class="modal-title" id="myModalLabel">MODIFICAR CONTRATO</h3>
                  </div>
-                <form id="agregarContratoF" name="modificarContratoF">  
+                <form id="modificarContratoF" name="modificarContratoF">  
+                    <input type="hidden" value="" id="Id_ContratoM" name="Id_ContratoM" />
                     <div class="content">
                         <div class="panel">                                               
                             <ul class="list-group" id="seccion_uno" name="seccion_uno">
@@ -1116,7 +1119,7 @@
                                                 <label for="inputEmail" class="control-label">Valor de Adición</label>
                                             </div>
                                             <div class="form-group col-md-12">
-                                                <input type="text" class="form-control"  placeholder="Valor Adición" id="Valor_Adicion" name="Valor_Adicion">
+                                                <input type="text" class="form-control"  placeholder="Valor Adición" id="Valor_AdicionM" name="Valor_AdicionM">
                                             </div>
                                         </div>
                                         <div class="row">
@@ -1159,14 +1162,14 @@
                                                 <label for="inputEmail" class="control-label">Duración Meses</label>
                                             </div>
                                             <div class="form-group col-md-4">
-                                                <input type="text" class="form-control"  placeholder="Duración Meses" id="Meses_Prorroga" name="Meses_Prorroga">
+                                                <input type="text" class="form-control"  placeholder="Duración Meses" id="Meses_ProrrogaM" name="Meses_ProrrogaM">
                                             </div>
 
                                             <div class="form-group col-md-2">
                                                 <label for="inputEmail" class="control-label">Duración Días</label>
                                             </div>
                                             <div class="form-group col-md-4">
-                                                <input type="text" class="form-control"  placeholder="Duración Días" id="Dias_Prorroga" name="Dias_Prorroga">
+                                                <input type="text" class="form-control"  placeholder="Duración Días" id="Dias_ProrrogaM" name="Dias_ProrrogaM">
                                             </div>
                                         </div>
                                         <div class="row">                                            
@@ -1174,8 +1177,8 @@
                                                 <label for="inputEmail" class="control-label">Fecha Fin CTO Prórroga</label>
                                             </div>
                                             <div class="form-group col-md-4">
-                                                <div class="input-group date form-control" id="FechaFinCtoProrrogaDate" style="border: none;">
-                                                    <input id="FechaFinCtoProrroga" class="form-control " type="text" value="" name="FechaFinCtoProrroga" default="" data-date="" data-behavior="FechaFinCtoProrroga">
+                                                <div class="input-group date form-control" id="FechaFinCtoProrrogaDateM" style="border: none;">
+                                                    <input id="FechaFinCtoProrrogaM" class="form-control " type="text" value="" name="FechaFinCtoProrrogaM" default="" data-date="" data-behavior="FechaFinCtoProrrogaM">
                                                 <span class="input-group-addon btn"><i class="glyphicon glyphicon-calendar"></i> </span>
                                                 </div>    
                                             </div>                                           
@@ -1222,7 +1225,7 @@
                                                 <label for="inputEmail" class="control-label">Objeto Suspención</label>
                                             </div>
                                             <div class="form-group col-md-12">
-                                                <textarea class="form-control"  placeholder="Objeto de la suspención" id="Objeto_Suspencion" name="Objeto_Suspencion"></textarea>
+                                                <textarea class="form-control"  placeholder="Objeto de la suspención" id="Objeto_SuspencionM" name="Objeto_SuspencionM"></textarea>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -1230,14 +1233,14 @@
                                                 <label for="inputEmail" class="control-label">Duración Meses</label>
                                             </div>
                                             <div class="form-group col-md-4">
-                                                <input type="text" class="form-control"  placeholder="Duración Meses" id="Meses_Suspencion" name="Meses_Suspencion">
+                                                <input type="text" class="form-control"  placeholder="Duración Meses" id="Meses_SuspencionM" name="Meses_SuspencionM">
                                             </div>
 
                                             <div class="form-group col-md-2">
                                                 <label for="inputEmail" class="control-label">Duración Días</label>
                                             </div>
                                             <div class="form-group col-md-4">
-                                                <input type="text" class="form-control"  placeholder="Duración Días" id="Dias_Suspencion" name="Dias_Suspencion">
+                                                <input type="text" class="form-control"  placeholder="Duración Días" id="Dias_SuspencionM" name="Dias_SuspencionM">
                                             </div>
                                         </div>                                        
                                         <div class="row">
@@ -1245,8 +1248,8 @@
                                                 <label for="inputEmail" class="control-label">Fecha Inicio</label>
                                             </div>
                                             <div class="form-group col-md-4">
-                                                <div class="input-group date form-control" id="FechaInicioSuspencionDate" style="border: none;">
-                                                    <input id="FechaInicioSuspencion" class="form-control " type="text" value="" name="FechaInicioSuspencion" default="" data-date="" data-behavior="FechaInicioSuspencion">
+                                                <div class="input-group date form-control" id="FechaInicioSuspencionDateM" style="border: none;">
+                                                    <input id="FechaInicioSuspencionM" class="form-control " type="text" value="" name="FechaInicioSuspencionM" default="" data-date="" data-behavior="FechaInicioSuspencionM">
                                                 <span class="input-group-addon btn"><i class="glyphicon glyphicon-calendar"></i> </span>
                                                 </div>    
                                             </div>   
@@ -1255,8 +1258,8 @@
                                                 <label for="inputEmail" class="control-label">Fecha Fin</label>
                                             </div>
                                             <div class="form-group col-md-4">
-                                                <div class="input-group date form-control" id="FechaFinSuspencionDate" style="border: none;">
-                                                    <input id="FechaFinSuspencion" class="form-control " type="text" value="" name="FechaFinSuspencion" default="" data-date="" data-behavior="FechaFinSuspencion">
+                                                <div class="input-group date form-control" id="FechaFinSuspencionDateM" style="border: none;">
+                                                    <input id="FechaFinSuspencionM" class="form-control " type="text" value="" name="FechaFinSuspencionM" default="" data-date="" data-behavior="FechaFinSuspencionM">
                                                 <span class="input-group-addon btn"><i class="glyphicon glyphicon-calendar"></i> </span>
                                                 </div>    
                                             </div>                                           
@@ -1266,8 +1269,8 @@
                                                 <label for="inputEmail" class="control-label">Fecha Reinicio</label>
                                             </div>
                                             <div class="form-group col-md-4">
-                                                <div class="input-group date form-control" id="FechaReinicioSuspencionDate" style="border: none;">
-                                                    <input id="FechaReinicioSuspencion" class="form-control " type="text" value="" name="FechaReinicioSuspencion" default="" data-date="" data-behavior="FechaReinicioSuspencion">
+                                                <div class="input-group date form-control" id="FechaReinicioSuspencionDateM" style="border: none;">
+                                                    <input id="FechaReinicioSuspencionM" class="form-control " type="text" value="" name="FechaReinicioSuspencionM" default="" data-date="" data-behavior="FechaReinicioSuspencionM">
                                                 <span class="input-group-addon btn"><i class="glyphicon glyphicon-calendar"></i> </span>
                                                 </div>    
                                             </div>                                    
@@ -1317,14 +1320,14 @@
                                                 <label for="inputEmail" class="control-label">Nombre Cesionario</label>
                                             </div>
                                             <div class="form-group col-md-4">
-                                                <input type="text" class="form-control"  placeholder="Nombre Cesionario" id="Nombre_Cesionario" name="Nombre_Cesionario">
+                                                <input type="text" class="form-control"  placeholder="Nombre Cesionario" id="Nombre_CesionarioM" name="Nombre_CesionarioM">
                                             </div>
 
                                             <div class="form-group col-md-2">
                                                 <label for="inputEmail" class="control-label">Cédula del  Cesionario</label>
                                             </div>
                                             <div class="form-group col-md-4">
-                                                <input type="text" class="form-control"  placeholder="Cédula del Cesionario" id="Cedula_Cesionario" name="Cedula_Cesionario">
+                                                <input type="text" class="form-control"  placeholder="Cédula del Cesionario" id="Cedula_CesionarioM" name="Cedula_CesionarioM">
                                             </div>
                                         </div>
                                         <div class="row">
@@ -1332,14 +1335,14 @@
                                                 <label for="inputEmail" class="control-label">Dv Cesión</label>
                                             </div>
                                             <div class="form-group col-md-4">
-                                                <input type="text" class="form-control"  placeholder="Dv Cesión" id="Dv_Cesion" name="Dv_Cesion">
+                                                <input type="text" class="form-control"  placeholder="Dv Cesión" id="Dv_CesionM" name="Dv_CesionM">
                                             </div>
 
                                             <div class="form-group col-md-2">
                                                 <label for="inputEmail" class="control-label">Valor Cedido</label>
                                             </div>
                                             <div class="form-group col-md-4">
-                                                <input type="text" class="form-control"  placeholder="Valor Cedido" id="Valor_Cesion" name="Valor_Cesion">
+                                                <input type="text" class="form-control"  placeholder="Valor Cedido" id="Valor_CesionM" name="Valor_CesionM">
                                             </div>
                                         </div>
                                         <div class="row">
@@ -1347,8 +1350,8 @@
                                                 <label for="inputEmail" class="control-label">Fecha Cesión</label>
                                             </div>
                                             <div class="form-group col-md-4">
-                                                <div class="input-group date form-control" id="FechaCesionDate" style="border: none;">
-                                                    <input id="FechaCesion" class="form-control " type="text" value="" name="FechaCesion" default="" data-date="" data-behavior="FechaCesion">
+                                                <div class="input-group date form-control" id="FechaCesionDateM" style="border: none;">
+                                                    <input id="FechaCesionM" class="form-control " type="text" value="" name="FechaCesionM" default="" data-date="" data-behavior="FechaCesionM">
                                                 <span class="input-group-addon btn"><i class="glyphicon glyphicon-calendar"></i> </span>
                                                 </div>    
                                             </div>                                           
@@ -1397,7 +1400,7 @@
                                                 <label for="inputEmail" class="control-label">Obligación</label>
                                             </div>
                                             <div class="form-group col-md-12">
-                                                <textarea class="form-control"  placeholder="Obligación" id="Obligacion" name="Obligacion"></textarea>
+                                                <textarea class="form-control"  placeholder="Obligación" id="ObligacionM" name="ObligacionM"></textarea>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -1430,16 +1433,13 @@
                                     <div class="row">
                                         <div class="form-group col-md-12">
                                             <center>
-                                                <button type="button" class="btn btn-success" value="" name="ModificarContrato" id="ModificarContrato" >Modificar Contrato</button>
+                                                <button type="button" class="btn btn-success" value="" name="Modificar" id="Modificar" >Modificar Contrato</button>
                                             </center>
                                         </div>
                                     </div>
-                                    <div id="mensaje"></div>
+                                    <div id="mensajeEdit"></div>
                                 </li>
-                            </ul>   
-                            <div class="form-group"  id="mensaje_contrato" style="display: none;">
-                                <div id="alert_contrato"></div>
-                            </div>                         
+                            </ul>                               
                         </div>
                     </div>
                 </form>
@@ -1447,6 +1447,20 @@
         </div>
     </div>
     <!-- ------------------------------FINAL DE MODAL MODIFICAR CONTRATOS ----------------------------------------- -->
+
+    <!-- ------------------------------ MODAL ELIMINAR CONTRATOS ----------------------------------------- -->
+    <div class="modal fade bs-example-modal-lg" id="EliminarContratoD" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h3 class="modal-title" id="myModalLabel">ELIMINAR CONTRATO</h3>
+                </div>                
+                <div id="mensajeDelete"></div>
+            </div>
+        </div>
+    </div>
+    <!-- ------------------------------FINAL DE MODAL REGISTRO DE CONTRATOS ----------------------------------------- -->
 
 </div>                        
 @stop

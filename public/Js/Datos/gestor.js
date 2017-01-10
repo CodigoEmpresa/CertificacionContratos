@@ -19,6 +19,14 @@ $(function(){
   $('#FechaCesionDate').datepicker({format: 'yyyy-mm-dd', autoclose: true,});
 
 
+
+  $('#FechaFinCtoProrrogaDateM').datepicker({format: 'yyyy-mm-dd', autoclose: true,});
+  $('#FechaInicioSuspencionDateM').datepicker({format: 'yyyy-mm-dd', autoclose: true,});
+  $('#FechaFinSuspencionDateM').datepicker({format: 'yyyy-mm-dd', autoclose: true,});
+  $('#FechaReinicioSuspencionDateM').datepicker({format: 'yyyy-mm-dd', autoclose: true,});
+  $('#FechaCesionDateM').datepicker({format: 'yyyy-mm-dd', autoclose: true,});
+
+
 	$('#datosTabla').DataTable({
         retrieve: true,
         buttons: [
@@ -38,6 +46,30 @@ $(function(){
 
     $("#Agregar_Contrato").on('click', function(){
         $("#AgregarContratoD").modal('show');
+        Adicion = new Array();
+        Prorroga = new Array();
+        Suspencion = new Array();
+        Cesion = new Array();
+        Obligacion = new Array();
+        $("#NuevaAdicionD").hide('slow');
+        $("#RegistrosAdicion").empty();
+        $("#TablaAdicion").hide('slow');
+
+        $("#NuevaProrrogaD").hide('slow');
+        $("#RegistrosProrroga").empty();
+        $("#TablaProrroga").hide('slow');
+
+        $("#NuevaSuspencionD").hide('slow');
+        $("#RegistrosSuspencion").empty();
+        $("#TablaSuspencion").hide('slow');
+
+        $("#NuevaCesionD").hide('slow');
+        $("#RegistrosCesion").empty();
+        $("#TablaCesion").hide('slow');
+
+        $("#NuevaObligacionD").hide('slow');
+        $("#RegistrosObligacion").empty();
+        $("#TablaObligacion").hide('slow');
     });
 
     $("#NuevaAdicion").on('click', function(){
@@ -321,19 +353,20 @@ $(function(){
                 }, 2000);
                 $.get("getContrato", function (ContratosDatos) { 
                     var t = $('#datosTabla').DataTable();
-                    t.row.add(['1','1','1','1'] ).clear().draw( false );
+                    t.row.add(['1','1','1','1','1'] ).clear().draw( false );
                     $.each(ContratosDatos, function(i, e){
                         t.row.add( [
-                            e['Cedula'],                            
-                            e['Dv'],                            
+                            e['Cedula'],                        
                             e['Nombre_Contratista'],                            
+                            e['Numero_Contrato'],
+                            e['Fecha_Inicio'],
                             '<button type="button" class="btn btn-info" data-funcion="verContrato" value="'+e['Id']+'" >'+
                                 '<span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span>'+
                             '</button>'+
                             '<button type="button" class="btn btn-primary" data-funcion="modificarContrato" value="'+e['Id']+'" >'+
                                 '<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>'+
                             '</button>'+
-                            '<button type="button" class="btn btn-danger" value="'+e['Id']+'" >'+
+                            '<button type="button" class="btn btn-danger"  data-funcion="eliminarContrato" value="'+e['Id']+'" >'+
                                 '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>'+
                             '</button>',
                         ] ).draw( false );
@@ -462,10 +495,22 @@ $(function(){
     }); 
 
   $('#datosTabla').delegate('button[data-funcion="modificarContrato"]','click',function (e) {  
+    Adicion = new Array();
+    Prorroga = new Array();
+    Suspencion = new Array();
+    Cesion = new Array();
+    Obligacion = new Array();
+
+    /*$("#NuevaAdicionDM").hide('slow');
+    $("#NuevaProrrogaDM").hide('slow');
+    $("#NuevaSuspencionDM").hide('slow');
+    $("#NuevaCesionDM").hide('slow');
+    $("#NuevaObligacionDM").hide('slow');*/
+
     $("#ModificarContratoD").modal('show');
     $.get("getContratoOne/"+$(this).val(), function (Contrato) { 
       if(Contrato){
-        $("#VerContratoD").modal('show');
+        $("#Id_ContratoM").val(Contrato['Id']);
         $("#Cedula_ContratistaM").val(Contrato['Cedula']);
         $("#DvM").val(Contrato['Dv']);
         $("#Cedula_RepresentanteM").val(Contrato['Cedula_Representante']);
@@ -490,7 +535,11 @@ $(function(){
            var html = '';
             $.each(Contrato.adicion, function(i, e){
               Adicion.push({"Numero_Adicion": e['Numero_Adicion'], "Valor_Adicion": e['Valor_Adicion']});
-              html += '<tr><td>'+e['Numero_Adicion']+'</td><td>'+e['Valor_Adicion']+'</td><td><button type="button" class="btn btn-danger" onclick="EliminarAdicion('+e['Id']+')">Eliminar</button></td></tr>';                
+              html += '<tr>'+
+                            '<td>'+e['Numero_Adicion']+'</td>'+
+                            '<td>'+e['Valor_Adicion']+'</td>'+
+                            '<td><button type="button" data-funcion="EliminarAdicion" class="btn btn-danger" value="'+i+'">Eliminar</button></td>'+
+                          '</tr>';
             });
             $("#RegistrosAdicionM").empty();
             $("#RegistrosAdicionM").html(html);
@@ -511,7 +560,7 @@ $(function(){
                         '<td>'+e['Meses']+'</td>'+
                         '<td>'+e['Dias']+'</td>'+
                         '<td>'+e['Fecha_Fin']+'</td>'+
-                        '<td><button type="button" class="btn btn-danger" onclick="EliminarProrroga('+e['Id']+')">Eliminar</button></td>'+
+                        '<td><button type="button" data-funcion="EliminarProrroga" class="btn btn-danger" value="'+i+'">Eliminar</button></td>'+
                       '</tr>';                
               });
 
@@ -540,7 +589,7 @@ $(function(){
                           '<td>'+e['Fecha_Inicio']+'</td>'+
                           '<td>'+e['Fecha_Fin']+'</td>'+
                           '<td>'+e['Fecha_Reinicio']+'</td>'+
-                          '<td><button type="button" class="btn btn-danger" onclick="EliminarSuspencion('+e['Id']+')">Eliminar</button></td>'+
+                          '<td><button type="button" data-funcion="EliminarSuspencion" class="btn btn-danger" value="'+i+'">Eliminar</button></td>'+
                         '</tr>';                
               });
 
@@ -567,7 +616,7 @@ $(function(){
                             '<td>'+e['Dv_Cesion']+'</td>'+
                             '<td>'+e['Valor_Cedido']+'</td>'+
                             '<td>'+e['Fecha_Cesion']+'</td>'+
-                            '<td><button type="button" class="btn btn-danger" onclick="EliminarCesion('+e['Id']+')">Eliminar</button></td>'+
+                            '<td><button type="button" data-funcion="EliminarCesion" class="btn btn-danger" value="'+i+'">Eliminar</button></td>'+
                           '</tr>';                
                 });
 
@@ -584,7 +633,7 @@ $(function(){
               html += '<tr>'+
                         '<td>'+e['Numero_Obligacion']+'</td>'+
                         '<td>'+e['Objeto_Obligacion']+'</td>'+
-                        '<td><button type="button" class="btn btn-danger" onclick="EliminarObligacion('+e['Id']+')">Eliminar</button></td>'+
+                        '<td><button type="button" data-funcion="EliminarObligacion" class="btn btn-danger" value="'+i+'">Eliminar</button></td>'+
                       '</tr>';                
                 });
 
@@ -615,4 +664,451 @@ $(function(){
     $("#NuevaObligacionM").on('click', function(){
         $("#NuevaObligacionDM").show('slow');
     });
+
+    $("#AgregarAdicionM").on('click', function(){
+        var formData = new FormData($("#modificarContratoF")[0]);    
+        $.ajax({
+          url: 'revAdicionM',  
+          type: 'POST',
+          data: formData,          
+          contentType: false,
+          processData: false,
+          dataType: "json",
+          success: function (xhr) {
+            if(xhr.status == 'error'){
+              validador_erroresM(xhr.errors);
+            }
+            else if(xhr.status == 'success'){
+                $('#modificarContratoF .form-group').removeClass('has-error');
+                Adicion.push({"Numero_Adicion":(Adicion.length)+1,  "Valor_Adicion": $("input[name=Valor_AdicionM]").val()});
+
+                $("input[name=Valor_AdicionM]").val('');
+
+                var html = '';
+                $.each(Adicion, function(i, e){
+                  html += '<tr>'+
+                            '<td>'+e['Numero_Adicion']+'</td>'+
+                            '<td>'+e['Valor_Adicion']+'</td>'+
+                            '<td><button type="button" data-funcion="EliminarAdicion" class="btn btn-danger" value="'+i+'">Eliminar</button></td>'+
+                          '</tr>';
+                });
+
+                $("#RegistrosAdicionM").empty();
+                $("#RegistrosAdicionM").html(html);
+                $("#TablaAdicionM").show('slow');
+                validador_erroresM(xhr.responseJSON);
+            }
+          },
+          error: function (xhr){
+            validador_erroresM(xhr.responseJSON);
+          }
+        });
+    });
+
+    $("#AgregarProrrogaM").on('click', function(){
+        var formData = new FormData($("#modificarContratoF")[0]);   
+        $.ajax({
+          url: 'revProrrogaM',  
+          type: 'POST',
+          data: formData,          
+          contentType: false,
+          processData: false,
+          dataType: "json",
+          success: function (xhr) {
+            if(xhr.status == 'error'){
+              validador_erroresM(xhr.errors);
+            }
+            else if(xhr.status == 'success'){
+                $('#modificarContratoF .form-group').removeClass('has-error');
+                Prorroga.push({"Numero_Prorroga":(Prorroga.length)+1,
+                               "Meses_Prorroga" : $("input[name=Meses_ProrrogaM]").val(),
+                               "Dias_Prorroga" : $("input[name=Dias_ProrrogaM]").val(),
+                               "FechaFinCtoProrroga" : $("input[name=FechaFinCtoProrrogaM]").val(),
+                              });
+
+                $("input[name=Meses_ProrrogaM]").val('');
+                $("input[name=Dias_ProrrogaM]").val('');
+                $("input[name=FechaFinCtoProrrogaM]").val('');
+
+                var html = '';
+                $.each(Prorroga, function(i, e){
+                  html += '<tr>'+
+                        '<td>'+e['Numero_Prorroga']+'</td>'+
+                        '<td>'+e['Meses_Prorroga']+'</td>'+
+                        '<td>'+e['Dias_Prorroga']+'</td>'+
+                        '<td>'+e['FechaFinCtoProrroga']+'</td>'+
+                        '<td><button type="button" data-funcion="EliminarProrroga" class="btn btn-danger" value="'+i+'">Eliminar</button></td>'+
+                      '</tr>';                 
+                });
+
+                $("#RegistrosProrrogaM").empty();
+                $("#RegistrosProrrogaM").html(html);
+                $("#TablaProrrogaM").show('slow');
+            }
+          },
+          error: function (xhr){
+            validador_erroresM(xhr.responseJSON);
+          }
+        });
+    });
+
+    $("#AgregarSuspencionM").on('click', function(){
+        var formData = new FormData($("#modificarContratoF")[0]);          
+        $.ajax({
+          url: 'revSuspencionM',  
+          type: 'POST',
+          data: formData,          
+          contentType: false,
+          processData: false,
+          dataType: "json",
+          success: function (xhr) {
+            if(xhr.status == 'error'){
+              validador_erroresM(xhr.errors);
+            }
+            else if(xhr.status == 'success'){
+                $('#modificarContratoF .form-group').removeClass('has-error');
+                Suspencion.push({"Numero_Suspencion": (Suspencion.length)+1,
+                               "Objeto_Suspencion" : $("textarea[name=Objeto_SuspencionM]").val(),
+                               "Meses_Suspencion" : $("input[name=Meses_SuspencionM]").val(),
+                               "Dias_Suspencion" : $("input[name=Dias_SuspencionM]").val(),
+                               "FechaInicioSuspencion" : $("input[name=FechaInicioSuspencionM]").val(),
+                               "FechaFinSuspencion" : $("input[name=FechaFinSuspencionM]").val(),
+                               "FechaReinicioSuspencion" : $("input[name=FechaReinicioSuspencionM]").val(),
+                              });
+
+                $("textarea[name=Objeto_SuspencionM]").val('');
+                $("input[name=Meses_SuspencionM]").val('');
+                $("input[name=Dias_SuspencionM]").val('');
+                $("input[name=FechaInicioSuspencionM]").val('');
+                $("input[name=FechaFinSuspencionM]").val('');
+                $("input[name=FechaReinicioSuspencionM]").val('');
+
+                var html = '';
+                $.each(Suspencion, function(i, e){
+                  html += '<tr>'+
+                            '<td>'+e['Numero_Suspencion']+'</td>'+
+                            '<td>'+e['Objeto_Suspencion']+'</td>'+
+                            '<td>'+e['Meses_Suspencion']+'</td>'+
+                            '<td>'+e['Dias_Suspencion']+'</td>'+
+                            '<td>'+e['FechaInicioSuspencion']+'</td>'+
+                            '<td>'+e['FechaFinSuspencion']+'</td>'+
+                            '<td>'+e['FechaReinicioSuspencion']+'</td>'+
+                            '<td><button type="button" data-funcion="EliminarSuspencion" class="btn btn-danger" value="'+i+'">Eliminar</button></td>'+
+                          '</tr>';                
+                });
+
+                $("#RegistrosSuspencionM").empty();
+                $("#RegistrosSuspencionM").html(html);
+                $("#TablaSuspencionM").show('slow');
+            }
+          },
+          error: function (xhr){
+            validador_erroresM(xhr.responseJSON);
+          }
+        });
+    });
+
+$("#AgregarCesionM").on('click', function(){
+        var formData = new FormData($("#modificarContratoF")[0]);
+        $.ajax({
+          url: 'revCesionM',  
+          type: 'POST',
+          data: formData,          
+          contentType: false,
+          processData: false,
+          dataType: "json",
+          success: function (xhr) {
+            if(xhr.status == 'error'){
+              validador_erroresM(xhr.errors);
+            }
+            else if(xhr.status == 'success'){
+                $('#modificarContratoF .form-group').removeClass('has-error');
+                Cesion.push({"Numero_Cesion":(Cesion.length)+1,
+                             "Nombre_Cesionario" : $("input[name=Nombre_CesionarioM]").val(),
+                             "Cedula_Cesionario" : $("input[name=Cedula_CesionarioM]").val(),
+                             "Dv_Cesion" : $("input[name=Dv_CesionM]").val(),
+                             "Valor_Cesion" : $("input[name=Valor_CesionM]").val(),
+                             "FechaCesion" : $("input[name=FechaCesionM]").val()
+                            });
+
+                $("input[name=Nombre_CesionarioM]").val('');
+                $("input[name=Cedula_CesionarioM]").val('');
+                $("input[name=Dv_CesionM]").val('');
+                $("input[name=Valor_CesionM]").val('');
+                $("input[name=FechaCesionM]").val('');
+
+                var html = '';
+                $.each(Cesion, function(i, e){
+                  html += '<tr>'+
+                            '<td>'+e['Numero_Cesion']+'</td>'+
+                            '<td>'+e['Nombre_Cesionario']+'</td>'+
+                            '<td>'+e['Cedula_Cesionario']+'</td>'+
+                            '<td>'+e['Dv_Cesion']+'</td>'+
+                            '<td>'+e['Valor_Cesion']+'</td>'+
+                            '<td>'+e['FechaCesion']+'</td>'+
+                            '<td><button type="button" data-funcion="EliminarCesion" class="btn btn-danger" value="'+i+'">Eliminar</button></td>'+
+                          '</tr>';                
+                });
+
+                $("#RegistrosCesionM").empty();
+                $("#RegistrosCesionM").html(html);
+                $("#TablaCesionM").show('slow');
+            }
+          },
+          error: function (xhr){
+            validador_erroresM(xhr.responseJSON);
+          }
+        });
+    });
+
+ $("#AgregarObligacionM").on('click', function(){
+        var formData = new FormData($("#modificarContratoF")[0]);          
+        $.ajax({
+          url: 'revObligacionM',  
+          type: 'POST',
+          data: formData,          
+          contentType: false,
+          processData: false,
+          dataType: "json",
+          success: function (xhr) {
+            if(xhr.status == 'error'){
+              validador_errores(xhr.errors);
+            }
+            else if(xhr.status == 'success'){
+                $('#modificarContratoF .form-group').removeClass('has-error');
+                Obligacion.push({"Numero_Obligacion":(Obligacion.length)+1,"Obligacion" : $("textarea[name=ObligacionM]").val()});
+
+                $("textarea[name=ObligacionM]").val('');
+
+                var html = '';
+                $.each(Obligacion, function(i, e){
+                  html += '<tr>'+
+                            '<td>'+e['Numero_Obligacion']+'</td>'+
+                            '<td>'+e['Obligacion']+'</td>'+
+                            '<td><button type="button" data-funcion="EliminarObligacion" class="btn btn-danger" value="'+i+'">Eliminar</button></td>'+
+                          '</tr>';                
+                });
+
+                $("#RegistrosObligacionM").empty();
+                $("#RegistrosObligacionM").html(html);
+                $("#TablaObligacionM").show('slow');
+            }
+          },
+          error: function (xhr){
+            validador_errores(xhr.responseJSON);
+          }
+        });
+    });
+
+    $("#Modificar").on('click', function(){
+        var formData = new FormData($("#modificarContratoF")[0]);   
+        var json_vector_adicion = JSON.stringify(Adicion);
+        formData.append("Adicion",json_vector_adicion);
+
+        var json_vector_prorroga = JSON.stringify(Prorroga);
+        formData.append("Prorroga",json_vector_prorroga);
+
+        var json_vector_suspencion = JSON.stringify(Suspencion);
+        formData.append("Suspencion",json_vector_suspencion);
+
+        var json_vector_cesion = JSON.stringify(Cesion);
+        formData.append("Cesion",json_vector_cesion);
+
+        var json_vector_obligacion = JSON.stringify(Obligacion);
+        formData.append("Obligacion",json_vector_obligacion);
+
+        $.ajax({
+          url: 'EditContrato',  
+          type: 'POST',
+          data: formData,          
+          contentType: false,
+          processData: false,
+          dataType: "json",
+          success: function (xhr) {
+            if(xhr.status == 'error'){
+              validador_errores(xhr.errors);
+            }
+            else if(xhr.status == 'success'){
+                $('#modificarContratoF .form-group').removeClass('has-error');     
+                $('#mensajeEdit').html('<div class="alert alert-dismissible alert-success" ><strong>Exito!</strong>'+xhr.Mensaje+'</div>');
+                $('#mensajeEdit').show(60);
+                $('#mensajeEdit').delay(1500).hide(600);    
+                setTimeout(function(){
+                  $("#ModificarContratoD").modal('hide');
+                }, 2000);
+                $.get("getContrato", function (ContratosDatos) { 
+                    var t = $('#datosTabla').DataTable();
+                    t.row.add(['1','1','1','1','1'] ).clear().draw( false );
+                    $.each(ContratosDatos, function(i, e){
+                        t.row.add( [
+                            e['Cedula'],                        
+                            e['Nombre_Contratista'],                            
+                            e['Numero_Contrato'],
+                            e['Fecha_Inicio'],
+                            '<button type="button" class="btn btn-info" data-funcion="verContrato" value="'+e['Id']+'" >'+
+                                '<span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span>'+
+                            '</button>'+
+                            '<button type="button" class="btn btn-primary" data-funcion="modificarContrato" value="'+e['Id']+'" >'+
+                                '<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>'+
+                            '</button>'+
+                            '<button type="button" class="btn btn-danger" data-funcion="eliminarContrato" value="'+e['Id']+'" >'+
+                                '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>'+
+                            '</button>',
+                        ] ).draw( false );
+                    });
+                });
+            }            
+          },
+          error: function (xhr){
+            validador_errores(xhr.responseJSON);
+          }
+        });
+    });
+  var validador_erroresM = function(data){
+      $('#modificarContratoF .form-group').removeClass('has-error');
+      $.each(data, function(i, e){
+        $("#"+i).closest('.form-group').addClass('has-error');
+      });
+    }
+
+  $('#RegistrosAdicionM').delegate('button[data-funcion="EliminarAdicion"]','click',function (e) {  
+      Adicion.splice(($(this).val()), 1);
+      var html = '';
+      $.each(Adicion, function(i, e){
+        html += '<tr>'+
+                  '<td>'+e['Numero_Adicion']+'</td>'+
+                  '<td>'+e['Valor_Adicion']+'</td>'+
+                  '<td><button type="button" data-funcion="EliminarAdicion" class="btn btn-danger" value="'+i+')">Eliminar</button></td>'+
+                '</tr>';
+      });
+
+      $("#RegistrosAdicionM").empty();
+      $("#RegistrosAdicionM").html(html);
+      $("#TablaAdicionM").show('slow');
+  });
+
+  $('#RegistrosProrrogaM').delegate('button[data-funcion="EliminarProrroga"]','click',function (e) {  
+      Prorroga.splice(($(this).val()), 1);
+      var html = '';
+      $.each(Prorroga, function(i, e){
+        html += '<tr>'+
+              '<td>'+e['Numero_Prorroga']+'</td>'+
+              '<td>'+e['Meses_Prorroga']+'</td>'+
+              '<td>'+e['Dias_Prorroga']+'</td>'+
+              '<td>'+e['FechaFinCtoProrroga']+'</td>'+
+              '<td><button type="button" data-funcion="EliminarProrroga" class="btn btn-danger" value="'+i+'">Eliminar</button></td>'+
+            '</tr>';                 
+      });
+
+      $("#RegistrosProrrogaM").empty();
+      $("#RegistrosProrrogaM").html(html);
+      $("#TablaProrrogaM").show('slow');
+  });
+
+  $('#RegistrosSuspencionM').delegate('button[data-funcion="EliminarSuspencion"]','click',function (e) {  
+      Suspencion.splice(($(this).val()), 1);
+      var html = '';
+      $.each(Suspencion, function(i, e){
+        html += '<tr>'+
+                  '<td>'+e['Numero_Suspencion']+'</td>'+
+                  '<td>'+e['Objeto_Suspencion']+'</td>'+
+                  '<td>'+e['Meses_Suspencion']+'</td>'+
+                  '<td>'+e['Dias_Suspencion']+'</td>'+
+                  '<td>'+e['FechaInicioSuspencion']+'</td>'+
+                  '<td>'+e['FechaFinSuspencion']+'</td>'+
+                  '<td>'+e['FechaReinicioSuspencion']+'</td>'+
+                  '<td><button type="button" data-funcion="EliminarSuspencion" class="btn btn-danger" value="'+i+'">Eliminar</button></td>'+
+                '</tr>';                
+      });
+
+      $("#RegistrosSuspencionM").empty();
+      $("#RegistrosSuspencionM").html(html);
+      $("#TablaSuspencionM").show('slow');
+  });
+
+  $('#RegistrosCesionM').delegate('button[data-funcion="EliminarCesion"]','click',function (e) {  
+      Cesion.splice(($(this).val()), 1);
+      var html = '';
+      $.each(Cesion, function(i, e){
+        html += '<tr>'+
+                  '<td>'+e['Numero_Cesion']+'</td>'+
+                  '<td>'+e['Nombre_Cesionario']+'</td>'+
+                  '<td>'+e['Cedula_Cesionario']+'</td>'+
+                  '<td>'+e['Dv_Cesion']+'</td>'+
+                  '<td>'+e['Valor_Cesion']+'</td>'+
+                  '<td>'+e['FechaCesion']+'</td>'+
+                  '<td><button type="button" data-funcion="EliminarCesion" class="btn btn-danger" value="'+i+'">Eliminar</button></td>'+
+                '</tr>';                
+      });
+
+      $("#RegistrosCesionM").empty();
+      $("#RegistrosCesionM").html(html);
+      $("#TablaCesionM").show('slow');
+  });
+
+  $('#RegistrosObligacionM').delegate('button[data-funcion="EliminarObligacion"]','click',function (e) {  
+      Obligacion.splice(($(this).val()), 1);
+      var html = '';
+      $.each(Obligacion, function(i, e){
+        html += '<tr>'+
+                  '<td>'+e['Numero_Obligacion']+'</td>'+
+                  '<td>'+e['Obligacion']+'</td>'+
+                  '<td><button type="button" data-funcion="EliminarObligacion" class="btn btn-danger" value="'+i+'">Eliminar</button></td>'+
+                '</tr>';                
+      });
+
+      $("#RegistrosObligacionM").empty();
+      $("#RegistrosObligacionM").html(html);
+      $("#TablaObligacionM").show('slow');
+  });
+
+  $('#datosTabla').delegate('button[data-funcion="eliminarContrato"]','click',function (e) {  
+    var datos = {Id:$(this).val()};
+    $.ajax({
+      url: 'DeleteContrato',  
+      type: 'POST',
+      data: datos,          
+      dataType: "json",
+      success: function (xhr) {
+        if(xhr.status == 'error'){
+          validador_errores(xhr.errors);
+        }
+        else if(xhr.status == 'success'){
+            $("#EliminarContratoD").modal('show');
+            $('#modificarContratoF .form-group').removeClass('has-error');     
+            $('#mensajeDelete').html('<div class="alert alert-dismissible alert-success" ><strong>Exito!</strong>'+xhr.Mensaje+'</div>');
+            $('#mensajeDelete').show(60);
+            $('#mensajeDelete').delay(1500).hide(600);    
+            setTimeout(function(){
+              $("#EliminarContratoD").modal('hide');
+            }, 2000);
+            
+            $.get("getContrato", function (ContratosDatos) { 
+                var t = $('#datosTabla').DataTable();
+                t.row.add(['1','1','1','1','1'] ).clear().draw( false );
+                $.each(ContratosDatos, function(i, e){
+                    t.row.add( [
+                        e['Cedula'],                        
+                        e['Nombre_Contratista'],                            
+                        e['Numero_Contrato'],
+                            e['Fecha_Inicio'],
+                        '<button type="button" class="btn btn-info" data-funcion="verContrato" value="'+e['Id']+'" >'+
+                            '<span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span>'+
+                        '</button>'+
+                        '<button type="button" class="btn btn-primary" data-funcion="modificarContrato" value="'+e['Id']+'" >'+
+                            '<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>'+
+                        '</button>'+
+                        '<button type="button" class="btn btn-danger" data-funcion="eliminarContrato" value="'+e['Id']+'" >'+
+                            '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>'+
+                        '</button>',
+                    ] ).draw( false );
+                });
+            });
+        }            
+      },
+      error: function (xhr){
+        validador_errores(xhr.responseJSON);
+      }
+    });
+  });
 });

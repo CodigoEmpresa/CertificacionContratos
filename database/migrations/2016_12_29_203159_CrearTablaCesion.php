@@ -16,7 +16,7 @@ class CrearTablaCesion extends Migration
 
             $table->increments('Id');
             $table->integer('Contrato_Id')->unsigned();
-            $table->string('Numero_Cesion');
+            $table->integer('Numero_Cesion');
             $table->string('Nombre_Cesionario');
             $table->string('Cedula_Cesionario');
             $table->integer('Dv_Cesion');

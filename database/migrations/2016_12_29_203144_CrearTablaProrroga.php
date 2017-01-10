@@ -16,7 +16,7 @@ class CrearTablaProrroga extends Migration
 
             $table->increments('Id');
             $table->integer('Contrato_Id')->unsigned();
-            $table->string('Numero_Prorroga');
+            $table->integer('Numero_Prorroga');
             $table->integer('Meses');
             $table->integer('Dias');
             $table->date('Fecha_Fin');
