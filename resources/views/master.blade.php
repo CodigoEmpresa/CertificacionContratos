@@ -145,7 +145,7 @@
           <div class="page-header" id="banner">
             <div class="row">
               <div class="col-lg-8 col-md-7 col-sm-6">
-                <h1>APLICATIVO CERTIFICACIÓN DE CONTRATISTAS</h1>
+                <h1>APLICATIVO DE GESTIÓN DE CERTIFICADOS A CONTRATISTAS</h1>
                 <p class="lead"><h1>Área de Apoyo a la contratación</h1></p>
               </div>
               <div class="col-lg-4 col-md-5 col-sm-6">
