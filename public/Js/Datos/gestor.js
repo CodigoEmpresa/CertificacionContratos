@@ -46,6 +46,7 @@ $(function(){
 
     $("#Agregar_Contrato").on('click', function(){
         $("#AgregarContratoD").modal('show');
+        $('#agregarContratoF .form-group').removeClass('has-error');
         Adicion = new Array();
         Prorroga = new Array();
         Suspencion = new Array();
@@ -187,7 +188,7 @@ $(function(){
             }
             else if(xhr.status == 'success'){
                 $('#agregarContratoF .form-group').removeClass('has-error');
-                Suspencion.push({"Objeto_Suspencion" : $("textarea[name=Objeto_Suspencion]").val(),
+                Suspencion.push({/*"Objeto_Suspencion" : $("textarea[name=Objeto_Suspencion]").val(),*/
                                "Meses_Suspencion" : $("input[name=Meses_Suspencion]").val(),
                                "Dias_Suspencion" : $("input[name=Dias_Suspencion]").val(),
                                "FechaInicioSuspencion" : $("input[name=FechaInicioSuspencion]").val(),
@@ -195,7 +196,7 @@ $(function(){
                                "FechaReinicioSuspencion" : $("input[name=FechaReinicioSuspencion]").val(),
                               });
 
-                $("textarea[name=Objeto_Suspencion]").val('');
+                //$("textarea[name=Objeto_Suspencion]").val('');
                 $("input[name=Meses_Suspencion]").val('');
                 $("input[name=Dias_Suspencion]").val('');
                 $("input[name=FechaInicioSuspencion]").val('');
@@ -206,7 +207,7 @@ $(function(){
                 $.each(Suspencion, function(i, e){
                   html += '<tr>'+
                             '<td>'+(i+1)+'</td>'+
-                            '<td>'+e['Objeto_Suspencion']+'</td>'+
+                            //'<td>'+e['Objeto_Suspencion']+'</td>'+
                             '<td>'+e['Meses_Suspencion']+'</td>'+
                             '<td>'+e['Dias_Suspencion']+'</td>'+
                             '<td>'+e['FechaInicioSuspencion']+'</td>'+
@@ -443,7 +444,7 @@ $(function(){
             $.each(Contrato.suspencion, function(i, e){
                 html += '<tr>'+
                           '<td>'+e['Numero_Suspencion']+'</td>'+
-                          '<td>'+e['Objeto_Suspension']+'</td>'+
+                          //'<td>'+e['Objeto_Suspension']+'</td>'+
                           '<td>'+e['Meses']+'</td>'+
                           '<td>'+e['Dias']+'</td>'+
                           '<td>'+e['Fecha_Inicio']+'</td>'+
@@ -501,11 +502,17 @@ $(function(){
     Cesion = new Array();
     Obligacion = new Array();
 
-    /*$("#NuevaAdicionDM").hide('slow');
-    $("#NuevaProrrogaDM").hide('slow');
-    $("#NuevaSuspencionDM").hide('slow');
-    $("#NuevaCesionDM").hide('slow');
-    $("#NuevaObligacionDM").hide('slow');*/
+    $("#RegistrosAdicionM").empty();
+    $("#RegistrosProrrogaM").empty();
+    $("#RegistrosSuspencionM").empty();
+    $("#RegistrosCesionM").empty();
+    $("#RegistrosObligacionM").empty();
+
+    $("#TablaAdicionM").show('slow');
+    $("#TablaProrrogaM").show('slow');
+    $("#TablaSuspencionM").show('slow');
+    $("#TablaCesionM").show('slow');
+    $("#TablaObligacionM").show('slow');
 
     $("#ModificarContratoD").modal('show');
     $.get("getContratoOne/"+$(this).val(), function (Contrato) { 
@@ -574,7 +581,7 @@ $(function(){
             var html = '';
             $.each(Contrato.suspencion, function(i, e){
               Suspencion.push({"Numero_Suspencion" : e['Numero_Suspencion'],
-                              "Objeto_Suspencion" : e['Objeto_Suspension'],
+                              //"Objeto_Suspencion" : e['Objeto_Suspension'],
                               "Meses_Suspencion" : e['Meses'],
                               "Dias_Suspencion" : e['Dias'],
                               "FechaInicioSuspencion" : e['Fecha_Inicio'],
@@ -583,7 +590,7 @@ $(function(){
                             });
                 html += '<tr>'+
                           '<td>'+e['Numero_Suspencion']+'</td>'+
-                          '<td>'+e['Objeto_Suspension']+'</td>'+
+                          //'<td>'+e['Objeto_Suspension']+'</td>'+
                           '<td>'+e['Meses']+'</td>'+
                           '<td>'+e['Dias']+'</td>'+
                           '<td>'+e['Fecha_Inicio']+'</td>'+
@@ -768,7 +775,7 @@ $(function(){
             else if(xhr.status == 'success'){
                 $('#modificarContratoF .form-group').removeClass('has-error');
                 Suspencion.push({"Numero_Suspencion": (Suspencion.length)+1,
-                               "Objeto_Suspencion" : $("textarea[name=Objeto_SuspencionM]").val(),
+                               //"Objeto_Suspencion" : $("textarea[name=Objeto_SuspencionM]").val(),
                                "Meses_Suspencion" : $("input[name=Meses_SuspencionM]").val(),
                                "Dias_Suspencion" : $("input[name=Dias_SuspencionM]").val(),
                                "FechaInicioSuspencion" : $("input[name=FechaInicioSuspencionM]").val(),
@@ -776,7 +783,7 @@ $(function(){
                                "FechaReinicioSuspencion" : $("input[name=FechaReinicioSuspencionM]").val(),
                               });
 
-                $("textarea[name=Objeto_SuspencionM]").val('');
+                //$("textarea[name=Objeto_SuspencionM]").val('');
                 $("input[name=Meses_SuspencionM]").val('');
                 $("input[name=Dias_SuspencionM]").val('');
                 $("input[name=FechaInicioSuspencionM]").val('');
@@ -787,7 +794,7 @@ $(function(){
                 $.each(Suspencion, function(i, e){
                   html += '<tr>'+
                             '<td>'+e['Numero_Suspencion']+'</td>'+
-                            '<td>'+e['Objeto_Suspencion']+'</td>'+
+                            //'<td>'+e['Objeto_Suspencion']+'</td>'+
                             '<td>'+e['Meses_Suspencion']+'</td>'+
                             '<td>'+e['Dias_Suspencion']+'</td>'+
                             '<td>'+e['FechaInicioSuspencion']+'</td>'+
@@ -1011,7 +1018,7 @@ $("#AgregarCesionM").on('click', function(){
       $.each(Suspencion, function(i, e){
         html += '<tr>'+
                   '<td>'+e['Numero_Suspencion']+'</td>'+
-                  '<td>'+e['Objeto_Suspencion']+'</td>'+
+                  //'<td>'+e['Objeto_Suspencion']+'</td>'+
                   '<td>'+e['Meses_Suspencion']+'</td>'+
                   '<td>'+e['Dias_Suspencion']+'</td>'+
                   '<td>'+e['FechaInicioSuspencion']+'</td>'+

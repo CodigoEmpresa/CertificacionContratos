@@ -17,7 +17,7 @@ class CrearTablaSuspencion extends Migration
             $table->increments('Id');
             $table->integer('Contrato_Id')->unsigned();
             $table->integer('Numero_Suspencion');
-            $table->string('Objeto_Suspension');
+            //$table->string('Objeto_Suspension');
             $table->integer('Meses');
             $table->integer('Dias');
             $table->date('Fecha_Inicio');

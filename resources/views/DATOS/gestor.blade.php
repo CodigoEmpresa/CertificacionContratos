@@ -370,14 +370,14 @@
                                         </div>
                                     </div>
                                     <div id="NuevaSuspencionD" style="display:none;">                                        
-                                        <div class="row">
+                                       <!-- <div class="row">
                                             <div class="form-group col-md-12">
                                                 <label for="inputEmail" class="control-label">Objeto Suspención</label>
                                             </div>
                                             <div class="form-group col-md-12">
                                                 <textarea class="form-control"  placeholder="Objeto de la suspención" id="Objeto_Suspencion" name="Objeto_Suspencion"></textarea>
                                             </div>
-                                        </div>
+                                        </div>-->
                                         <div class="row">
                                             <div class="form-group col-md-2">
                                                 <label for="inputEmail" class="control-label">Duración Meses</label>
@@ -439,7 +439,7 @@
                                                     <thead>
                                                         <tr>
                                                             <th>N° de Suspención</th>
-                                                            <th>Objeto de la Suspención</th>
+                                                            <!--<th>Objeto de la Suspención</th>-->
                                                             <th>Duración Meses</th>
                                                             <th>Duración Días</th>
                                                             <th>Fecha de Inicio</th>
@@ -835,7 +835,7 @@
                                                     <thead>
                                                         <tr>
                                                             <th>N° de Suspención</th>
-                                                            <th>Objeto de la Suspención</th>
+                                                            <!--<th>Objeto de la Suspención</th>-->
                                                             <th>Duración Meses</th>
                                                             <th>Duración Días</th>
                                                             <th>Fecha de Inicio</th>
@@ -1220,14 +1220,14 @@
                                         </div>
                                     </div>
                                     <div id="NuevaSuspencionDM" style="display:none;">                                        
-                                        <div class="row">
+                                        <!--<div class="row">
                                             <div class="form-group col-md-12">
                                                 <label for="inputEmail" class="control-label">Objeto Suspención</label>
                                             </div>
                                             <div class="form-group col-md-12">
                                                 <textarea class="form-control"  placeholder="Objeto de la suspención" id="Objeto_SuspencionM" name="Objeto_SuspencionM"></textarea>
                                             </div>
-                                        </div>
+                                        </div>-->
                                         <div class="row">
                                             <div class="form-group col-md-2">
                                                 <label for="inputEmail" class="control-label">Duración Meses</label>
@@ -1289,7 +1289,7 @@
                                                     <thead>
                                                         <tr>
                                                             <th>N° de Suspención</th>
-                                                            <th>Objeto de la Suspención</th>
+                                                            <!--<th>Objeto de la Suspención</th>-->
                                                             <th>Duración Meses</th>
                                                             <th>Duración Días</th>
                                                             <th>Fecha de Inicio</th>

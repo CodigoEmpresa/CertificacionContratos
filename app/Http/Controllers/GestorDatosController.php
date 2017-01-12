@@ -75,7 +75,7 @@ class GestorDatosController extends Controller
 	public function RevisionSuspencion(Request $request){
 		if ($request->ajax()) { 
     		$validator = Validator::make($request->all(), [
-    			'Objeto_Suspencion' => 'required',
+    			//'Objeto_Suspencion' => 'required',
     			'Meses_Suspencion' => 'required|numeric',
     			'Dias_Suspencion' => 'required|numeric',
     			'FechaInicioSuspencion' => 'required|date',
@@ -212,7 +212,7 @@ class GestorDatosController extends Controller
 							$Suspencion = new Suspencion;
 							$Suspencion->Contrato_Id = $Contrato->Id;
 							$Suspencion->Numero_Suspencion = $i;
-							$Suspencion->Objeto_Suspension = $Vector->Objeto_Suspencion;
+							//$Suspencion->Objeto_Suspension = $Vector->Objeto_Suspencion;
 							$Suspencion->Meses = $Vector->Meses_Suspencion;
 							$Suspencion->Dias = $Vector->Dias_Suspencion;
 							$Suspencion->Fecha_Inicio = $Vector->FechaInicioSuspencion;
@@ -353,7 +353,7 @@ class GestorDatosController extends Controller
 							$Suspencion = new Suspencion;
 							$Suspencion->Contrato_Id = $Contrato->Id;
 							$Suspencion->Numero_Suspencion = $Vector->Numero_Suspencion;
-							$Suspencion->Objeto_Suspension = $Vector->Objeto_Suspencion;
+							//$Suspencion->Objeto_Suspension = $Vector->Objeto_Suspencion;
 							$Suspencion->Meses = $Vector->Meses_Suspencion;
 							$Suspencion->Dias = $Vector->Dias_Suspencion;
 							$Suspencion->Fecha_Inicio = $Vector->FechaInicioSuspencion;
@@ -436,7 +436,7 @@ class GestorDatosController extends Controller
 	public function RevisionSuspencionM(Request $request){
 		if ($request->ajax()) { 
     		$validator = Validator::make($request->all(), [
-    			'Objeto_SuspencionM' => 'required',
+    			//'Objeto_SuspencionM' => 'required',
     			'Meses_SuspencionM' => 'required|numeric',
     			'Dias_SuspencionM' => 'required|numeric',
     			'FechaInicioSuspencionM' => 'required|date',
