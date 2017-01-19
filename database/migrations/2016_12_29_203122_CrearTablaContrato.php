@@ -15,13 +15,15 @@ class CrearTablaContrato extends Migration
         Schema::create('contrato', function (Blueprint $table) {
 
             $table->increments('Id');
+            $table->integer('Tipo_Documento');
             $table->string('Cedula');
-            $table->integer('Dv');
+            $table->integer('Dv')->nullable();
             $table->string('Nombre_Contratista');
             $table->string('Numero_Contrato');
             $table->integer('Tipo_Contrato_Id')->unsigned();
-            $table->string('Nombre_Representante');
-            $table->string('Cedula_Representante');
+            $table->string('Nombre_Representante')->nullable();
+            $table->integer('Tipo_Documento_Representante')->nullable();
+            $table->string('Cedula_Representante')->nullable();
             $table->string('Objeto');
             $table->date('Fecha_Firma');
             $table->date('Fecha_Inicio');
@@ -29,10 +31,10 @@ class CrearTablaContrato extends Migration
             $table->date('Fecha_Terminacion_Anticipada');
             $table->integer('Meses_Duracion');
             $table->integer('Dias_Duracion');
-            $table->string('Otra_Duracion');
+            $table->string('Otra_Duracion')->nullable();
             $table->integer('Valor_Inicial');
             $table->integer('Valor_Mensual');
-            $table->date('fecha_Final_CTO');
+            //$table->date('fecha_Final_CTO');
             $table->timestamps();
         });
     }

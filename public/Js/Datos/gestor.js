@@ -243,6 +243,7 @@ $(function(){
             else if(xhr.status == 'success'){
                 $('#agregarContratoF .form-group').removeClass('has-error');
                 Cesion.push({"Nombre_Cesionario" : $("input[name=Nombre_Cesionario]").val(),
+                               "Tipo_Documento_Cesionario" : $("#Tipo_Documento_Cesion").val(),
                                "Cedula_Cesionario" : $("input[name=Cedula_Cesionario]").val(),
                                "Dv_Cesion" : $("input[name=Dv_Cesion]").val(),
                                "Valor_Cesion" : $("input[name=Valor_Cesion]").val(),
@@ -250,6 +251,7 @@ $(function(){
                               });
 
                 $("input[name=Nombre_Cesionario]").val('');
+                $("input[name=Tipo_Documento_Cesion]").val('');
                 $("input[name=Cedula_Cesionario]").val('');
                 $("input[name=Dv_Cesion]").val('');
                 $("input[name=Valor_Cesion]").val('');
@@ -389,11 +391,25 @@ $(function(){
     }
 
     $('#datosTabla').delegate('button[data-funcion="verContrato"]','click',function (e) {  
+      $("#RegistrosAdicionV").empty();
+      $("#RegistrosProrrogaV").empty();
+      $("#RegistrosSuspensionV").empty();
+      $("#RegistrosCesionV").empty();
+      $("#RegistrosObligacionV").empty();
+
+      $("#TablaAdicionV").hide('slow');
+      $("#TablaProrrogaV").hide('slow');
+      $("#TablaSuspencionV").hide('slow');
+      $("#TablaCesionV").hide('slow');
+      $("#TablaObligacionV").hide('slow');
+
       $.get("getContratoOne/"+$(this).val(), function (Contrato) { 
         if(Contrato){
           $("#VerContratoD").modal('show');
+          $("#Tipo_Documento_InicialV").val(Contrato['Tipo_Documento']).change();
           $("#Cedula_ContratistaV").val(Contrato['Cedula']);
           $("#DvV").val(Contrato['Dv']);
+          $("#Tipo_Documento_RepresentanteV").val(Contrato['Tipo_Documento_Representante']).change();
           $("#Cedula_RepresentanteV").val(Contrato['Cedula_Representante']);
           $("#Dias_DuracionV").val(Contrato['Dias_Duracion']);
           $("#FechaFinV").val(Contrato['Fecha_Fin']);
@@ -518,8 +534,10 @@ $(function(){
     $.get("getContratoOne/"+$(this).val(), function (Contrato) { 
       if(Contrato){
         $("#Id_ContratoM").val(Contrato['Id']);
+        $("#Tipo_Documento_InicialM").val(Contrato['Tipo_Documento']).change();
         $("#Cedula_ContratistaM").val(Contrato['Cedula']);
         $("#DvM").val(Contrato['Dv']);
+        $("#Tipo_Documento_RepresentanteM").val(Contrato['Tipo_Documento_Representante']);
         $("#Cedula_RepresentanteM").val(Contrato['Cedula_Representante']);
         $("#Dias_DuracionM").val(Contrato['Dias_Duracion']);
         $("#FechaFinM").val(Contrato['Fecha_Fin']);
@@ -611,6 +629,7 @@ $(function(){
             $.each(Contrato.cesion, function(i, e){
               Cesion.push({"Numero_Cesion" : e['Numero_Cesion'],
                          "Nombre_Cesionario" : e['Nombre_Cesionario'],
+                         "Tipo_Documento_Cesionario" : e['Tipo_Documento_Cesionario'],
                          "Cedula_Cesionario" : e['Cedula_Cesionario'],
                          "Dv_Cesion" : e['Dv_Cesion'],
                          "Valor_Cesion" : e['Valor_Cedido'],
@@ -832,6 +851,7 @@ $("#AgregarCesionM").on('click', function(){
                 $('#modificarContratoF .form-group').removeClass('has-error');
                 Cesion.push({"Numero_Cesion":(Cesion.length)+1,
                              "Nombre_Cesionario" : $("input[name=Nombre_CesionarioM]").val(),
+                             "Tipo_Documento_Cesionario" : $("#Tipo_Documento_CesionM").val(),
                              "Cedula_Cesionario" : $("input[name=Cedula_CesionarioM]").val(),
                              "Dv_Cesion" : $("input[name=Dv_CesionM]").val(),
                              "Valor_Cesion" : $("input[name=Valor_CesionM]").val(),
@@ -840,6 +860,7 @@ $("#AgregarCesionM").on('click', function(){
 
                 $("input[name=Nombre_CesionarioM]").val('');
                 $("input[name=Cedula_CesionarioM]").val('');
+                $("input[name=Tipo_Documento_CesionM]").val('');
                 $("input[name=Dv_CesionM]").val('');
                 $("input[name=Valor_CesionM]").val('');
                 $("input[name=FechaCesionM]").val('');
@@ -933,7 +954,7 @@ $("#AgregarCesionM").on('click', function(){
           dataType: "json",
           success: function (xhr) {
             if(xhr.status == 'error'){
-              validador_errores(xhr.errors);
+              validador_erroresM(xhr.errors);
             }
             else if(xhr.status == 'success'){
                 $('#modificarContratoF .form-group').removeClass('has-error');     
@@ -967,7 +988,7 @@ $("#AgregarCesionM").on('click', function(){
             }            
           },
           error: function (xhr){
-            validador_errores(xhr.responseJSON);
+            validador_erroresM(xhr.responseJSON);
           }
         });
     });
@@ -1118,4 +1139,115 @@ $("#AgregarCesionM").on('click', function(){
       }
     });
   });
+
+  $("#Tipo_Documento_Inicial").on('change', function(){    
+    $("#Dv_Inicial").hide('slow');
+    $("#RepresentanteDiv").hide('slow');
+    
+    $("#Numero_Cedula_Inicial").empty();
+
+    if($(this).val() == 1){
+      $("#Numero_Cedula_Inicial").append('Número de cédula');  
+    }
+    if($(this).val() == 2){
+      $("#Numero_Cedula_Inicial").append('Número de tarjeta de identidad');  
+    }
+    if($(this).val() == 3){
+      $("#Numero_Cedula_Inicial").append('Número de registro civil');  
+    }
+    if($(this).val() == 4){
+      $("#Numero_Cedula_Inicial").append('Número de cédula de extranjería');  
+    }
+    if($(this).val() == 5){
+      $("#Numero_Cedula_Inicial").append('Número de D.N.I');  
+    }
+    if($(this).val() == 6){
+      $("#Numero_Cedula_Inicial").append();  
+    }
+    if($(this).val() == 7){
+      $("#Numero_Cedula_Inicial").append('Número de NIT');  
+      $("#Dv_Inicial").show('slow');
+      $("#RepresentanteDiv").show('slow');
+    }    
+  });
+
+  $("#Tipo_Documento_InicialV").on('change', function(){    
+    $("#Dv_InicialV").hide('slow');
+    $("#RepresentanteDivV").hide('slow');
+    
+    $("#Numero_Cedula_InicialV").empty();
+
+    if($(this).val() == 1){
+      $("#Numero_Cedula_InicialV").append('Número de cédula');  
+    }
+    if($(this).val() == 2){
+      $("#Numero_Cedula_InicialV").append('Número de tarjeta de identidad');  
+    }
+    if($(this).val() == 3){
+      $("#Numero_Cedula_InicialV").append('Número de registro civil');  
+    }
+    if($(this).val() == 4){
+      $("#Numero_Cedula_InicialV").append('Número de cédula de extranjería');  
+    }
+    if($(this).val() == 5){
+      $("#Numero_Cedula_InicialV").append('Número de D.N.I');  
+    }
+    if($(this).val() == 6){
+      $("#Numero_Cedula_InicialV").append();  
+    }
+    if($(this).val() == 7){
+      $("#Numero_Cedula_InicialV").append('Número de NIT');  
+      $("#Dv_InicialV").show('slow');
+      $("#RepresentanteDivV").show('slow');
+    }    
+  });
+
+  $("#Tipo_Documento_InicialM").on('change', function(){    
+    $("#Dv_InicialM").hide('slow');
+    $("#RepresentanteDivM").hide('slow');
+    
+    $("#Numero_Cedula_InicialM").empty();
+
+    if($(this).val() == 1){
+      $("#Numero_Cedula_InicialM").append('Número de cédula');  
+    }
+    if($(this).val() == 2){
+      $("#Numero_Cedula_InicialM").append('Número de tarjeta de identidad');  
+    }
+    if($(this).val() == 3){
+      $("#Numero_Cedula_InicialM").append('Número de registro civil');  
+    }
+    if($(this).val() == 4){
+      $("#Numero_Cedula_InicialM").append('Número de cédula de extranjería');  
+    }
+    if($(this).val() == 5){
+      $("#Numero_Cedula_InicialM").append('Número de D.N.I');  
+    }
+    if($(this).val() == 6){
+      $("#Numero_Cedula_InicialM").append();  
+    }
+    if($(this).val() == 7){
+      $("#Numero_Cedula_InicialM").append('Número de NIT');  
+      $("#Dv_InicialM").show('slow');
+      $("#RepresentanteDivM").show('slow');
+    }    
+  });
+
+  $("#Tipo_Documento_Cesion").on('change', function(){    
+    $("#Dv_Cesion").hide('slow');
+
+    if($(this).val() == 7){
+      $("#Dv_Cesion").show('slow');
+    }    
+  });
+
+  $("#Tipo_Documento_CesionM").on('change', function(){    
+    $("#Dv_CesionM").hide('slow');
+        
+    if($(this).val() == 7){
+      $("#Dv_CesionM").show('slow');
+    }    
+  });
+
+  
 });

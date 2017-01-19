@@ -5,7 +5,6 @@
     <script src="{{ asset('public/Js/Datos/gestor.js') }}"></script> 
     <script src="{{ asset('public/Js/bootstrap-datepicker.js') }}"></script>   
     {{Html::style('public/Css/bootstrap-datepicker3.css')}}   
-
     
     <style type="text/css">
         .botonX {width:150px;}
@@ -79,19 +78,33 @@
                                <li class="list-group-item">
                                     <h4 class="modal-title" id="myModalLabel">Datos Básicos</h4>
                                     <br>
-                                    <div class="row">
+                                    <div class="row">                                        
                                         <div class="form-group col-md-2">
-                                            <label for="inputEmail" class="control-label">Número de cédula</label>
+                                            <label for="inputEmail" class="control-label">Tipo de documento</label>
                                         </div>
                                         <div class="form-group col-md-4">
-                                            <input type="text" class="form-control"  placeholder="Número de Cédula" id="Cedula_Contratista" name="Cedula_Contratista">
+                                            <select name="Tipo_Documento_Inicial" id="Tipo_Documento_Inicial" class="form-control">
+                                                <option value="">Seleccionar</option>   
+                                                @foreach($TipoDocumento as $TipoDocumentos)
+                                                    <option value="{{ $TipoDocumentos['Id_TipoDocumento'] }}">{{ $TipoDocumentos['Descripcion_TipoDocumento'] }}</option>                                                    
+                                                @endforeach                   
+                                            </select>
                                         </div>
-
+                                    </div>
+                                    <div class="row">                                        
                                         <div class="form-group col-md-2">
-                                            <label for="inputEmail" class="control-label">Dv</label>
+                                            <label id="Numero_Cedula_Inicial" for="inputEmail" class="control-label">Número de cédula</label>
                                         </div>
                                         <div class="form-group col-md-4">
-                                            <input type="text" class="form-control"  placeholder="Número Dv" id="Dv" name="Dv">
+                                            <input type="text" class="form-control"  placeholder="Número de documento" id="Cedula_Contratista" name="Cedula_Contratista">
+                                        </div>
+                                        <div id="Dv_Inicial" style="display:none;">
+                                            <div class="form-group col-md-2">
+                                                <label for="inputEmail" class="control-label">Dv</label>
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <input type="text" class="form-control"  placeholder="Número Dv" id="Dv" name="Dv">
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -123,9 +136,22 @@
                                         </div>
                                     </div>
                                 </li>
-                                <li class="list-group-item">
+                                <li class="list-group-item" id="RepresentanteDiv" style="display:none;">
                                     <h4 class="modal-title" id="myModalLabel">Datos del Representante Legal</h4>
                                     <br>
+                                    <div class="row">                                        
+                                        <div class="form-group col-md-2">
+                                            <label for="inputEmail" class="control-label">Tipo de documento</label>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <select name="Tipo_Documento_Representante" id="Tipo_Documento_Representante" class="form-control">
+                                                <option value="">Seleccionar</option>   
+                                                @foreach($TipoDocumento as $TipoDocumentos)
+                                                    <option value="{{ $TipoDocumentos['Id_TipoDocumento'] }}">{{ $TipoDocumentos['Descripcion_TipoDocumento'] }}</option>                                                    
+                                                @endforeach                   
+                                            </select>
+                                        </div>
+                                    </div>
                                     <div class="row">                                        
                                         <div class="form-group col-md-2">
                                             <label for="inputEmail" class="control-label">Nombre Representante Legal</label>
@@ -140,8 +166,11 @@
                                         <div class="form-group col-md-4">
                                             <input type="text" class="form-control"  placeholder="Cédula Representante Legal" id="Cedula_Representante" name="Cedula_Representante">
                                         </div>
-                                    </div>
-
+                                    </div>                                    
+                                </li>
+                                <li class="list-group-item">  
+                                    <h4 class="modal-title" id="myModalLabel">Objeto del contrato</h4>
+                                    <br>                                  
                                     <div class="row">                                        
                                         <div class="form-group col-md-12">
                                             <label for="inputEmail" class="control-label">Objeto del Contrato</label>
@@ -197,7 +226,7 @@
                                             </div>    
                                         </div>
                                     </div>
-                                    <div class="row">
+                                    <!--<div class="row">
                                         <div class="form-group col-md-2">
                                             <label for="inputEmail" class="control-label">Fecha de Final Contrato</label>
                                         </div>
@@ -207,7 +236,7 @@
                                             <span class="input-group-addon btn"><i class="glyphicon glyphicon-calendar"></i> </span>
                                             </div>    
                                         </div>
-                                    </div>
+                                    </div>-->
                                 </li>
                                 <li class="list-group-item">
                                     <h4 class="modal-title" id="myModalLabel">Datos de la Duración</h4>
@@ -471,6 +500,19 @@
                                             <div class="form-group col-md-4">
                                                 <input type="text" class="form-control"  placeholder="Nombre Cesionario" id="Nombre_Cesionario" name="Nombre_Cesionario">
                                             </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-md-2">
+                                                <label for="inputEmail" class="control-label">Tipo de documento del cesionario</label>
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <select name="Tipo_Documento_Cesion" id="Tipo_Documento_Cesion" class="form-control">
+                                                    <option value="">Seleccionar</option>   
+                                                    @foreach($TipoDocumento as $TipoDocumentos)
+                                                        <option value="{{ $TipoDocumentos['Id_TipoDocumento'] }}">{{ $TipoDocumentos['Descripcion_TipoDocumento'] }}</option>                                                    
+                                                    @endforeach                                                                                                   
+                                                </select>
+                                            </div>
 
                                             <div class="form-group col-md-2">
                                                 <label for="inputEmail" class="control-label">Cédula del  Cesionario</label>
@@ -480,11 +522,13 @@
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="form-group col-md-2">
-                                                <label for="inputEmail" class="control-label">Dv Cesión</label>
-                                            </div>
-                                            <div class="form-group col-md-4">
-                                                <input type="text" class="form-control"  placeholder="Dv Cesión" id="Dv_Cesion" name="Dv_Cesion">
+                                            <div id="Dv_Cesion" style="display:none" class="form-group"> 
+                                                <div class="form-group col-md-2">
+                                                    <label for="inputEmail" class="control-label">Dv Cesión</label>
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <input type="text" class="form-control"  placeholder="Dv Cesión" id="Dv_Cesion" name="Dv_Cesion">
+                                                </div>
                                             </div>
 
                                             <div class="form-group col-md-2">
@@ -613,20 +657,34 @@
                             <ul class="list-group" id="seccion_uno" name="seccion_uno">
                                <li class="list-group-item">
                                     <h4 class="modal-title" id="myModalLabel">Datos Básicos</h4>
-                                    <br>
+                                    <br>  
+                                    <div class="row">                                        
+                                        <div class="form-group col-md-2">
+                                            <label for="inputEmail" class="control-label">Tipo de documento</label>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <select name="Tipo_Documento_InicialV" id="Tipo_Documento_InicialV" class="form-control" readonly>
+                                                <option value="">Seleccionar</option>   
+                                                @foreach($TipoDocumento as $TipoDocumentos)
+                                                    <option value="{{ $TipoDocumentos['Id_TipoDocumento'] }}">{{ $TipoDocumentos['Descripcion_TipoDocumento'] }}</option>                                                    
+                                                @endforeach                   
+                                            </select>
+                                        </div>
+                                    </div>                                  
                                     <div class="row">
                                         <div class="form-group col-md-2">
-                                            <label for="inputEmail" class="control-label">Número de cédula</label>
+                                            <label id="Numero_Cedula_InicialV" for="inputEmail" class="control-label">Número de cédula</label>
                                         </div>
                                         <div class="form-group col-md-4">
                                             <input type="text" class="form-control"  placeholder="Número de Cédula" id="Cedula_ContratistaV" name="Cedula_ContratistaV" readonly>
                                         </div>
-
-                                        <div class="form-group col-md-2">
-                                            <label for="inputEmail" class="control-label">Dv</label>
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <input type="text" class="form-control"  placeholder="Número Dv" id="DvV" name="DvV" readonly>
+                                        <div id="Dv_InicialV" style="display:none;">
+                                            <div class="form-group col-md-2">
+                                                <label for="inputEmail" class="control-label">Dv</label>
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <input type="text" class="form-control"  placeholder="Número Dv" id="DvV" name="DvV" readonly>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -653,10 +711,23 @@
                                         </div>
                                     </div>
                                 </li>
-                                <li class="list-group-item">
+                                <li class="list-group-item" id="RepresentanteDivV" style="display:none;">
                                     <h4 class="modal-title" id="myModalLabel">Datos del Representante Legal</h4>
                                     <br>
                                     <div class="row">                                        
+                                        <div class="form-group col-md-2">
+                                            <label for="inputEmail" class="control-label">Tipo de documento del representante</label>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <select name="Tipo_Documento_RepresentanteV" id="Tipo_Documento_RepresentanteV" class="form-control" readonly>
+                                                <option value="">Seleccionar</option>   
+                                                @foreach($TipoDocumento as $TipoDocumentos)
+                                                    <option value="{{ $TipoDocumentos['Id_TipoDocumento'] }}">{{ $TipoDocumentos['Descripcion_TipoDocumento'] }}</option>                                                    
+                                                @endforeach                   
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row">                                                                            
                                         <div class="form-group col-md-2">
                                             <label for="inputEmail" class="control-label">Nombre Representante Legal</label>
                                         </div>
@@ -671,7 +742,10 @@
                                             <input type="text" class="form-control"  placeholder="Cédula Representante Legal" id="Cedula_RepresentanteV" name="Cedula_RepresentanteV" readonly>
                                         </div>
                                     </div>
-
+                                </li>                                
+                                <li class="list-group-item">  
+                                    <h4 class="modal-title" id="myModalLabel">Objeto del contrato</h4>
+                                    <br>                                  
                                     <div class="row">                                        
                                         <div class="form-group col-md-12">
                                             <label for="inputEmail" class="control-label">Objeto del Contrato</label>
@@ -928,19 +1002,33 @@
                                <li class="list-group-item">
                                     <h4 class="modal-title" id="myModalLabel">Datos Básicos</h4>
                                     <br>
+                                    <div class="row">                                        
+                                        <div class="form-group col-md-2">
+                                            <label for="inputEmail" class="control-label">Tipo de documento</label>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <select name="Tipo_Documento_InicialM" id="Tipo_Documento_InicialM" class="form-control">
+                                                <option value="">Seleccionar</option>   
+                                                @foreach($TipoDocumento as $TipoDocumentos)
+                                                    <option value="{{ $TipoDocumentos['Id_TipoDocumento'] }}">{{ $TipoDocumentos['Descripcion_TipoDocumento'] }}</option>                                                    
+                                                @endforeach                   
+                                            </select>
+                                        </div>
+                                    </div>     
                                     <div class="row">
                                         <div class="form-group col-md-2">
-                                            <label for="inputEmail" class="control-label">Número de cédula</label>
+                                            <label id="Numero_Cedula_InicialM"for="inputEmail" class="control-label">Número de cédula</label>
                                         </div>
                                         <div class="form-group col-md-4">
                                             <input type="text" class="form-control"  placeholder="Número de Cédula" id="Cedula_ContratistaM" name="Cedula_ContratistaM">
                                         </div>
-
-                                        <div class="form-group col-md-2">
-                                            <label for="inputEmail" class="control-label">Dv</label>
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <input type="text" class="form-control"  placeholder="Número Dv" id="DvM" name="DvM">
+                                        <div id="Dv_InicialM" style="display:none;">
+                                            <div class="form-group col-md-2">
+                                                <label for="inputEmail" class="control-label">Dv</label>
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <input type="text" class="form-control"  placeholder="Número Dv" id="DvM" name="DvM">
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -972,9 +1060,22 @@
                                         </div>
                                     </div>
                                 </li>
-                                <li class="list-group-item">
+                                <li class="list-group-item" id="RepresentanteDivM" style="display:none;">                                
                                     <h4 class="modal-title" id="myModalLabel">Datos del Representante Legal</h4>
                                     <br>
+                                    <div class="row">                                        
+                                        <div class="form-group col-md-2">
+                                            <label for="inputEmail" class="control-label">Tipo de documento del representante</label>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <select name="Tipo_Documento_RepresentanteM" id="Tipo_Documento_RepresentanteM" class="form-control">
+                                                <option value="">Seleccionar</option>   
+                                                @foreach($TipoDocumento as $TipoDocumentos)
+                                                    <option value="{{ $TipoDocumentos['Id_TipoDocumento'] }}">{{ $TipoDocumentos['Descripcion_TipoDocumento'] }}</option>                                                    
+                                                @endforeach                   
+                                            </select>
+                                        </div>
+                                    </div>
                                     <div class="row">                                        
                                         <div class="form-group col-md-2">
                                             <label for="inputEmail" class="control-label">Nombre Representante Legal</label>
@@ -990,7 +1091,8 @@
                                             <input type="text" class="form-control"  placeholder="Cédula Representante Legal" id="Cedula_RepresentanteM" name="Cedula_RepresentanteM">
                                         </div>
                                     </div>
-
+                                </li>
+                                <li class="list-group-item">
                                     <div class="row">                                        
                                         <div class="form-group col-md-12">
                                             <label for="inputEmail" class="control-label">Objeto del Contrato</label>
@@ -1322,6 +1424,19 @@
                                             <div class="form-group col-md-4">
                                                 <input type="text" class="form-control"  placeholder="Nombre Cesionario" id="Nombre_CesionarioM" name="Nombre_CesionarioM">
                                             </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-md-2">
+                                                <label for="inputEmail" class="control-label">Tipo de documento del cesionario</label>
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <select name="Tipo_Documento_CesionM" id="Tipo_Documento_CesionM" class="form-control">
+                                                    <option value="">Seleccionar</option>   
+                                                    @foreach($TipoDocumento as $TipoDocumentos)
+                                                        <option value="{{ $TipoDocumentos['Id_TipoDocumento'] }}">{{ $TipoDocumentos['Descripcion_TipoDocumento'] }}</option>                                                    
+                                                    @endforeach                                                                                                   
+                                                </select>
+                                            </div>
 
                                             <div class="form-group col-md-2">
                                                 <label for="inputEmail" class="control-label">Cédula del  Cesionario</label>
@@ -1331,11 +1446,13 @@
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="form-group col-md-2">
-                                                <label for="inputEmail" class="control-label">Dv Cesión</label>
-                                            </div>
-                                            <div class="form-group col-md-4">
-                                                <input type="text" class="form-control"  placeholder="Dv Cesión" id="Dv_CesionM" name="Dv_CesionM">
+                                            <div id="Dv_CesionM" class="form-group" style="display:none;">
+                                                <div class="form-group col-md-2">
+                                                    <label for="inputEmail" class="control-label">Dv Cesión</label>
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <input type="text" class="form-control"  placeholder="Dv Cesión" id="Dv_CesionM" name="Dv_CesionM">
+                                                </div>
                                             </div>
 
                                             <div class="form-group col-md-2">

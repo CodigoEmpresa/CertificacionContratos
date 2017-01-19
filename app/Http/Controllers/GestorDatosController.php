@@ -17,6 +17,7 @@ use App\Models\Prorroga;
 use App\Models\Suspencion;
 use App\Models\Cesion;
 use App\Models\Obligacion;
+use App\Models\TipoDocumento;
 
 class GestorDatosController extends Controller
 {
@@ -32,9 +33,11 @@ class GestorDatosController extends Controller
 	{
 		$Contrato = Contrato::all();
 		$TipoContrato = TipoContrato::all();
+		$TipoDocumento = TipoDocumento::all();
 		return view('DATOS/gestor')
 				->with(compact('Contrato'))
 				->with(compact('TipoContrato'))
+				->with(compact('TipoDocumento'))
 				;
 	}
 
@@ -95,10 +98,20 @@ class GestorDatosController extends Controller
 
 	public function RevisionCesion(Request $request){
 		if ($request->ajax()) { 
+			$var = '';
+			if($request->Tipo_Documento_Cesion == 1 || $request->Tipo_Documento_Cesion == 2 || $request->Tipo_Documento_Cesion == 3 || $request->Tipo_Documento_Cesion == 7){
+				$var = '|numeric|digits_between:1,15';
+			}elseif($request->Tipo_Documento_Cesion == 4 || $request->Tipo_Documento_Cesion == 5 || $request->Tipo_Documento_Cesion == 6){
+				$var = '|alpha_num';
+			}else{
+				$var = '';
+			}
+
     		$validator = Validator::make($request->all(), [
+    			'Tipo_Documento_Cesion' => 'required',
     			'Nombre_Cesionario' => 'required',
-    			'Cedula_Cesionario' => 'required|numeric',
-    			'Dv_Cesion' => 'required|numeric',
+    			"Cedula_Cesionario" => 'required'.$var,
+    			'Dv_Cesion' => array('required_if:Tipo_Documento_Cesion,7', 'numeric'),
     			'Valor_Cesion' => 'required|numeric',
     			'FechaCesion' => 'required|date',
     			]);
@@ -131,23 +144,43 @@ class GestorDatosController extends Controller
 
 	public function AgregarContrato(Request $request){
 		if ($request->ajax()) { 
+
+			$var = '';
+			if($request->Tipo_Documento_Inicial == 1 || $request->Tipo_Documento_Inicial == 2 || $request->Tipo_Documento_Inicial == 3 || $request->Tipo_Documento_Inicial == 7){
+				$var = '|numeric|digits_between:1,15';
+			}elseif($request->Tipo_Documento_Inicial == 4 || $request->Tipo_Documento_Inicial == 5 || $request->Tipo_Documento_Inicial == 6){
+				$var = '|alpha_num';
+			}else{
+				$var = '';
+			}
+
+			$varRep = array('required_if:Tipo_Documento_Representante,7');
+			if($request->Tipo_Documento_Representante == 1 || $request->Tipo_Documento_Representante == 2 || $request->Tipo_Documento_Representante == 3 || $request->Tipo_Documento_Representante == 7){
+				$varRep = array('required_if:Tipo_Documento_Representante,7', 'numeric', 'digits_between:1,15');
+			}elseif($request->Tipo_Documento_Representante == 4 || $request->Tipo_Documento_Representante == 5 || $request->Tipo_Documento_Representante == 6){
+				$varRep = array('required_if:Tipo_Documento_Representante,7', 'alpha_num');
+			}else{
+				$varRep = array('required_if:Tipo_Documento_Representante,7');
+			}
+
     		$validator = Validator::make($request->all(), [
-			   	  "Cedula_Contratista" => "required|numeric|digits_between:1,15",
-				  "Dv" => "required|numeric|digits:1",
+    			  "Tipo_Documento_Inicial" => "required",
+			   	  "Cedula_Contratista" => 'required'.$var,
+				  "Dv" => array('required_if:Tipo_Documento_Inicial,7','numeric', 'digits:1', 'min:1', 'max:9'),
 				  "Nombre_Contratista" => "required",
 				  "Numero_Contrato" => "required|numeric|digits_between:1,10",
 				  "Tipo_Contrato" => "required",
-				  "Nombre_Representante" => "required",
-				  "Cedula_Representante" => "required|numeric|digits_between:1,15",
+				  "Tipo_Documento_Representante" => array('required_if:Tipo_Documento_Inicial,7'),
+				  "Nombre_Representante" => array('required_if:Tipo_Documento_Inicial,7'),
+				  "Cedula_Representante" => $varRep,
 				  "Objeto_Contrato" => "required|between:1,100",
 				  "FechaFirma" => "required|date",
 				  "FechaInicio" => "required|date",
 				  "FechaFin" => "required|date",
 				  "FechaFinAnticipado" => "required|date",
-				  "FechaFinContrato" => 'required|date',
 				  "Meses_Duracion" => "required|numeric:|digits_between:1,4",
 				  "Dias_Duracion" => "required|numeric:|digits_between:1,4",
-				  "Otra_Duracion" => "required",
+				  "Otra_Duracion" => "",
 				  "Valor_Inicial" => "required|numeric:|digits_between:1,15",
 				  "Valor_Mensual" => "required|numeric:|digits_between:1,8",				  
     			]);    		
@@ -157,12 +190,14 @@ class GestorDatosController extends Controller
 	        }else{ 
 
 	        	$Contrato = new Contrato;
+	        	$Contrato->Tipo_Documento = $request->Tipo_Documento_Inicial;
 	        	$Contrato->Cedula = $request->Cedula_Contratista;
 	        	$Contrato->Dv = $request->Dv;
 	        	$Contrato->Nombre_Contratista = $request->Nombre_Contratista;
 	        	$Contrato->Numero_Contrato = $request->Numero_Contrato;
 	        	$Contrato->Tipo_Contrato_Id = $request->Tipo_Contrato;
 	        	$Contrato->Nombre_Representante = $request->Nombre_Representante;
+	        	$Contrato->Tipo_Documento_Representante = $request->Tipo_Documento_Representante;
 	        	$Contrato->Cedula_Representante = $request->Cedula_Representante;
 	        	$Contrato->Objeto = $request->Objeto_Contrato;
 	        	$Contrato->Fecha_Firma = $request->FechaFirma;
@@ -174,7 +209,6 @@ class GestorDatosController extends Controller
 	        	$Contrato->Otra_Duracion = $request->Otra_Duracion;	        	
 	        	$Contrato->Valor_Inicial = $request->Valor_Inicial;
 	        	$Contrato->Valor_Mensual = $request->Valor_Mensual;
-	        	$Contrato->fecha_Final_CTO = $request->FechaFinContrato;
 
 	        	if($Contrato->save()){	        		
 	        		$AdicionVector = json_decode($request['Adicion']);
@@ -186,7 +220,7 @@ class GestorDatosController extends Controller
 							$Adicion->Numero_Adicion = $i;
 							$Adicion->Valor_Adicion = $Vector->Valor_Adicion;
 							$Adicion->save();
-							$i+1;
+							$i= $i+1;
 						}
 					}
 
@@ -201,7 +235,7 @@ class GestorDatosController extends Controller
 							$Prorroga->Dias = $Vector->Dias_Prorroga;
 							$Prorroga->Fecha_Fin = $Vector->FechaFinCtoProrroga;
 							$Prorroga->save();
-							$i+1;
+							$i= $i+1;
 						}
 					}
 
@@ -219,7 +253,7 @@ class GestorDatosController extends Controller
 							$Suspencion->Fecha_Fin = $Vector->FechaFinSuspencion;
 							$Suspencion->Fecha_Reinicio = $Vector->FechaReinicioSuspencion;
 							$Suspencion->save();
-							$i+1;
+							$i= $i+1;
 						}
 					}
 
@@ -231,12 +265,13 @@ class GestorDatosController extends Controller
 							$Cesion->Contrato_Id = $Contrato->Id;
 							$Cesion->Numero_Cesion = $i;
 							$Cesion->Nombre_Cesionario = $Vector->Nombre_Cesionario;							
+							$Cesion->Tipo_Documento_Cesionario = $Vector->Tipo_Documento_Cesionario;
 							$Cesion->Cedula_Cesionario = $Vector->Cedula_Cesionario;
 							$Cesion->Dv_Cesion = $Vector->Dv_Cesion;
 							$Cesion->Valor_Cedido = $Vector->Valor_Cesion;
 							$Cesion->Fecha_Cesion = $Vector->FechaCesion;
 							$Cesion->save();
-							$i+1;
+							$i= $i+1;
 						}
 					}
 
@@ -249,7 +284,7 @@ class GestorDatosController extends Controller
 							$Obligacion->Numero_Obligacion = $i;
 							$Obligacion->Objeto_Obligacion = $Vector->Obligacion;							
 							$Obligacion->save();
-							$i+1;
+							$i= $i+1;
 						}
 					}
 	        	}
@@ -267,30 +302,48 @@ class GestorDatosController extends Controller
 	}
 
 	public function GetContratoOne(Request $request, $id_contrato){
-		$Contrato = Contrato::with('Tipocontrato', 'Adicion', 'Prorroga', 'Suspencion', 'Cesion', 'Obligacion')->find($id_contrato);
+		$Contrato = Contrato::with('Tipocontrato', 'Adicion', 'Prorroga', 'Suspencion', 'Cesion', 'Obligacion', 'TipoDocumento')->find($id_contrato);
 		return $Contrato;
 	}
 
 	public function ModificarContrato(Request $request){
-		//dd($request->all());
 		if ($request->ajax()) { 
+			$var = '';
+			if($request->Tipo_Documento_InicialM == 1 || $request->Tipo_Documento_InicialM == 2 || $request->Tipo_Documento_InicialM == 3 || $request->Tipo_Documento_InicialM == 7){
+				$var = '|numeric|digits_between:1,15';
+			}elseif($request->Tipo_Documento_InicialM == 4 || $request->Tipo_Documento_InicialM == 5 || $request->Tipo_Documento_InicialM == 6){
+				$var = '|alpha_num';
+			}else{
+				$var = '';
+			}
+
+			$varRep = array('required_if:Tipo_Documento_InicialM,7');
+			if($request->Tipo_Documento_RepresentanteM == 1 || $request->Tipo_Documento_RepresentanteM == 2 || $request->Tipo_Documento_RepresentanteM == 3 || $request->Tipo_Documento_RepresentanteM == 7){
+				$varRep = array('required_if:Tipo_Documento_InicialM,7', 'numeric', 'digits_between:1,15');
+			}elseif($request->Tipo_Documento_RepresentanteM == 4 || $request->Tipo_Documento_RepresentanteM == 5 || $request->Tipo_Documento_RepresentanteM == 6){
+				$varRep = array('required_if:Tipo_Documento_InicialM,7', 'alpha_num');
+			}else{
+				$varRep = array('required_if:Tipo_Documento_InicialM,7');
+			}
+
     		$validator = Validator::make($request->all(), [
-			   	  "Cedula_ContratistaM" => "required|numeric|digits_between:1,15",
-				  "DvM" => "required|numeric|digits:1",
+			   	  "Tipo_Documento_InicialM" => "required",
+			   	  "Cedula_ContratistaM" => 'required'.$var,
+				  "DvM" => array('required_if:Tipo_Documento_InicialM,7','numeric', 'digits:1'),
 				  "Nombre_ContratistaM" => "required",
 				  "Numero_ContratoM" => "required|numeric|digits_between:1,10",
 				  "Tipo_ContratoM" => "required",
-				  "Nombre_RepresentanteM" => "required",
-				  "Cedula_RepresentanteM" => "required|numeric|digits_between:1,15",
+				  "Nombre_RepresentanteM" => array('required_if:Tipo_Documento_InicialM,7'),
+				  "Tipo_Documento_RepresentanteM" => array('required_if:Tipo_Documento_InicialM,7'),
+				  "Cedula_RepresentanteM" => $varRep,
 				  "Objeto_ContratoM" => "required|between:1,100",
 				  "FechaFirmaM" => "required|date",
 				  "FechaInicioM" => "required|date",
 				  "FechaFinM" => "required|date",
 				  "FechaFinAnticipadoM" => "required|date",
-				  "FechaFinContratoM" => 'required|date',
 				  "Meses_DuracionM" => "required|numeric:|digits_between:1,4",
 				  "Dias_DuracionM" => "required|numeric:|digits_between:1,4",
-				  "Otra_DuracionM" => "required",
+				  "Otra_DuracionM" => "",
 				  "Valor_InicialM" => "required|numeric:|digits_between:1,15",
 				  "Valor_MensualM" => "required|numeric:|digits_between:1,8",			  
     			]);    		
@@ -299,12 +352,14 @@ class GestorDatosController extends Controller
 	            return response()->json(array('status' => 'error', 'errors' => $validator->errors()));
 	        }else{ 
 	        	$Contrato = Contrato::find($request->Id_ContratoM);
+	        	$Contrato->Tipo_Documento = $request->Tipo_Documento_InicialM;
 	        	$Contrato->Cedula = $request->Cedula_ContratistaM;
 	        	$Contrato->Dv = $request->DvM;
 	        	$Contrato->Nombre_Contratista = $request->Nombre_ContratistaM;
 	        	$Contrato->Numero_Contrato = $request->Numero_ContratoM;
 	        	$Contrato->Tipo_Contrato_Id = $request->Tipo_ContratoM;
 	        	$Contrato->Nombre_Representante = $request->Nombre_RepresentanteM;
+	        	$Contrato->Tipo_Documento_Representante = $request->Tipo_Documento_RepresentanteM;
 	        	$Contrato->Cedula_Representante = $request->Cedula_RepresentanteM;
 	        	$Contrato->Objeto = $request->Objeto_ContratoM;
 	        	$Contrato->Fecha_Firma = $request->FechaFirmaM;
@@ -316,7 +371,6 @@ class GestorDatosController extends Controller
 	        	$Contrato->Otra_Duracion = $request->Otra_DuracionM;	        	
 	        	$Contrato->Valor_Inicial = $request->Valor_InicialM;
 	        	$Contrato->Valor_Mensual = $request->Valor_MensualM;
-	        	$Contrato->fecha_Final_CTO = $request->FechaFinContratoM;
 
 	        	if($Contrato->save()){
 
@@ -371,6 +425,7 @@ class GestorDatosController extends Controller
 							$Cesion->Contrato_Id = $Contrato->Id;
 							$Cesion->Numero_Cesion = $Vector->Numero_Cesion;
 							$Cesion->Nombre_Cesionario = $Vector->Nombre_Cesionario;							
+							$Cesion->Tipo_Documento_Cesionario = $Vector->Tipo_Documento_Cesionario;
 							$Cesion->Cedula_Cesionario = $Vector->Cedula_Cesionario;
 							$Cesion->Dv_Cesion = $Vector->Dv_Cesion;
 							$Cesion->Valor_Cedido = $Vector->Valor_Cesion;
@@ -456,10 +511,21 @@ class GestorDatosController extends Controller
 
 	public function RevisionCesionM(Request $request){
 		if ($request->ajax()) { 
+
+			$var = '';
+			if($request->Tipo_Documento_CesionM == 1 || $request->Tipo_Documento_CesionM == 2 || $request->Tipo_Documento_CesionM == 3 || $request->Tipo_Documento_CesionM == 7){
+				$var = '|numeric|digits_between:1,15';
+			}elseif($request->Tipo_Documento_CesionM == 4 || $request->Tipo_Documento_CesionM == 5 || $request->Tipo_Documento_CesionM == 6){
+				$var = '|alpha_num';
+			}else{
+				$var = '';
+			}
+
     		$validator = Validator::make($request->all(), [
     			'Nombre_CesionarioM' => 'required',
+    			'Tipo_Documento_CesionM' => 'required',
     			'Cedula_CesionarioM' => 'required|numeric',
-    			'Dv_CesionM' => 'required|numeric',
+    			'Dv_CesionM' => array('required_if:Tipo_Documento_Cesion,7', 'numeric'),
     			'Valor_CesionM' => 'required|numeric',
     			'FechaCesionM' => 'required|date',
     			]);
@@ -500,11 +566,12 @@ class GestorDatosController extends Controller
 	            return response()->json(array('status' => 'error', 'errors' => $validator->errors()));
 	        }else{ 	        
 	        	$Contrato = Contrato::find($request->Id);
-	        	$Adicion = Adicion::where('Contrato_Id', $request->Id_ContratoM)->delete();
-	        	$Prorroga = Prorroga::where('Contrato_Id', $request->Id_ContratoM)->delete();
-	        	$Suspencion = Suspencion::where('Contrato_Id', $request->Id_ContratoM)->delete();
-	        	$Cesion = Cesion::where('Contrato_Id', $request->Id_ContratoM)->delete();
-	        	$Obligacion = Obligacion::where('Contrato_Id', $request->Id_ContratoM)->delete();
+	        	$Adicion = Adicion::where('Contrato_Id', $request->Id_Contrato)->delete();
+	        	$Prorroga = Prorroga::where('Contrato_Id', $request->Id_Contrato)->delete();
+	        	$Suspencion = Suspencion::where('Contrato_Id', $request->Id_Contrato)->delete();
+	        	$Cesion = Cesion::where('Contrato_Id', $request->Id_Contrato)->delete();
+	        	$Obligacion = Obligacion::where('Contrato_Id', $request->Id_Contrato)->delete();
+
 	        	$Contrato->delete();
 	        	
 	        	return response()->json(array('status' => 'success', 'Mensaje' => 'El contrato ha sido eliminado con éxito!'));

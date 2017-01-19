@@ -25,6 +25,13 @@ session_start();
 	Route::post('/personas/service/procesar/', '\Idrd\Usuarios\Controllers\PersonaController@procesar');	
 	/************************************/
 
+	Route::get('generador','GeneradorController@index');
+	Route::post('getContratoExp','GeneradorController@GetContratoExp');
+	Route::post('getContratoUnico','GeneradorController@GetContratoUnico');
+	Route::get('descargarContrato/{Contrato_Id}','GeneradorController@DescargarContrato');
+	Route::get('datos/{tipo_documento}/{documento}/{anio}','GeneradorController@Datos');
+	Route::get('getContratoOne/{id_contrato}','GestorDatosController@GetContratoOne');		
+
 
 
 
@@ -48,7 +55,6 @@ Route::group(['middleware' => ['web']], function () {
 	Route::post('DeleteContrato', 'GestorDatosController@EliminarContrato');	
 
 	Route::get('getContrato','GestorDatosController@GetContrato');	
-	Route::get('getContratoOne/{id_contrato}','GestorDatosController@GetContratoOne');	
 
 	Route::post('revAdicionM', 'GestorDatosController@RevisionAdicionM');
 	Route::post('revProrrogaM', 'GestorDatosController@RevisionProrrogaM');

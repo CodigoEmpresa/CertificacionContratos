@@ -20,7 +20,7 @@ class CrearTablaAdicion extends Migration
             $table->integer('Valor_Adicion');
             $table->timestamps();
 
-            $table->foreign('Contrato_Id')->references('Id')->on('contrato');
+            //$table->foreign('Contrato_Id')->references('Id')->on('contrato');
 
         });
     }

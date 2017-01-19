@@ -11,7 +11,8 @@
         "laravelcollective/html": "5.2.*",
         "guzzlehttp/guzzle": "~4.0",
         "mikehaertl/phpwkhtmltopdf": "^2.2",
-        "wemersonjanuario/wkhtmltopdf-windows":"0.12.2.3"
+        "wemersonjanuario/wkhtmltopdf-windows":"0.12.2.3",
+        "vsmoraes/laravel-pdf": "^1.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

@@ -26,7 +26,7 @@ class CrearTablaSuspencion extends Migration
             $table->date('Fecha_Fin_CTO');
             $table->timestamps();
 
-            $table->foreign('Contrato_Id')->references('Id')->on('contrato');
+            //$table->foreign('Contrato_Id')->references('Id')->on('contrato');
 
         });
     }

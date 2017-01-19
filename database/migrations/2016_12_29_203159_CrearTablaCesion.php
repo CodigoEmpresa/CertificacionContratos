@@ -18,14 +18,15 @@ class CrearTablaCesion extends Migration
             $table->integer('Contrato_Id')->unsigned();
             $table->integer('Numero_Cesion');
             $table->string('Nombre_Cesionario');
+            $table->string('Tipo_Documento_Cesionario');
             $table->string('Cedula_Cesionario');
-            $table->integer('Dv_Cesion');
+            $table->integer('Dv_Cesion')->nullable();
             $table->integer('Valor_Cedido');
             $table->integer('Dias');
             $table->date('Fecha_Cesion');
             $table->timestamps();
 
-            $table->foreign('Contrato_Id')->references('Id')->on('contrato');
+            //$table->foreign('Contrato_Id')->references('Id')->on('contrato');
 
         });
     }

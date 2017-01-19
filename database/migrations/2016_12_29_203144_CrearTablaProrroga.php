@@ -22,7 +22,7 @@ class CrearTablaProrroga extends Migration
             $table->date('Fecha_Fin');
             $table->timestamps();
 
-            $table->foreign('Contrato_Id')->references('Id')->on('contrato');
+            //$table->foreign('Contrato_Id')->references('Id')->on('contrato');
 
         });
     }

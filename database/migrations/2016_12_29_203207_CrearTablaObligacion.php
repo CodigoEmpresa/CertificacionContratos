@@ -20,7 +20,7 @@ class CrearTablaObligacion extends Migration
             $table->string('Objeto_Obligacion');
             $table->timestamps();
 
-            $table->foreign('Contrato_Id')->references('Id')->on('contrato');
+            //$table->foreign('Contrato_Id')->references('Id')->on('contrato');
 
         });
     }
