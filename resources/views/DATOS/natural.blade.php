@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Certificación contratistas</title>
+  <title>Certificación contratistas - persona natural</title>
   <link rel="stylesheet" href="public/Css/pdf.css" media="screen">
 
   <style>
@@ -16,7 +16,7 @@
       <img src="public/Img/cabecera.png">
     </p>
     <br>
-    <span>      
+    <span class="Neg">      
       EL  SUSCRITO  RESPONSABLE DEL  ÁREA  APOYO  A  LA  CONTRATACION DEL INSTITUTO DISTRITAL PARA LA RECREACION Y EL DEPORTE. N.I.T. - IDRD: 860.061.099 - 1
       <br><br>
       HACE CONSTAR
@@ -40,16 +40,13 @@
       <div class="TableDiv">
         <div class="table">
           <div class="table-row titulo">
-            <div class="table-tit">Nº. <span class="Mayus Vino">{{$data['Tipo_Contrato']}}</span></div>
-            <div class="table-tit"><span class="Mayus Vino">{{$data['Numero_Contrato']}}</span> de <span class="Mayus Vino">{{$data['Anio']}}</span></div>
+            <div class="table-tit">No. Contrato</div>
+            <div class="table-cell" style="background-color: #A4A4A4;"><span class="Mayus Vino">{{$data['Numero_Contrato']}}</span> de <span class="Mayus Vino">{{$data['Anio']}}</span></div>
           </div>
 
           <div class="table-row">
-            <div class="table-cell">
-              <span class="Neg">
-                VALOR INICIAL DEL 
-                <span class="Mayus Vino">{{$data['Tipo_Contrato']}}</span>
-              </span>
+            <div class="table-cell Neg">
+              VALOR INICIAL</span>
             </div>
             <div class="table-cell Vino">${{$data['Valor_Inicial']}}</div>
           </div>
@@ -82,13 +79,86 @@
           </div>
 
           <div class="table-row">
-            <div class="table-cell Neg">
-              FECHA DE TERMINACION DEL <span class="Mayus Vino">{{$data['Tipo_Contrato']}}</span>
-            </div>
+            <div class="table-cell Neg">FECHA DE TERMINACION</div>
             <div class="table-cell Vino">
               {{$data['Fecha_Fin']}}
             </div>
           </div>
+
+          @if($data['Fecha_Terminacion_Anticipada'] != 0)
+            <div class="table-row">
+              <div class="table-cell Neg">FECHA DE TERMINACION ANTICIPADA</div>
+              <div class="table-cell Vino">
+                {{$data['Fecha_Terminacion_Anticipada']}}
+              </div>
+            </div>
+          @endif
+
+          @if($data['CountAdiciones'] > 0)
+            <div class="table-row">
+              <div class="table-tit Neg Cesion">
+                ADICIONES
+              </div>
+              <div class="table-cell Vino">
+                <div class="tableO">
+                  @foreach($data['Adiciones'] as $Adiciones)              
+                <div class="table-rowO">
+                  <div class="table-cellOT Neg">
+                    {{ $Adiciones['Numero']}}.
+                  </div>
+                  <div class="table-cellO Vino">
+                    {{ $Adiciones['Valor_Adicion'] }}
+                  </div>
+                </div>
+                @endforeach
+                </div>            
+              </div>
+            </div>
+          @endif
+
+          @if($data['CountProrrogas'] > 0)
+            <div class="table-row">
+              <div class="table-tit Neg Cesion">
+                PRORROGAS
+              </div>
+              <div class="table-cell Vino">
+                <div class="tableO">
+                  @foreach($data['Prorrogas'] as $Prorrogas)              
+                <div class="table-rowO">
+                  <div class="table-cellOT Neg">
+                    {{ $Prorrogas['Numero']}}.
+                  </div>
+                  <div class="table-cellO Vino">
+                    {{$Prorrogas['Meses_Letra']}} ({{$Prorrogas['Meses']}}) Meses y {{$Prorrogas['Dias_Letra']}} ({{$Prorrogas['Dias']}}) Días.
+                  </div>
+                </div>
+                @endforeach
+                </div>            
+              </div>
+            </div>
+          @endif
+
+          @if($data['CountSuspenciones'] > 0)
+            <div class="table-row">
+              <div class="table-tit Neg Cesion">
+                SUSPENCIONES
+              </div>
+              <div class="table-cell Vino">
+                <div class="tableO">
+                  @foreach($data['Suspenciones'] as $Suspenciones)              
+                <div class="table-rowO">
+                  <div class="table-cellOT Neg">
+                    {{ $Suspenciones['Numero']}}.
+                  </div>
+                  <div class="table-cellO Vino">
+                    Desde la fecha {{$Suspenciones['Fecha_Inicio']}} hasta {{$Suspenciones['Fecha_Fin']}}, con reinicio el {{$Suspenciones['Fecha_Reinicio']}}. Con duración de {{$Suspenciones['Meses_Letra']}} ({{$Suspenciones['Meses']}}) Meses y {{$Suspenciones['Dias_Letra']}} ({{$Suspenciones['Dias']}}) Días. 
+                  </div>
+                </div>
+                @endforeach
+                </div>            
+              </div>
+            </div>
+          @endif
 
           @if($data['CountCesiones'] > 0)           
               @foreach($data['Cesiones'] as $Cesiones)              
@@ -103,18 +173,19 @@
               @endforeach
           @endif
 
+          @if($data['CountObligaciones'] > 0)           
           <div class="table-row">
             <div class="table-cell Neg">
               OBLIGACIONES ESPECIFICAS
             </div>
             <div class="table-cell Vino">
-              <div class="table">
+              <div class="tableO">
                 @foreach($data['Obligaciones'] as $Obligaciones)              
-                <div class="table-row">
-                  <div class="table-cell Neg">
+                <div class="table-rowO">
+                  <div class="table-cellOT Neg">
                     {{ $Obligaciones['Numero']}}.
                   </div>
-                  <div class="table-cell Vino">
+                  <div class="table-cellO Vino">
                     {{ $Obligaciones['Obligacion'] }}.
                   </div>
                 </div>
@@ -122,13 +193,14 @@
               </div>            
             </div>
           </div>
+          @endif
         </div>
       </div>  
-
+      <br>
       <div class="TextoInicio">
-        <p>
+        <span>
           Para constancia se expide a solicitud de la parte interesada en Bogotá, D.C., a los <span class="Minus Vino">{{$data['Dia_Actual_Letra']}}</span> (<span class="Minus Vino">{{$data['Dia_Actual']}}</span>) días del mes de <span class="Minus Vino">{{$data['Fecha_A']}}</span> de <span class="Minus Vino">{{$data['Anio_Actual']}}</span>.
-        </p>
+        </span>
         <br><br>
         <img src="public/Img/firma.png">
       </div>

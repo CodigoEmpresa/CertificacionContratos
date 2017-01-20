@@ -163,6 +163,14 @@ class GestorDatosController extends Controller
 				$varRep = array('required_if:Tipo_Documento_Representante,7');
 			}
 
+			$varTipoCI = 'required|numeric:|digits_between:1,15';
+	   		$varTipoCM = 'required|numeric:|digits_between:1,8';
+			if($request->Tipo_Contrato == 4 || $request->Tipo_Contrato == 11 || $request->Tipo_Contrato == 17 || $request->Tipo_Contrato == 23 || $request->Tipo_Contrato == 24 ||
+			   $request->Tipo_Contrato == 25 || $request->Tipo_Contrato == 26 || $request->Tipo_Contrato == 27){
+			   		$varTipoCI = 'numeric:|digits_between:1,15';
+			   		$varTipoCM = 'numeric:|digits_between:1,8';
+			}
+
     		$validator = Validator::make($request->all(), [
     			  "Tipo_Documento_Inicial" => "required",
 			   	  "Cedula_Contratista" => 'required'.$var,
@@ -177,12 +185,12 @@ class GestorDatosController extends Controller
 				  "FechaFirma" => "required|date",
 				  "FechaInicio" => "required|date",
 				  "FechaFin" => "required|date",
-				  "FechaFinAnticipado" => "required|date",
+				  /*"FechaFinAnticipado" => "required|date",*/
 				  "Meses_Duracion" => "required|numeric:|digits_between:1,4",
 				  "Dias_Duracion" => "required|numeric:|digits_between:1,4",
 				  "Otra_Duracion" => "",
-				  "Valor_Inicial" => "required|numeric:|digits_between:1,15",
-				  "Valor_Mensual" => "required|numeric:|digits_between:1,8",				  
+				  "Valor_Inicial" => $varTipoCI,
+				  "Valor_Mensual" => $varTipoCM,
     			]);    		
 
 	        if ($validator->fails()){
@@ -326,6 +334,14 @@ class GestorDatosController extends Controller
 				$varRep = array('required_if:Tipo_Documento_InicialM,7');
 			}
 
+			$varTipoCI = 'required|numeric:|digits_between:1,15';
+	   		$varTipoCM = 'required|numeric:|digits_between:1,8';
+			if($request->Tipo_ContratoM == 4 || $request->Tipo_ContratoM == 11 || $request->Tipo_ContratoM == 17 || $request->Tipo_ContratoM == 23 || $request->Tipo_ContratoM == 24 ||
+			   $request->Tipo_ContratoM == 25 || $request->Tipo_ContratoM == 26 || $request->Tipo_ContratoM == 27){
+			   		$varTipoCI = 'numeric:|digits_between:1,15';
+			   		$varTipoCM = 'numeric:|digits_between:1,8';
+			}
+
     		$validator = Validator::make($request->all(), [
 			   	  "Tipo_Documento_InicialM" => "required",
 			   	  "Cedula_ContratistaM" => 'required'.$var,
@@ -340,12 +356,12 @@ class GestorDatosController extends Controller
 				  "FechaFirmaM" => "required|date",
 				  "FechaInicioM" => "required|date",
 				  "FechaFinM" => "required|date",
-				  "FechaFinAnticipadoM" => "required|date",
+				  /*"FechaFinAnticipadoM" => "required|date",*/
 				  "Meses_DuracionM" => "required|numeric:|digits_between:1,4",
 				  "Dias_DuracionM" => "required|numeric:|digits_between:1,4",
 				  "Otra_DuracionM" => "",
-				  "Valor_InicialM" => "required|numeric:|digits_between:1,15",
-				  "Valor_MensualM" => "required|numeric:|digits_between:1,8",			  
+				  "Valor_InicialM" => $varTipoCI,
+				  "Valor_MensualM" => $varTipoCM,
     			]);    		
 
 	        if ($validator->fails()){

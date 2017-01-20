@@ -28,7 +28,7 @@ class CrearTablaContrato extends Migration
             $table->date('Fecha_Firma');
             $table->date('Fecha_Inicio');
             $table->date('Fecha_Fin');
-            $table->date('Fecha_Terminacion_Anticipada');
+            $table->date('Fecha_Terminacion_Anticipada')->nullable();
             $table->integer('Meses_Duracion');
             $table->integer('Dias_Duracion');
             $table->string('Otra_Duracion')->nullable();

@@ -789,14 +789,14 @@
                                             <input class="form-control " type="text"  id="FechaFinAnticipadoV" name="FechaFinAnticipadoV" readonly>
                                         </div>
                                     </div>
-                                    <div class="row">
+                                    <!--<div class="row">
                                         <div class="form-group col-md-2">
                                             <label for="inputEmail" class="control-label">Fecha de Final Contrato</label>
                                         </div>
                                         <div class="form-group col-md-4">
                                             <input class="form-control " type="text"  id="FechaFinContratoV" name="FechaFinContratoV" readonly>
                                         </div>
-                                    </div>
+                                    </div>-->
                                 </li>
                                 <li class="list-group-item">
                                     <h4 class="modal-title" id="myModalLabel">Datos de la Duración</h4>
@@ -1147,7 +1147,7 @@
                                             </div>    
                                         </div>
                                     </div>
-                                    <div class="row">
+                                    <!--<div class="row">
                                         <div class="form-group col-md-2">
                                             <label for="inputEmail" class="control-label">Fecha de Final Contrato</label>
                                         </div>
@@ -1157,7 +1157,7 @@
                                             <span class="input-group-addon btn"><i class="glyphicon glyphicon-calendar"></i> </span>
                                             </div>    
                                         </div>
-                                    </div>
+                                    </div>-->
                                 </li>
                                 <li class="list-group-item">
                                     <h4 class="modal-title" id="myModalLabel">Datos de la Duración</h4>

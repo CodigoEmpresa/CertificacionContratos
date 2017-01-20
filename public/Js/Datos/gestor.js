@@ -26,6 +26,11 @@ $(function(){
   $('#FechaReinicioSuspencionDateM').datepicker({format: 'yyyy-mm-dd', autoclose: true,});
   $('#FechaCesionDateM').datepicker({format: 'yyyy-mm-dd', autoclose: true,});
 
+  $('#FechaFirmaDateM').datepicker({format: 'yyyy-mm-dd', autoclose: true,});
+  $('#FechaInicioDateM').datepicker({format: 'yyyy-mm-dd', autoclose: true,});
+  $('#FechaFinAnticipadoDateM').datepicker({format: 'yyyy-mm-dd', autoclose: true,});
+  $('#FechaFinDateM').datepicker({format: 'yyyy-mm-dd', autoclose: true,});
+
 
 	$('#datosTabla').DataTable({
         retrieve: true,

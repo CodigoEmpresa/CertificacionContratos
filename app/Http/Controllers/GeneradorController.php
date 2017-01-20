@@ -22,14 +22,9 @@ class GeneradorController extends Controller
 
 	private $pdf;
 
-    public function __construct(Pdf $pdf/*, PersonaInterface $repositorio_personas*/)
+    public function __construct(Pdf $pdf)
     {
         $this->pdf = $pdf;
-
-       /* if (isset($_SESSION['Usuario']))
-			$this->Usuario = $_SESSION['Usuario'];
-
-		$this->repositorio_personas = $repositorio_personas;*/
     }
 
     public function index()
@@ -137,14 +132,55 @@ class GeneradorController extends Controller
 
 		$Dia_Actual_Letra = $conversor->to_word($listaFecha[1]);
 
-		if(count($Contrato->Obligacion) > 0){
-			$Obligaciones = array();
+        /************ADICIONES**************/
+        $Adiciones = array();
+        if(count($Contrato->Adicion) > 0){            
+            foreach ($Contrato->Adicion as $key => $Adicion) {
+                array_push($Adiciones, array("Numero"=>$Adicion['Numero_Adicion'], "Valor_Adicion"=>'$ '.number_format( $Adicion['Valor_Adicion'], 0, '.', '.' )));
+            }
+        }
+        /**********************************/
+
+        /************PRORROGAS**************/
+        $Prorrogas = array();
+        $Fecha_Fin_Prorroga = '0000-00-00';
+        if(count($Contrato->Prorroga) > 0){            
+            foreach ($Contrato->Prorroga as $key => $Prorroga) {
+                array_push($Prorrogas, array("Numero"=>$Prorroga['Numero_Prorroga'], 
+                                             "Meses"=>$Prorroga['Meses'], 
+                                             "Meses_Letra" => ($conversor->to_word($Prorroga['Meses'])), 
+                                             "Dias"=>$Prorroga['Dias'],
+                                             "Dias_Letra"=>($conversor->to_word($Prorroga['Dias']))
+                                            ));
+            }
+            $Fecha_Fin_Prorroga = $Prorroga['Fecha_Fin'];
+        }
+        /**********************************/
+
+        /************SUSPENCIONES**************/
+        $Suspenciones = array();
+        $Fecha_Fin_Suspencion = '0000-00-00';
+        if(count($Contrato->Suspencion) > 0){            
+            foreach ($Contrato->Suspencion as $key => $Suspencion) {
+                array_push($Suspenciones, array("Numero"=>$Suspencion['Numero_Suspencion'], 
+                                                "Meses"=>$Suspencion['Meses'], 
+                                                "Meses_Letra"=>($conversor->to_word($Suspencion['Meses'])), 
+                                                "Dias"=>$Suspencion['Dias'], 
+                                                "Dias_Letra"=>($conversor->to_word($Suspencion['Dias'])),                                              
+                                                "Fecha_Inicio"=>$Suspencion['Fecha_Inicio'], 
+                                                "Fecha_Fin"=>$Suspencion['Fecha_Fin'], 
+                                                "Fecha_Reinicio"=>$Suspencion['Fecha_Reinicio'], 
+                                            ));
+                $Fecha_Fin_Suspencion = $Suspencion['Fecha_Fin'];
+
+            }
+        }
+        /**********************************/
+        $Obligaciones = array();
+		if(count($Contrato->Obligacion) > 0){			
 			foreach ($Contrato->Obligacion as $key => $Obligacion) {
 				array_push($Obligaciones, array("Numero"=>$Obligacion['Numero_Obligacion'], "Obligacion"=>$Obligacion['Objeto_Obligacion']));
 			}
-		}else{
-			$Obligaciones = array();
-			array_push($Obligaciones, array("Numero"=>'1', "Obligacion"=>'No hay'));
 		}
 
 		if(count($Contrato->Cesion) > 0){
@@ -158,6 +194,8 @@ class GeneradorController extends Controller
 										"Valor_Cedido" => number_format( $CesionesUlt['Valor_Cedido'], 0, '.', '.' ),
 										"Dias" => $CesionesUlt['Dias'],
 										"Fecha_Cesion" => $CesionesUlt['Fecha_Cesion']));
+
+            //$Fecha_Fin_Cesion =$CesionesUlt['Fec'];
 		}else{
 			$Cesiones = array();
 		}
@@ -169,7 +207,25 @@ class GeneradorController extends Controller
 			$Tipo_Documento_Representante = 'No hay';
 		}
 
-		
+        if($Contrato['Fecha_Terminacion_Anticipada'] == '0000-00-00'){
+            $Fecha_Terminacion_Anticipada = 0;
+            $Fecha_Fin_Contrato = $Contrato['Fecha_Fin'];
+        }else{
+            $Fecha_Terminacion_Anticipada = $Contrato['Fecha_Terminacion_Anticipada'];
+            $Fecha_Fin_Contrato = $Contrato['Fecha_Terminacion_Anticipada'];
+        }		
+
+        if($Fecha_Fin_Contrato > $Fecha_Fin_Prorroga){
+            $F1 = $Fecha_Fin_Contrato;
+        }else{
+            $F1 = $Fecha_Fin_Prorroga;
+        }
+
+        if($F1 > $Fecha_Fin_Suspencion){
+            $F2 = $F1;
+        }else{
+            $F2 = $Fecha_Fin_Suspencion;
+        }
 
 		$data =  [
             'Tipo_Contrato'      => $Contrato->TipoContrato['Nombre_Tipo_Contrato'] ,
@@ -187,19 +243,29 @@ class GeneradorController extends Controller
             'Meses_Letra'     =>$Meses_Letra,
             'Dias_Duracion'     =>$Contrato['Dias_Duracion'],
             'Dias_Letra'     =>$Dias_Letra,
-            'Fecha_Fin'     =>$Contrato['Fecha_Fin'],
+            'Fecha_Fin'     =>$F2,
             'Dia_Actual_Letra' => $Dia_Actual_Letra,
             'Anio_Actual' => $listaFecha[3],
             'Dia_Actual' => $listaFecha[1],
             'Fecha_A' => $Fecha_A,
             'Obligaciones' => $Obligaciones,
+            'CountObligaciones' => count($Obligaciones),
             'Cesiones' => $Cesiones,
             'CountCesiones' => count($Cesiones),
             'Nombre_Representante' => $Contrato['Nombre_Representante'],
             'Cedula_Representante' => $Contrato['Cedula_Representante'],
             'Tipo_Documento_Representante' => $Tipo_Documento_Representante,
             'Dv' => $Contrato['Dv'],
+            'Fecha_Terminacion_Anticipada' => $Fecha_Terminacion_Anticipada,
+            'Adiciones' => $Adiciones,
+            'CountAdiciones' => count($Adiciones),
+            'Prorrogas' => $Prorrogas,
+            'CountProrrogas' => count($Prorrogas),
+            'Suspenciones' => $Suspenciones,
+            'CountSuspenciones' => count($Suspenciones),
         ];
+
+        //dd($data);
         return $data;
 	}
 }
