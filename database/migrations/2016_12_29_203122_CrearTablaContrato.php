@@ -24,7 +24,7 @@ class CrearTablaContrato extends Migration
             $table->string('Nombre_Representante')->nullable();
             $table->integer('Tipo_Documento_Representante')->nullable();
             $table->string('Cedula_Representante')->nullable();
-            $table->string('Objeto');
+            $table->text('Objeto');
             $table->date('Fecha_Firma');
             $table->date('Fecha_Inicio');
             $table->date('Fecha_Fin');
@@ -33,7 +33,7 @@ class CrearTablaContrato extends Migration
             $table->integer('Dias_Duracion');
             $table->string('Otra_Duracion')->nullable();
             $table->integer('Valor_Inicial');
-            $table->integer('Valor_Mensual');
+            $table->string('Valor_Mensual');
             //$table->date('fecha_Final_CTO');
             $table->timestamps();
         });

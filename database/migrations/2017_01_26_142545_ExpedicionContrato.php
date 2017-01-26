@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CrearTablaObligacion extends Migration
+class ExpedicionContrato extends Migration
 {
     /**
      * Run the migrations.
@@ -12,12 +12,12 @@ class CrearTablaObligacion extends Migration
      */
     public function up()
     {
-        Schema::create('obligacion', function (Blueprint $table) {
+        Schema::create('expedicion_contrato', function (Blueprint $table) {
 
             $table->increments('Id');
             $table->integer('Contrato_Id')->unsigned();
-            $table->integer('Numero_Obligacion');
-            $table->text('Objeto_Obligacion');
+            $table->string('Nombre_Expedicion');
+            $table->integer('Conteo');
             $table->timestamps();
 
             //$table->foreign('Contrato_Id')->references('Id')->on('contrato');
@@ -32,9 +32,9 @@ class CrearTablaObligacion extends Migration
      */
     public function down()
     {
-        Schema::table('obligacion', function(Blueprint $table){
-            $table->dropForeign('Contrato_Id');
+        Schema::table('expedicion_contrato', function(Blueprint $table){
+            //$table->dropForeign('Contrato_Id');
         });    
-        Schema::drop('obligacion');
+        Schema::drop('expedicion_contrato');
     }
 }

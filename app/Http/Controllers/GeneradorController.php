@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\DB;
 
 use App\Models\TipoDocumento;
 use App\Models\Contrato;
+use App\Models\ExpedicionContrato;
 
 class GeneradorController extends Controller
 {
@@ -90,7 +91,8 @@ class GeneradorController extends Controller
 
 	public function DescargarContrato(Request $request, $Contrato_Id){
 		$data = $this->getData($Contrato_Id);	
-		$Contrato = Contrato::find($Contrato_Id);			
+		$Contrato = Contrato::find($Contrato_Id);	
+
         if($Contrato['Tipo_Documento'] == 7){
         	//Juridico
         	$html =  \View::make('DATOS.juridico', compact('data'))->render();
@@ -99,7 +101,6 @@ class GeneradorController extends Controller
         	//Natural
         	$html =  \View::make('DATOS.natural', compact('data'))->render();
         	return $this->pdf->load($html)->show();
-
         }
         
 	}
@@ -132,11 +133,14 @@ class GeneradorController extends Controller
 
 		$Dia_Actual_Letra = $conversor->to_word($listaFecha[1]);
 
+        $valorAdiciones = 0;
+
         /************ADICIONES**************/
         $Adiciones = array();
         if(count($Contrato->Adicion) > 0){            
             foreach ($Contrato->Adicion as $key => $Adicion) {
                 array_push($Adiciones, array("Numero"=>$Adicion['Numero_Adicion'], "Valor_Adicion"=>'$ '.number_format( $Adicion['Valor_Adicion'], 0, '.', '.' )));
+                $valorAdiciones = $valorAdiciones+$Adicion['Valor_Adicion'];
             }
         }
         /**********************************/
@@ -227,6 +231,13 @@ class GeneradorController extends Controller
             $F2 = $Fecha_Fin_Suspencion;
         }
 
+        $ConteoExpedicion = (count(ExpedicionContrato::where('Contrato_Id', $Contrato_Id)->get()))+1;
+        $ExpedicionContrato = new ExpedicionContrato;
+        $ExpedicionContrato->Contrato_Id = $Contrato->Id;
+        $ExpedicionContrato->Nombre_Expedicion = $Contrato->Id.'-'.$Contrato->Numero_Contrato.'-'.$ConteoExpedicion;
+        $ExpedicionContrato->Conteo = $ConteoExpedicion;
+        $ExpedicionContrato->save();
+
 		$data =  [
             'Tipo_Contrato'      => $Contrato->TipoContrato['Nombre_Tipo_Contrato'] ,
             'Cedula'   => number_format( $Contrato['Cedula'], 0, '.', '.' ),
@@ -263,6 +274,8 @@ class GeneradorController extends Controller
             'CountProrrogas' => count($Prorrogas),
             'Suspenciones' => $Suspenciones,
             'CountSuspenciones' => count($Suspenciones),
+            'ValorFinal' => number_format( ($valorAdiciones + $Contrato['Valor_Inicial']), 0, '.', '.' ),
+            'Expedicion' => $ExpedicionContrato->Nombre_Expedicion,
         ];
 
         //dd($data);

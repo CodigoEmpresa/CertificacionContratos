@@ -27,14 +27,14 @@
                                 <br>
                                 <justify>
                                     <p>
-                                        Para la solicitud del certificado debe digitar su número de identificación y especificar el tipo de documento, en dado caso que sea una empresa especifíquelo colocando el NIT sin el número de verificación.
+                                        Para la solicitud del certificado debe seleccionar el tipo de documento, a continuación digite el número de identificación (En dado caso que sea una empresa especifíquelo colocando el NIT sin el número de verificación), y por último el año del contrato.
                                     </p>
                                 </justify>
                             </div>
                             <br><br>
                             <div class="row">                                        
                                 <div class="form-group col-md-1">
-                                    <label for="inputEmail" class="control-label">Tipo de documento</label>
+                                    <label for="inputEmail" class="control-label">Tipo de documento:</label>
                                 </div>
                                 <div class="form-group col-md-3">
                                     <select name="Tipo_Documento" id="Tipo_Documento" class="form-control">
@@ -46,14 +46,14 @@
                                 </div>                                    
 
                                 <div class="form-group col-md-1">
-                                    <label id="Numero_Cedula_Inicial" for="inputEmail" class="control-label">Número de documento</label>
+                                    <label id="Numero_Cedula_Inicial" for="inputEmail" class="control-label">Número documento:</label>
                                 </div>
                                 <div class="form-group col-md-3">
                                     <input type="text" class="form-control"  placeholder="Número de documento" id="Documento" name="Documento">
                                 </div>
 
                                 <div class="form-group col-md-1">
-                                    <label for="inputEmail" class="control-label">Año</label>
+                                    <label for="inputEmail" class="control-label">Año contrato:</label>
                                 </div>
                                 <div class="form-group col-md-3">
                                     <div class="input-group date form-control" id="AnioDate" style="border: none;">

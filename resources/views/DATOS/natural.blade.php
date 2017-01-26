@@ -4,25 +4,26 @@
   <meta charset="UTF-8">
   <title>Certificación contratistas - persona natural</title>
   <link rel="stylesheet" href="public/Css/pdf.css" media="screen">
-
-  <style>
-   
-  </style>
-  
 </head>
 <body>
+  <div class="header">
+    Página <span class="pagenum"></span>.<br>
+    CERTIFICADO DE EXPEDICIÓN No {{$data['Expedicion']}}
+    ESTE CERTIFICADO ESTA FIRMADO DIGILTAMENTE, PARA VERIFICAR SU VALIDEZ COMUNÍQUESE CON EL IDRD.
+    <br><br><br><br><br>
+  </div>
   <center>
     <p>
-      <img src="public/Img/cabecera.png">
+      <img class="" src="public/Img/cabecera.png">
     </p>
     <br>
-    <span class="Neg">      
-      EL  SUSCRITO  RESPONSABLE DEL  ÁREA  APOYO  A  LA  CONTRATACION DEL INSTITUTO DISTRITAL PARA LA RECREACION Y EL DEPORTE. N.I.T. - IDRD: 860.061.099 - 1
+    <span class="Neg Titulos">      
+      EL  SUSCRITO  RESPONSABLE DEL  ÁREA  APOYO  A  LA  CONTRATACIÓN DEL INSTITUTO DISTRITAL PARA LA RECREACIÓN Y EL DEPORTE. N.I.T. - IDRD: 860.061.099 - 1
       <br><br>
       HACE CONSTAR
-    </span>
+    </span>    
   </center>
-  <br>
+  <br><br>
   @if($data['CountCesiones'] > 0)
         <p class="TextoInicio">
           Que revisada la documentación que reposa en los archivos de  la entidad, se establece que el IDRD suscribió EL <span class="Mayus Vino">{{$data['Tipo_Contrato']}}</span>, que se relaciona a continuación, con <span class="Mayus Vino">{{$data['Nombre_Contratista']}}</span> identificado (a) con <span class="Mayus Vino">{{$data['Tipo_Documento']}}</span> No. <span class="Mayus Vino">{{$data['Cedula']}}</span>, quien lo cede a <span class="Mayus Vino">{{$data['Cesiones'][0]['Nombre_Cesionario']}}</span> identificado (a) con <span class="Mayus Vino">{{$data['Cesiones'][0]['Tipo_Documento_Cesionario']}}</span> No. <span class="Mayus Vino">{{$data['Cesiones'][0]['Cedula_Cesionario']}}</span>, con las siguientes características:
@@ -34,14 +35,18 @@
         </p>      
       @endif   
       <br>
-      <div class="Objeto">
-        OBJETO:  <span class="Mayus Vino">{{$data['Objeto']}}</span>
-      </div> 
       <div class="TableDiv">
         <div class="table">
           <div class="table-row titulo">
             <div class="table-tit">No. Contrato</div>
             <div class="table-cell" style="background-color: #A4A4A4;"><span class="Mayus Vino">{{$data['Numero_Contrato']}}</span> de <span class="Mayus Vino">{{$data['Anio']}}</span></div>
+          </div>
+
+          <div class="table-row">
+            <div class="table-cell Neg">
+              OBJETO</span>
+            </div>
+            <div class="table-cell Vino Mayus">{{$data['Objeto']}}</div>
           </div>
 
           <div class="table-row">
@@ -79,7 +84,7 @@
           </div>
 
           <div class="table-row">
-            <div class="table-cell Neg">FECHA DE TERMINACION</div>
+            <div class="table-cell Neg">FECHA DE TERMINACIÓN</div>
             <div class="table-cell Vino">
               {{$data['Fecha_Fin']}}
             </div>
@@ -87,18 +92,19 @@
 
           @if($data['Fecha_Terminacion_Anticipada'] != 0)
             <div class="table-row">
-              <div class="table-cell Neg">FECHA DE TERMINACION ANTICIPADA</div>
+              <div class="table-cell Neg">FECHA DE TERMINACIÓN ANTICIPADA</div>
               <div class="table-cell Vino">
                 {{$data['Fecha_Terminacion_Anticipada']}}
               </div>
             </div>
-          @endif
+          @endif        
 
           @if($data['CountAdiciones'] > 0)
             <div class="table-row">
               <div class="table-tit Neg Cesion">
                 ADICIONES
               </div>
+
               <div class="table-cell Vino">
                 <div class="tableO">
                   @foreach($data['Adiciones'] as $Adiciones)              
@@ -111,7 +117,7 @@
                   </div>
                 </div>
                 @endforeach
-                </div>            
+                </div>     
               </div>
             </div>
           @endif
@@ -119,7 +125,7 @@
           @if($data['CountProrrogas'] > 0)
             <div class="table-row">
               <div class="table-tit Neg Cesion">
-                PRORROGAS
+                PRÓRROGAS
               </div>
               <div class="table-cell Vino">
                 <div class="tableO">
@@ -133,7 +139,7 @@
                   </div>
                 </div>
                 @endforeach
-                </div>            
+                </div>     
               </div>
             </div>
           @endif
@@ -155,7 +161,7 @@
                   </div>
                 </div>
                 @endforeach
-                </div>            
+                </div>     
               </div>
             </div>
           @endif
@@ -164,7 +170,7 @@
               @foreach($data['Cesiones'] as $Cesiones)              
                 <div class="table-row">
                   <div class="table-tit Neg Cesion">FECHA DE CESIÓN</div>   
-                  <div class="table-tit Neg Vino">{{$Cesiones['Fecha_Cesion']}}</div>
+                  <div class="table-cell Vino" style="background-color: #A4A4A4;">{{$Cesiones['Fecha_Cesion']}}</div>
                 </div>
                 <div class="table-row">
                   <div class="table-cell Neg">VALOR CEDIDO</div>
@@ -173,40 +179,74 @@
               @endforeach
           @endif
 
-          @if($data['CountObligaciones'] > 0)           
           <div class="table-row">
-            <div class="table-cell Neg">
-              OBLIGACIONES ESPECIFICAS
+            <div class="table-cell Neg ">VALOR FINAL</div>   
+            <div class="table-cell Vino">${{$data['ValorFinal']}}</div>
+          </div>
+
+        </div>
+    </div>
+
+      @if($data['CountObligaciones'] > 0)      
+      <div class="TableDiv">
+        <div class="table"> 
+          <div class="table-row">
+            <div class="table-tit Neg">
+              OBLIGACIONES ESPECÍFICAS
             </div>
             <div class="table-cell Vino">
-              <div class="tableO">
-                @foreach($data['Obligaciones'] as $Obligaciones)              
-                <div class="table-rowO">
-                  <div class="table-cellOT Neg">
-                    {{ $Obligaciones['Numero']}}.
-                  </div>
-                  <div class="table-cellO Vino">
-                    {{ $Obligaciones['Obligacion'] }}.
-                  </div>
-                </div>
-                @endforeach
-              </div>            
+              <div class="tableO"></div>
             </div>
           </div>
-          @endif
         </div>
-      </div>  
-      <br>
+      </div>    
+
+        @foreach($data['Obligaciones'] as $Obligaciones) 
+        <div class="TableDiv">
+          <div class="tableOX">            
+              <div class="tableO">     
+                <div class="table-rowO">   
+                  <div class="table-titO Neg">OBLIGACIONES ESPECÍFICAS</div>
+                  <div class="table-cell Vino">                     
+                    <div class="tableO">
+                      <div class="table-rowO">
+                        <div class="table-cellOT Neg">
+                          {{ $Obligaciones['Numero']}}.
+                        </div>
+                        <div class="table-cellO Vino">
+                          {{ $Obligaciones['Obligacion'] }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>  
+              </div>   
+            </div>
+        </div>    
+        @endforeach
+        <div class="TableDiv" style="">
+          <div class="table">          
+            <div class="table-row">
+              <div class="table-tit Neg">
+              </div>
+              <div class="table-cell Vino">
+                <div class="tableO"></div>
+              </div>
+            </div>
+          </div>
+        </div>  
+      @endif
+      <br><br><br>
       <div class="TextoInicio">
         <span>
           Para constancia se expide a solicitud de la parte interesada en Bogotá, D.C., a los <span class="Minus Vino">{{$data['Dia_Actual_Letra']}}</span> (<span class="Minus Vino">{{$data['Dia_Actual']}}</span>) días del mes de <span class="Minus Vino">{{$data['Fecha_A']}}</span> de <span class="Minus Vino">{{$data['Anio_Actual']}}</span>.
         </span>
         <br><br>
-        <img src="public/Img/firma.png">
+        <img class="Firma" src="public/Img/firma.png">
       </div>
       <br><br>
-      <div class="footer">
-        <img src="public/Img/piepaginapdf.jpg">
-      </div>   
+      <div class="footer">    
+          <img src="public/Img/piepaginapdf.jpg">
+      </div>
   </body>
 </html>

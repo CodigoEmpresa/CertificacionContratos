@@ -181,7 +181,7 @@ class GestorDatosController extends Controller
 				  "Tipo_Documento_Representante" => array('required_if:Tipo_Documento_Inicial,7'),
 				  "Nombre_Representante" => array('required_if:Tipo_Documento_Inicial,7'),
 				  "Cedula_Representante" => $varRep,
-				  "Objeto_Contrato" => "required|between:1,100",
+				  "Objeto_Contrato" => "required",
 				  "FechaFirma" => "required|date",
 				  "FechaInicio" => "required|date",
 				  "FechaFin" => "required|date",
@@ -297,7 +297,9 @@ class GestorDatosController extends Controller
 					}
 	        	}
 
-	        	return response()->json(array('status' => 'success', 'Mensaje' => 'El contrato ha sido agregado con éxito!'));
+	        	return response()->json(array('status' => 'success', 'Mensaje' => 'El contrato ha sido agregado con éxito!', 'Id' => $Contrato->Id, 
+	        								  'Cedula' => $Contrato->Cedula, 'Nombre' => $Contrato->Nombre_Contratista, 'Numero' => $Contrato->Numero_Contrato,
+	        								  'Fecha' => $Contrato->Fecha_Inicio));
 			}
 		}else{
 			return response()->json(["Sin acceso"]);
@@ -352,7 +354,7 @@ class GestorDatosController extends Controller
 				  "Nombre_RepresentanteM" => array('required_if:Tipo_Documento_InicialM,7'),
 				  "Tipo_Documento_RepresentanteM" => array('required_if:Tipo_Documento_InicialM,7'),
 				  "Cedula_RepresentanteM" => $varRep,
-				  "Objeto_ContratoM" => "required|between:1,100",
+				  "Objeto_ContratoM" => "required",
 				  "FechaFirmaM" => "required|date",
 				  "FechaInicioM" => "required|date",
 				  "FechaFinM" => "required|date",

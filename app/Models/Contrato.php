@@ -39,4 +39,8 @@ class Contrato extends Model
     public function TipoDocumento(){
         return $this->belongsTo('App\Models\TipoDocumento', 'Tipo_Documento');
     }
+
+    public function ExpedicionContrato(){
+        return $this->hasMany('App\Models\ExpedicionContrato', 'Contrato_Id');
+    }
 }
