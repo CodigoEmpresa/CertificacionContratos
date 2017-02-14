@@ -3,8 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <title>Certificación contratistas-persona jurídica</title>
-  <link rel="stylesheet" href="public/Css/pdf.css" media="screen">
+  {!! Html::style('public/Css/pdf.css') !!}
 </head>
+<footer>
+  <img class="PiePag" src="http://www.idrd.gov.co/SIM/CertificacionContratos/public/Img/piepaginapdf.jpg">
+</footer>
 <body>
   <div class="header">
     Página <span class="pagenum"></span>.<br>
@@ -14,7 +17,7 @@
   </div>
   <center>
     <p>
-      <img src="public/Img/cabecera.png">
+      <img class="" src="http://www.idrd.gov.co/SIM/CertificacionContratos/public/Img/cabecera.png">
     </p>
     <br>
     <span class="Neg">      
@@ -232,11 +235,7 @@
         Para constancia se expide a solicitud de la parte interesada en Bogotá, D.C., a los <span class="Minus Vino">{{$data['Dia_Actual_Letra']}}</span> (<span class="Minus Vino">{{$data['Dia_Actual']}}</span>) días del mes de <span class="Minus Vino">{{$data['Fecha_A']}}</span> de <span class="Minus Vino">{{$data['Anio_Actual']}}</span>.
       </span>
       <br><br>
-      <img src="public/Img/firma.png">
+      <img class="" src="http://www.idrd.gov.co/SIM/CertificacionContratos/public/Img/firma.png">
     </div>
-    <br><br>
-    <div class="footer">    
-        <img src="public/Img/piepaginapdf.jpg">
-    </div>  
   </body>
 </html>

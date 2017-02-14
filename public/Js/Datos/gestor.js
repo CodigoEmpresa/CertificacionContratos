@@ -1,4 +1,37 @@
 $(function(){
+
+$('#AnioConsulta').on('change', function(){
+  $('#TablaDat').hide('slow');
+  $('#Esperar').show('slow');
+  $.get("getContratoDate/"+$(this).val(), function (ContratoDate) {
+    var t = $('#datosTabla').DataTable();
+     t.clear();
+     if(ContratoDate.length > 0){
+            $.each(ContratoDate, function(i, e){
+              t.row.add( [
+                  e['Cedula'],                        
+                              e['Nombre_Contratista'],                            
+                              e['Numero_Contrato'],
+                              e['Fecha_Inicio'],
+                              '<button type="button" class="btn btn-info" data-funcion="verContrato" value="'+e['Id']+'" >'+
+                                  '<span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span>'+
+                              '</button>'+
+                              '<button type="button" class="btn btn-primary" data-funcion="modificarContrato" value="'+e['Id']+'" >'+
+                                  '<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>'+
+                              '</button>'+
+                              '<button type="button" class="btn btn-danger"  data-funcion="eliminarContrato" value="'+e['Id']+'" >'+
+                                  '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>'+
+                              '</button>',
+              ] ).draw( false );
+            });
+     }else{
+       t.draw();
+     }
+  }).done(function(){
+    $('#TablaDat').show('slow');
+    $('#Esperar').hide('slow');   
+  });
+});
   //$(document).ready(function() {
       var table = $('#datosTabla').DataTable();
    

@@ -44,6 +44,13 @@ class TipoContratoSeeder extends Seeder
             ['Nombre_Tipo_Contrato' => 'ORDEN DE COMPRA'],
             ['Nombre_Tipo_Contrato' => 'ORDEN DE COMPRA-ACUERDO MARCO'],
             ['Nombre_Tipo_Contrato' => 'ORDEN DE COMPRAVENTA'],
+            ['Nombre_Tipo_Contrato' => 'CONTRATO DE ALQUILER'],
+            ['Nombre_Tipo_Contrato' => 'CONTRATO DE ARRENDAMIENTO'],
+            ['Nombre_Tipo_Contrato' => 'CONVENIO'],
+            ['Nombre_Tipo_Contrato' => 'CONVENIO COMERCIAL'],
+            ['Nombre_Tipo_Contrato' => 'CONVENIO DE CORRESPONSABILIDAD'],
+            ['Nombre_Tipo_Contrato' => 'CONTRATO DE LICENCIAMIENTO DE PAGO DE DERECHOS DE AUTOR'],
+            ['Nombre_Tipo_Contrato' => 'CONVENIO DE ACUERDO DE ADOPCIÓN DE PARQUE'],
         ]);
     }
 }

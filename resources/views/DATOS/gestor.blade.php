@@ -24,8 +24,29 @@
                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Agregar contrato
             </button>
         </div>
-        <br><br>            
-        <div class="panel-body">
+        <br><br>  
+        <div class="row">                                        
+         <div class="form-group col-md-4">
+                 <label for="inputEmail" class="control-label">Seleccione un año:</label>
+             </div>
+             <div class="form-group col-md-8">
+             <select name="AnioConsulta" id="AnioConsulta" class="form-control">
+                <option value="">Seleccionar</option>      
+                <option value="2013">2013</option>      
+                <option value="2014">2014</option>      
+                <option value="2015">2015</option>      
+                <option value="2016">2016</option>      
+                <option value="2017">2017</option>                            
+                <option value="2018">2018</option>                                            
+         </select>          
+        </div>
+    </div>
+        <div class="panel-body" id="Esperar" style="display:none;">
+        <div class="container" id="loading" >
+            <center><button class="btn btn-lg btn-default"><span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> Espere...</button></center>
+        </div>
+       </div>
+        <div class="panel-body" id="TablaDat">
             <table id="datosTabla" class="display nowrap" cellspacing="0" width="100%">
                 <thead>
                     <tr>
@@ -37,27 +58,7 @@
                     </tr>
                 </thead>
                 <tbody>    
-                    @foreach($Contrato as $Contratos)
-                        <tr>
-                            <td>{{ $Contratos['Cedula']}}</td>                            
-                            <td>{{ $Contratos['Nombre_Contratista'] }}</td>
-                            <td>{{ $Contratos['Numero_Contrato'] }}</td>
-                            <td>{{ $Contratos['Fecha_Inicio'] }}</td>
-                            <td>                                
-                                <button type="button" class="btn btn-info"  data-funcion="verContrato" value="{{$Contratos['Id']}}" >
-                                    <span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span>
-                                </button>
-
-                                <button type="button" class="btn btn-primary" data-funcion="modificarContrato" value="{{$Contratos['Id']}}" >
-                                    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-                                </button>
-
-                                <button type="button" class="btn btn-danger" data-funcion="eliminarContrato" value="{{$Contratos['Id']}}" >
-                                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                                </button>                                
-                            </td>
-                        </tr>
-                    @endforeach                    
+                              
                 </tbody> 
             </table>
         </div>

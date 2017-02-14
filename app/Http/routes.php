@@ -31,6 +31,7 @@ session_start();
 	Route::get('descargarContrato/{Contrato_Id}','GeneradorController@DescargarContrato');
 	Route::get('datos/{tipo_documento}/{documento}/{anio}','GeneradorController@Datos');
 	Route::get('getContratoOne/{id_contrato}','GestorDatosController@GetContratoOne');		
+	Route::get('getContratoDate/{anio}','GestorDatosController@GetContratoDate');		
 
 
 

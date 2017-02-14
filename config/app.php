@@ -164,7 +164,7 @@ return [
         Idrd\Usuarios\UsuariosServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
 
-        Vsmoraes\Pdf\PdfServiceProvider::class
+        Barryvdh\DomPDF\ServiceProvider::class,
 
     ],
 
@@ -215,7 +215,7 @@ return [
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class, 
 
-        'PDF' => 'Vsmoraes\Pdf\PdfFacade',
+        'PDF' => Barryvdh\DomPDF\Facade::class,
 
     ],
 

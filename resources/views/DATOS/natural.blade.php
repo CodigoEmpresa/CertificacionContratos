@@ -2,9 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Certificación contratistas - persona natural</title>
-  <link rel="stylesheet" href="public/Css/pdf.css" media="screen">
+  <title>Certificación contratistas - persona natural</title> 
+  {!! Html::style('public/Css/pdf.css') !!}
 </head>
+<footer>
+  <img class="PiePag" src="http://www.idrd.gov.co/SIM/CertificacionContratos/public/Img/piepaginapdf.jpg">
+  </footer>
 <body>
   <div class="header">
     Página <span class="pagenum"></span>.<br>
@@ -14,7 +17,7 @@
   </div>
   <center>
     <p>
-      <img class="" src="public/Img/cabecera.png">
+      <img src="http://www.idrd.gov.co/SIM/CertificacionContratos/public/Img/cabecera.png">
     </p>
     <br>
     <span class="Neg Titulos">      
@@ -203,13 +206,13 @@
 
         @foreach($data['Obligaciones'] as $Obligaciones) 
         <div class="TableDiv">
-          <div class="tableOX">            
-              <div class="tableO">     
-                <div class="table-rowO">   
+          <!--<div class="tableOX">         -->   
+              <div class="table">     
+                <div class="table-row">   
                   <div class="table-titO Neg">OBLIGACIONES ESPECÍFICAS</div>
                   <div class="table-cell Vino">                     
-                    <div class="tableO">
-                      <div class="table-rowO">
+                    <div class="table">
+                      <div class="table-row">
                         <div class="table-cellOT Neg">
                           {{ $Obligaciones['Numero']}}.
                         </div>
@@ -221,7 +224,7 @@
                   </div>
                 </div>  
               </div>   
-            </div>
+            <!--</div>-->
         </div>    
         @endforeach
         <div class="TableDiv" style="">
@@ -242,11 +245,8 @@
           Para constancia se expide a solicitud de la parte interesada en Bogotá, D.C., a los <span class="Minus Vino">{{$data['Dia_Actual_Letra']}}</span> (<span class="Minus Vino">{{$data['Dia_Actual']}}</span>) días del mes de <span class="Minus Vino">{{$data['Fecha_A']}}</span> de <span class="Minus Vino">{{$data['Anio_Actual']}}</span>.
         </span>
         <br><br>
-        <img class="Firma" src="public/Img/firma.png">
+        <img class="" src="http://www.idrd.gov.co/SIM/CertificacionContratos/public/Img/firma.png">
       </div>
       <br><br>
-      <div class="footer">    
-          <img src="public/Img/piepaginapdf.jpg">
-      </div>
   </body>
 </html>

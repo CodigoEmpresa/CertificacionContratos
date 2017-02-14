@@ -10,7 +10,9 @@ use Idrd\Usuarios\Repo\PersonaInterface;
 use Validator;
 use Exception;
 
-use Vsmoraes\Pdf\Pdf;
+//use Vsmoraes\Pdf\Pdf;
+use Barryvdh\DomPDF\Facade as PDF;
+
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
 
@@ -23,10 +25,10 @@ class GeneradorController extends Controller
 
 	private $pdf;
 
-    public function __construct(Pdf $pdf)
+    /*public function __construct(Pdf $pdf)
     {
         $this->pdf = $pdf;
-    }
+    }*/
 
     public function index()
 	{
@@ -95,12 +97,16 @@ class GeneradorController extends Controller
 
         if($Contrato['Tipo_Documento'] == 7){
         	//Juridico
-        	$html =  \View::make('DATOS.juridico', compact('data'))->render();
-        	return $this->pdf->load($html)->show();
+        	//$html =  \View::make('DATOS.juridico', compact('data'))->render();
+        	//return $this->pdf->load($html)->show();
+            $pdf = PDF::loadView('DATOS.juridico', compact('data'));
+            return $pdf->download('CertificadoPersonaJuridica.pdf');
         }else {
         	//Natural
-        	$html =  \View::make('DATOS.natural', compact('data'))->render();
-        	return $this->pdf->load($html)->show();
+        	/*$html =  \View::make('DATOS.natural', compact('data'))->render();
+        	return $this->pdf->load($html)->show();*/
+            $pdf = PDF::loadView('DATOS.natural', compact('data'));
+            return $pdf->download('CertificadoPersonaNatural.pdf');
         }
         
 	}

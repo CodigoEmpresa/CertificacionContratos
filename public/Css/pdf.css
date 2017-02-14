@@ -46,7 +46,6 @@ p{
 }
 
 .TableInt td, tr, th, table  {
-	border:none;
     text-align: left; 
 }
 
@@ -94,7 +93,6 @@ p{
 .tableOX{
 	width: 90%;
 	margin: 0 auto;
-	/*border-bottom: 1px solid black; */
 	border-left: 1px solid black; 
 }
 
@@ -107,7 +105,7 @@ p{
 
 .table-rowO {
 	display: table-row;
-	border-bottom: 1px solid black; 
+	border-bottom: none; 
 }
 
 .table-titO{
@@ -116,11 +114,11 @@ p{
 	width:211px !important;
 	color:#ffffff;
 	font-weight: 800;
+	border: 1px solid black; 
 }
 
 .table-cellO {
 	display: table-cell; 
-	border-bottom: none;
 	
 }
 .table-cellOT {
@@ -130,24 +128,43 @@ p{
 
 
 .header,
-.footer {
+/*.footer*/ {
     
     text-align: center;
     
-}
+
 .header {
 	width: 100%;
 	position: fixed;
     top: -30px;
     font-size: 6;    
 }
-.footer {
-    bottom: 0px;
-    position: absolute;
-	bottom: 0;
-    
-
-}
 .pagenum:before {
     content: counter(page);
+}
+
+ footer {
+  position: fixed;
+  left: 0px;
+  bottom: -10px;
+  right: 0px;
+  height: 40px;
+  text-align: center;
+}
+footer .page:after {
+  content: counter(page);
+}
+footer table {
+  width: 100%;
+}
+footer p {
+  text-align: right;
+}
+footer .izq {
+  text-align: left;
+}
+
+.PiePag{
+	height: 70px;
+	width: 700px;
 }

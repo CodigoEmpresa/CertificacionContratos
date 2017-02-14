@@ -31,15 +31,20 @@ class GestorDatosController extends Controller
 
     public function index()
 	{
-		$Contrato = Contrato::all();
 		$TipoContrato = TipoContrato::all();
 		$TipoDocumento = TipoDocumento::all();
 		return view('DATOS/gestor')
-				->with(compact('Contrato'))
 				->with(compact('TipoContrato'))
 				->with(compact('TipoDocumento'))
 				;
 	}
+	
+	public function GetContratoDate(Request $request, $anio){
+		$Contrato = Contrato::whereBetween('Fecha_Firma', array($anio.'-01-01', $anio.'-12-31'))
+		->get();
+		return $Contrato;
+	}
+	
 
 	public function RevisionAdicion(Request $request){
 		if ($request->ajax()) { 
