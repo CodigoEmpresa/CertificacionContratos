@@ -42,7 +42,40 @@ class GestorDatosController extends Controller
 	public function GetContratoDate(Request $request, $anio){
 		$Contrato = Contrato::whereBetween('Fecha_Firma', array($anio.'-01-01', $anio.'-12-31'))
 		->get();
-		return $Contrato;
+		$html ="";
+
+		foreach ($Contrato as $key) {
+			$Cedula = "<tr><td>".$key->Cedula."</td>";
+			$Nombre_Contratista = "<td>".$key->Nombre_Contratista."</td>";
+			$Numero_Contrato = "<td>".$key->Numero_Contrato."</td>";
+			$Fecha_Inicio = "<td>".$key->Fecha_Inicio."</td>";
+
+			$Botones = '<td><button type="button" class="btn btn-info" data-funcion="verContrato" value="'.$key->Id.'" >
+                                  <span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span>
+                              </button>
+                              <button type="button" class="btn btn-primary" data-funcion="modificarContrato" value="'.$key->Id.'" >
+                                  <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                              </button>
+                              <button type="button" class="btn btn-danger"  data-funcion="eliminarContrato" value="'.$key->Id.'" >
+                                  <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                              </button></td></tr>';
+
+			$h = $Cedula.$Nombre_Contratista.$Numero_Contrato.$Fecha_Inicio.$Botones;
+
+			$html = $html.$h;
+		}
+		$Resultado = "<table id='datosTabla' name='datosTabla'>
+			        <thead>
+			            <tr>
+							<th>CÉDULA</th>                        
+	                        <th>CONTRATISTA</th>
+	                        <th>N° DE CONTRATO</th>
+	                        <th>AÑO DE CONTRATO</th>
+	                        <th>OPCIONES</th>							
+						</tr>
+					</thead>
+						<tbody>".$html."</tbody></table>";
+		return ($Resultado);
 	}
 	
 

@@ -1,38 +1,33 @@
 $(function(){
-
-$('#AnioConsulta').on('change', function(){
-  $('#TablaDat').hide('slow');
-  $('#Esperar').show('slow');
-  $.get("getContratoDate/"+$(this).val(), function (ContratoDate) {
-    var t = $('#datosTabla').DataTable();
-     t.clear();
-     if(ContratoDate.length > 0){
-            $.each(ContratoDate, function(i, e){
-              t.row.add( [
-                  e['Cedula'],                        
-                              e['Nombre_Contratista'],                            
-                              e['Numero_Contrato'],
-                              e['Fecha_Inicio'],
-                              '<button type="button" class="btn btn-info" data-funcion="verContrato" value="'+e['Id']+'" >'+
-                                  '<span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span>'+
-                              '</button>'+
-                              '<button type="button" class="btn btn-primary" data-funcion="modificarContrato" value="'+e['Id']+'" >'+
-                                  '<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>'+
-                              '</button>'+
-                              '<button type="button" class="btn btn-danger"  data-funcion="eliminarContrato" value="'+e['Id']+'" >'+
-                                  '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>'+
-                              '</button>',
-              ] ).draw( false );
+      $('#AnioConsulta').on('change', function(){            
+          if($(this).val() != ''){
+            $('#TablaDat').hide('slow');
+            $('#Esperar').show('slow');
+            $.get("getContratoDate/"+$(this).val(), function (ContratoDate) {
+              $('#TablaDat').html(ContratoDate);
+               $('#datosTabla').DataTable({
+                  retrieve: true,
+                    buttons: [
+                        'copy', 'csv', 'excel', 'pdf', 'print'
+                    ],
+                    dom: 'Bfrtip',
+                    select: true,
+                    "responsive": true,
+                    "ordering": true,
+                    "info": true,
+                    "pageLength": 10,
+                    "language": {
+                        url: 'public/DataTables/Spanish.json',
+                        searchPlaceholder: "Buscar"
+                    }
+                });
+            }).done(function(){
+              $('#TablaDat').show('slow');
+              $('#Esperar').hide('slow');   
             });
-     }else{
-       t.draw();
-     }
-  }).done(function(){
-    $('#TablaDat').show('slow');
-    $('#Esperar').hide('slow');   
-  });
-});
-  //$(document).ready(function() {
+          }
+      });
+        
       var table = $('#datosTabla').DataTable();
    
       $('#datosTabla tbody').on( 'click', 'tr', function () {
@@ -45,12 +40,7 @@ $('#AnioConsulta').on('change', function(){
           }
       } );
    
-      /*$('#button').click( function () {
-          table.row('.selected').remove().draw( false );
-      } );*/
-  /*} );*/
-
-
+  
     var Adicion = new Array();
     var Prorroga = new Array();
     var Suspencion = new Array();
@@ -83,23 +73,6 @@ $('#AnioConsulta').on('change', function(){
   $('#FechaFinAnticipadoDateM').datepicker({format: 'yyyy-mm-dd', autoclose: true,});
   $('#FechaFinDateM').datepicker({format: 'yyyy-mm-dd', autoclose: true,});
 
-
-  $('#datosTabla').DataTable({
-        retrieve: true,
-        buttons: [
-            'copy', 'csv', 'excel', 'pdf', 'print'
-        ],
-        dom: 'Bfrtip',
-        select: true,
-        "responsive": true,
-        "ordering": true,
-        "info": true,
-        "pageLength": 10,
-        "language": {
-            url: 'public/DataTables/Spanish.json',
-            searchPlaceholder: "Buscar"
-        }
-    }); 
 
     $("#Agregar_Contrato").on('click', function(){
         $("#AgregarContratoD").modal('show');
@@ -463,7 +436,7 @@ $('#AnioConsulta').on('change', function(){
       });
     }
 
-    $('#datosTabla').delegate('button[data-funcion="verContrato"]','click',function (e) {  
+    $('body').delegate('button[data-funcion="verContrato"]','click',function (e) { 
       $("#RegistrosAdicionV").empty();
       $("#RegistrosProrrogaV").empty();
       $("#RegistrosSuspensionV").empty();
@@ -584,7 +557,7 @@ $('#AnioConsulta').on('change', function(){
       });
     }); 
 
-  $('#datosTabla').delegate('button[data-funcion="modificarContrato"]','click',function (e) {  
+  $('body').delegate('button[data-funcion="modificarContrato"]','click',function (e) {  
     Adicion = new Array();
     Prorroga = new Array();
     Suspencion = new Array();
@@ -1163,7 +1136,7 @@ $("#AgregarCesionM").on('click', function(){
       $("#TablaObligacionM").show('slow');
   });
 
-  $('#datosTabla').delegate('button[data-funcion="eliminarContrato"]','click',function (e) {      
+  $('body').delegate('button[data-funcion="eliminarContrato"]','click',function (e) {      
     var datos = {Id:$(this).val()};
     $.ajax({
       url: 'DeleteContrato',  
