@@ -244,6 +244,12 @@ class GeneradorController extends Controller
         $ExpedicionContrato->Conteo = $ConteoExpedicion;
         $ExpedicionContrato->save();
 
+        if(is_numeric($Contrato['Valor_Mensual'])){
+            $valorMensual = number_format( $Contrato['Valor_Mensual'], 0, '.', '.' );
+        }else{
+            $valorMensual = $Contrato['Valor_Mensual'];
+        };
+
 		$data =  [
             'Tipo_Contrato'      => $Contrato->TipoContrato['Nombre_Tipo_Contrato'] ,
             'Cedula'   => number_format( $Contrato['Cedula'], 0, '.', '.' ),
@@ -254,7 +260,7 @@ class GeneradorController extends Controller
             'Tipo_Documento'     =>$Contrato->TipoDocumento['Descripcion_TipoDocumento'],
             'Fecha_Firma'     =>$Contrato['Fecha_Firma'],
             'Valor_Inicial'     =>number_format( $Contrato['Valor_Inicial'], 0, '.', '.' ),
-            'Valor_Mensual'     =>number_format( $Contrato['Valor_Mensual'], 0, '.', '.' ),
+            'Valor_Mensual'     => $valorMensual,
             'Fecha_Inicio'     =>$Contrato['Fecha_Inicio'],
             'Meses_Duracion'     =>$Contrato['Meses_Duracion'],
             'Meses_Letra'     =>$Meses_Letra,
