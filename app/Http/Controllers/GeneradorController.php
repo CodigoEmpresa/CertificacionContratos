@@ -92,27 +92,41 @@ class GeneradorController extends Controller
 	}
 
 	public function DescargarContrato(Request $request, $Contrato_Id){
+
 		$data = $this->getData($Contrato_Id);	
 		$Contrato = Contrato::find($Contrato_Id);	
 
-        if($Contrato['Tipo_Documento'] == 7){
-        	//Juridico
-        	//$html =  \View::make('DATOS.juridico', compact('data'))->render();
-        	//return $this->pdf->load($html)->show();
-            $pdf = PDF::loadView('DATOS.juridico', compact('data'));
-            return $pdf->download('CertificadoPersonaJuridica.pdf');
-        }else {
-        	//Natural
-        	/*$html =  \View::make('DATOS.natural', compact('data'))->render();
-        	return $this->pdf->load($html)->show();*/
-            $pdf = PDF::loadView('DATOS.natural', compact('data'));
-            return $pdf->download('CertificadoPersonaNatural.pdf');
+
+        $cadena = strtoupper($Contrato->Nombre_Contratista);
+        //$buscar = "CONSORCIO";
+        $resultado1 = strpos($cadena, 'UNIÓN TEMPORAL');
+        $resultado2 = strpos($cadena, 'UNION TEMPORAL');
+        $resultado3 = strpos($cadena, 'CONSORCIO');
+         
+        if($resultado1 !== FALSE || $resultado2 !== FALSE ||$resultado3 !== FALSE){
+            $pdf = PDF::loadView('DATOS.consorcio', compact('data'));
+            return $pdf->download('CertificadoConsorcio.pdf');          
+        }else{
+
+            if($Contrato['Tipo_Documento'] == 7){
+                //Juridico
+                //$html =  \View::make('DATOS.juridico', compact('data'))->render();
+                //return $this->pdf->load($html)->show();
+                $pdf = PDF::loadView('DATOS.juridico', compact('data'));
+                return $pdf->download('CertificadoPersonaJuridica.pdf');
+            }else {
+                //Natural
+                /*$html =  \View::make('DATOS.natural', compact('data'))->render();
+                return $this->pdf->load($html)->show();*/
+                $pdf = PDF::loadView('DATOS.natural', compact('data'));
+                return $pdf->download('CertificadoPersonaNatural.pdf');
+            }
         }
-        
 	}
 
 	public function getData($Contrato_Id){
-		$Contrato = Contrato::with('TipoDocumento', 'Tipocontrato', 'Adicion', 'Prorroga', 'Suspencion', 'Cesion', 'Obligacion')->find($Contrato_Id);
+		$Contrato = Contrato::with('TipoDocumento', 'Tipocontrato', 'Adicion', 'Prorroga', 'Suspencion', 'Cesion', 'Obligacion', 'Integrante')->find($Contrato_Id);
+        //dd($Contrato);
 		$lista = explode('-', $Contrato['Fecha_Firma']);
 		$Anio = $lista[0];
 		$conversor = new ConvertirClass();
@@ -180,8 +194,9 @@ class GeneradorController extends Controller
                                                 "Fecha_Inicio"=>$Suspencion['Fecha_Inicio'], 
                                                 "Fecha_Fin"=>$Suspencion['Fecha_Fin'], 
                                                 "Fecha_Reinicio"=>$Suspencion['Fecha_Reinicio'], 
+                                                "Fecha_Fin_CTO"=>$Suspencion['Fecha_Fin_CTO'], 
                                             ));
-                $Fecha_Fin_Suspencion = $Suspencion['Fecha_Fin'];
+                $Fecha_Fin_Suspencion = $Suspencion['Fecha_Fin_CTO'];
 
             }
         }
@@ -192,6 +207,13 @@ class GeneradorController extends Controller
 				array_push($Obligaciones, array("Numero"=>$Obligacion['Numero_Obligacion'], "Obligacion"=>$Obligacion['Objeto_Obligacion']));
 			}
 		}
+
+        $Integrantes = array();
+        if(count($Contrato->Integrante) > 0){           
+            foreach ($Contrato->Integrante as $key => $Integrante) {
+                array_push($Integrantes, array("Nombre_Integrante"=>$Integrante['Nombre_Integrante'], "Documento_Integrante"=>$Integrante['Documento_Integrante'], "Porcentaje_Integrante"=>$Integrante['Porcentaje_Integrante']));
+            }
+        }
 
 		if(count($Contrato->Cesion) > 0){
 			$Cesiones = array();			
@@ -217,6 +239,8 @@ class GeneradorController extends Controller
 			$Tipo_Documento_Representante = 'No hay';
 		}
 
+        $Fecha_Fin_Contrato_Inicial = $Contrato['Fecha_Fin'];
+
         if($Contrato['Fecha_Terminacion_Anticipada'] == '0000-00-00'){
             $Fecha_Terminacion_Anticipada = 0;
             $Fecha_Fin_Contrato = $Contrato['Fecha_Fin'];
@@ -236,6 +260,7 @@ class GeneradorController extends Controller
         }else{
             $F2 = $Fecha_Fin_Suspencion;
         }
+        //dd(max($Contrato['Fecha_Fin'], $Contrato['Fecha_Terminacion_Anticipada'], $Fecha_Fin_Prorroga, $Fecha_Fin_Suspencion));
 
         $ConteoExpedicion = (count(ExpedicionContrato::where('Contrato_Id', $Contrato_Id)->get()))+1;
         $ExpedicionContrato = new ExpedicionContrato;
@@ -273,6 +298,8 @@ class GeneradorController extends Controller
             'Fecha_A' => $Fecha_A,
             'Obligaciones' => $Obligaciones,
             'CountObligaciones' => count($Obligaciones),
+            'Integrantes' => $Integrantes,
+            'CountIntegrantes' => count($Integrantes),
             'Cesiones' => $Cesiones,
             'CountCesiones' => count($Cesiones),
             'Nombre_Representante' => $Contrato['Nombre_Representante'],
@@ -288,9 +315,10 @@ class GeneradorController extends Controller
             'CountSuspenciones' => count($Suspenciones),
             'ValorFinal' => number_format( ($valorAdiciones + $Contrato['Valor_Inicial']), 0, '.', '.' ),
             'Expedicion' => $ExpedicionContrato->Nombre_Expedicion,
+            'Fecha_Fin_Contrato_Inicial' => $Fecha_Fin_Contrato_Inicial
         ];
 
-        //dd($data);
+//        dd($data);
         return $data;
 	}
 }

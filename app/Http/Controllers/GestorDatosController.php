@@ -18,6 +18,7 @@ use App\Models\Suspencion;
 use App\Models\Cesion;
 use App\Models\Obligacion;
 use App\Models\TipoDocumento;
+use App\Models\Integrante;
 
 class GestorDatosController extends Controller
 {
@@ -40,27 +41,37 @@ class GestorDatosController extends Controller
 	}
 	
 	public function GetContratoDate(Request $request, $anio){
-		$Contrato = Contrato::whereBetween('Fecha_Firma', array($anio.'-01-01', $anio.'-12-31'))
+		$Contrato = Contrato::with('Cesion')->whereBetween('Fecha_Firma', array($anio.'-01-01', $anio.'-12-31'))
 		->get();
 		$html ="";
 
 		foreach ($Contrato as $key) {
-			$Cedula = "<tr><td>".$key->Cedula."</td>";
+			$Cedula = "<td>".$key->Cedula."</td>";
 			$Nombre_Contratista = "<td>".$key->Nombre_Contratista."</td>";
 			$Numero_Contrato = "<td>".$key->Numero_Contrato."</td>";
 			$Fecha_Inicio = "<td>".$key->Fecha_Inicio."</td>";
 
-			$Botones = '<td><button type="button" class="btn btn-info" data-funcion="verContrato" value="'.$key->Id.'" >
+			$Botones = '<td><button type="button" class="btn-sm btn-info" data-funcion="verContrato" value="'.$key->Id.'" >
                                   <span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span>
                               </button>
-                              <button type="button" class="btn btn-primary" data-funcion="modificarContrato" value="'.$key->Id.'" >
+                              <button type="button" class="btn-sm btn-primary" data-funcion="modificarContrato" value="'.$key->Id.'" >
                                   <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
                               </button>
-                              <button type="button" class="btn btn-danger"  data-funcion="eliminarContrato" value="'.$key->Id.'" >
+                              <button type="button" class="btn-sm btn-danger"  data-funcion="eliminarContrato" value="'.$key->Id.'" >
                                   <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                              </button></td></tr>';
+                              </button></td>';
 
-			$h = $Cedula.$Nombre_Contratista.$Numero_Contrato.$Fecha_Inicio.$Botones;
+            
+            if(count($key->Cesion)>0){
+            	$NombreCesionario ="<td>".$key->Cesion[0]['Nombre_Cesionario']."</td>";
+            	$DocumentoCesionario ="<td>".$key->Cesion[0]['Cedula_Cesionario']."</td>";
+            }else{
+            	$NombreCesionario="<td>No aplica</td>";
+            	$DocumentoCesionario="<td>No aplica</td>";
+            }
+            
+
+			$h = '<tr style=" font-size: 12px;">'.$Cedula.$Nombre_Contratista.$Numero_Contrato.$Fecha_Inicio.$NombreCesionario.$DocumentoCesionario.$Botones.'</tr>';
 
 			$html = $html.$h;
 		}
@@ -71,11 +82,41 @@ class GestorDatosController extends Controller
 	                        <th>CONTRATISTA</th>
 	                        <th>N° DE CONTRATO</th>
 	                        <th>AÑO DE CONTRATO</th>
+	                        <th>NOMBRE CESIONARIO</th>
+	                        <th>DOCUMENTO CESIONARIO</th>
 	                        <th>OPCIONES</th>							
 						</tr>
 					</thead>
 						<tbody>".$html."</tbody></table>";
 		return ($Resultado);
+	}
+
+	public function RevisionIntegrante(Request $request){
+		if ($request->ajax()) { 
+			$var = '';
+			if($request->Tipo_Documento_Integrante == 1 || $request->Tipo_Documento_Integrante == 2 || $request->Tipo_Documento_Integrante == 3 || $request->Tipo_Documento_Integrante == 7){
+				$var = '|numeric|digits_between:1,15';
+			}elseif($request->Tipo_Documento_Integrante == 4 || $request->Tipo_Documento_Integrante == 5 || $request->Tipo_Documento_Integrante == 6){
+				$var = '|alpha_num';
+			}else{
+				$var = '';
+			}
+    		$validator = Validator::make($request->all(), [
+    			'Nombre_Integrante' => 'required',
+    			'Tipo_Documento_Integrante' => 'required',
+    			'Documento_Integrante' => 'required'.$var,
+    			'Porcentaje_Integrante' => 'required|numeric',
+
+    			]);
+
+	        if ($validator->fails()){
+	            return response()->json(array('status' => 'error', 'errors' => $validator->errors()));
+	        }else{        			
+	        	return response()->json(array('status' => 'success', 'OK' => 'OK'));
+			}
+		}else{
+			return response()->json(["Sin acceso"]);
+		}
 	}
 	
 
@@ -121,7 +162,8 @@ class GestorDatosController extends Controller
     			'Dias_Suspencion' => 'required|numeric',
     			'FechaInicioSuspencion' => 'required|date',
     			'FechaFinSuspencion' => 'required|date',
-    			'FechaReinicioSuspencion' => 'required|date'    			
+    			'FechaReinicioSuspencion' => 'required|date',
+    			'FechaFinCTOSuspencion' => 'required|date'
     			]);
 
 	        if ($validator->fails()){
@@ -182,6 +224,18 @@ class GestorDatosController extends Controller
 
 	public function AgregarContrato(Request $request){
 		if ($request->ajax()) { 
+			$cadena = strtoupper($request->Nombre_Contratista);
+			$resultado1 = strpos($cadena, 'UNIÓN TEMPORAL');
+	        $resultado2 = strpos($cadena, 'UNION TEMPORAL');
+	        $resultado3 = strpos($cadena, 'CONSORCIO');
+
+	        $EditNombre = '';
+	         
+	        if($resultado1 !== FALSE || $resultado2 !== FALSE ||$resultado3 !== FALSE){
+	        	$EditNombre = 'required|not_in:1,2,3,4,5,6,8,9,10,11';
+	        }else{
+	        	$EditNombre = 'required';
+	        }
 
 			$var = '';
 			if($request->Tipo_Documento_Inicial == 1 || $request->Tipo_Documento_Inicial == 2 || $request->Tipo_Documento_Inicial == 3 || $request->Tipo_Documento_Inicial == 7){
@@ -202,17 +256,20 @@ class GestorDatosController extends Controller
 			}
 
 			$varTipoCI = 'required|numeric:|digits_between:1,15';
-	   		$varTipoCM = 'required|numeric:|digits_between:1,8';
+	   		$varTipoCM = 'required';
+
+
 			if($request->Tipo_Contrato == 4 || $request->Tipo_Contrato == 11 || $request->Tipo_Contrato == 17 || $request->Tipo_Contrato == 23 || $request->Tipo_Contrato == 24 ||
 			   $request->Tipo_Contrato == 25 || $request->Tipo_Contrato == 26 || $request->Tipo_Contrato == 27){
 			   		$varTipoCI = 'numeric:|digits_between:1,15';
-			   		$varTipoCM = 'numeric:|digits_between:1,8';
+			   		$varTipoCM = '';
 			}
 
     		$validator = Validator::make($request->all(), [
-    			  "Tipo_Documento_Inicial" => "required",
+    			  //"Tipo_Documento_Inicial" => "required",
+    			"Tipo_Documento_Inicial" => $EditNombre,    			
 			   	  "Cedula_Contratista" => 'required'.$var,
-				  "Dv" => array('required_if:Tipo_Documento_Inicial,7','numeric', 'digits:1', 'min:1', 'max:9'),
+				  "Dv" => array('required_if:Tipo_Documento_Inicial,7','numeric', 'digits:1', 'min:0', 'max:9'),
 				  "Nombre_Contratista" => "required",
 				  "Numero_Contrato" => "required|numeric|digits_between:1,10",
 				  "Tipo_Contrato" => "required",
@@ -256,7 +313,21 @@ class GestorDatosController extends Controller
 	        	$Contrato->Valor_Inicial = $request->Valor_Inicial;
 	        	$Contrato->Valor_Mensual = $request->Valor_Mensual;
 
-	        	if($Contrato->save()){	        		
+	        	if($Contrato->save()){	        
+					$IntegrantesVector = json_decode($request['Integrantes']);
+					if(count($IntegrantesVector) > 0){				
+						foreach($IntegrantesVector as $Vector){
+							$Integrante = new Integrante;
+							$Integrante->Contrato_Id = $Contrato->Id;
+							$Integrante->Nombre_Integrante = $Vector->Nombre_Integrante;
+							$Integrante->Tipo_Documento_Integrante_Id = $Vector->Tipo_Documento_Integrante;
+							$Integrante->Documento_Integrante = $Vector->Documento_Integrante;
+							$Integrante->Porcentaje_Integrante = $Vector->Porcentaje_Integrante;
+							$Integrante->save();
+						}
+					}
+
+
 	        		$AdicionVector = json_decode($request['Adicion']);
 					if(count($AdicionVector) > 0){	
 						$i = 1;					
@@ -286,6 +357,7 @@ class GestorDatosController extends Controller
 					}
 
 					$SuspencionVector = json_decode($request['Suspencion']);
+					//dd($SuspencionVector);
 					if(count($SuspencionVector) > 0){	
 						$i = 1;					
 						foreach($SuspencionVector as $Vector){
@@ -298,6 +370,7 @@ class GestorDatosController extends Controller
 							$Suspencion->Fecha_Inicio = $Vector->FechaInicioSuspencion;
 							$Suspencion->Fecha_Fin = $Vector->FechaFinSuspencion;
 							$Suspencion->Fecha_Reinicio = $Vector->FechaReinicioSuspencion;
+							$Suspencion->Fecha_Fin_CTO = $Vector->FechaFinCTOSuspencion;							
 							$Suspencion->save();
 							$i= $i+1;
 						}
@@ -319,6 +392,11 @@ class GestorDatosController extends Controller
 							$Cesion->save();
 							$i= $i+1;
 						}
+					}else{
+						$Cesion = new Cesion;
+						$Cesion->Nombre_Cesionario = 'No aplica';
+						$Cesion->Cedula_Cesionario = 'No aplica';
+
 					}
 
 					$ObligacionVector = json_decode($request['Obligacion']);
@@ -337,7 +415,7 @@ class GestorDatosController extends Controller
 
 	        	return response()->json(array('status' => 'success', 'Mensaje' => 'El contrato ha sido agregado con éxito!', 'Id' => $Contrato->Id, 
 	        								  'Cedula' => $Contrato->Cedula, 'Nombre' => $Contrato->Nombre_Contratista, 'Numero' => $Contrato->Numero_Contrato,
-	        								  'Fecha' => $Contrato->Fecha_Inicio));
+	        								  'Fecha' => $Contrato->Fecha_Inicio, 'Nombre_Cesionario'=>$Cesion->Nombre_Cesionario, 'Cedula_Cesionario'=>$Cesion->Cedula_Cesionario));
 			}
 		}else{
 			return response()->json(["Sin acceso"]);
@@ -350,12 +428,25 @@ class GestorDatosController extends Controller
 	}
 
 	public function GetContratoOne(Request $request, $id_contrato){
-		$Contrato = Contrato::with('Tipocontrato', 'Adicion', 'Prorroga', 'Suspencion', 'Cesion', 'Obligacion', 'TipoDocumento')->find($id_contrato);
+		$Contrato = Contrato::with('Tipocontrato', 'Adicion', 'Prorroga', 'Suspencion', 'Cesion', 'Obligacion', 'TipoDocumento', 'Integrante')->find($id_contrato);
 		return $Contrato;
 	}
 
 	public function ModificarContrato(Request $request){
 		if ($request->ajax()) { 
+			$cadena = strtoupper($request->Nombre_ContratistaM);
+			$resultado1 = strpos($cadena, 'UNIÓN TEMPORAL');
+	        $resultado2 = strpos($cadena, 'UNION TEMPORAL');
+	        $resultado3 = strpos($cadena, 'CONSORCIO');
+
+	        $EditNombre = '';
+	         
+	        if($resultado1 !== FALSE || $resultado2 !== FALSE ||$resultado3 !== FALSE){
+	        	$EditNombre = 'required|not_in:1,2,3,4,5,6,8,9,10,11';
+	        }else{
+	        	$EditNombre = 'required';
+	        }
+
 			$var = '';
 			if($request->Tipo_Documento_InicialM == 1 || $request->Tipo_Documento_InicialM == 2 || $request->Tipo_Documento_InicialM == 3 || $request->Tipo_Documento_InicialM == 7){
 				$var = '|numeric|digits_between:1,15';
@@ -375,15 +466,15 @@ class GestorDatosController extends Controller
 			}
 
 			$varTipoCI = 'required|numeric:|digits_between:1,15';
-	   		$varTipoCM = 'required|numeric:|digits_between:1,8';
+	   		$varTipoCM = 'required';
 			if($request->Tipo_ContratoM == 4 || $request->Tipo_ContratoM == 11 || $request->Tipo_ContratoM == 17 || $request->Tipo_ContratoM == 23 || $request->Tipo_ContratoM == 24 ||
 			   $request->Tipo_ContratoM == 25 || $request->Tipo_ContratoM == 26 || $request->Tipo_ContratoM == 27){
 			   		$varTipoCI = 'numeric:|digits_between:1,15';
-			   		$varTipoCM = 'numeric:|digits_between:1,8';
+			   		$varTipoCM = '';
 			}
 
     		$validator = Validator::make($request->all(), [
-			   	  "Tipo_Documento_InicialM" => "required",
+			   	  "Tipo_Documento_InicialM" => $EditNombre,
 			   	  "Cedula_ContratistaM" => 'required'.$var,
 				  "DvM" => array('required_if:Tipo_Documento_InicialM,7','numeric', 'digits:1'),
 				  "Nombre_ContratistaM" => "required",
@@ -430,6 +521,21 @@ class GestorDatosController extends Controller
 
 	        	if($Contrato->save()){
 
+	        		$IntegrantesD = Integrante::where('Contrato_Id', $request->Id_ContratoM)->delete();
+	        		$IntegrantesVector = json_decode($request['Integrantes']);
+					if(count($IntegrantesVector) > 0){				
+						foreach($IntegrantesVector as $Vector){
+							$Integrante = new Integrante;
+							$Integrante->Contrato_Id = $Contrato->Id;
+							$Integrante->Nombre_Integrante = $Vector->Nombre_Integrante;
+							$Integrante->Tipo_Documento_Integrante_Id = $Vector->Tipo_Documento_Integrante;
+							$Integrante->Documento_Integrante = $Vector->Documento_Integrante;
+							$Integrante->Porcentaje_Integrante = $Vector->Porcentaje_Integrante;
+							$Integrante->save();
+						}
+					}
+
+
 	        		$AdicionD = Adicion::where('Contrato_Id', $request->Id_ContratoM)->delete();
 	        		$AdicionVector = json_decode($request['Adicion']);
 					if(count($AdicionVector) > 0){		
@@ -469,6 +575,7 @@ class GestorDatosController extends Controller
 							$Suspencion->Fecha_Inicio = $Vector->FechaInicioSuspencion;
 							$Suspencion->Fecha_Fin = $Vector->FechaFinSuspencion;
 							$Suspencion->Fecha_Reinicio = $Vector->FechaReinicioSuspencion;
+							$Suspencion->Fecha_Fin_CTO = $Vector->FechaFinCTOSuspencion;							
 							$Suspencion->save();
 						}
 					}
@@ -504,6 +611,34 @@ class GestorDatosController extends Controller
 	        	}
 
 	        	return response()->json(array('status' => 'success', 'Mensaje' => 'El contrato ha sido modificado con éxito!'));
+			}
+		}else{
+			return response()->json(["Sin acceso"]);
+		}
+	}
+
+	public function RevisionIntegranteM(Request $request){
+		if ($request->ajax()) { 
+			$var = '';
+			if($request->Tipo_Documento_IntegranteM == 1 || $request->Tipo_Documento_IntegranteM == 2 || $request->Tipo_Documento_IntegranteM == 3 || $request->Tipo_Documento_IntegranteM == 7){
+				$var = '|numeric|digits_between:1,15';
+			}elseif($request->Tipo_Documento_IntegranteM == 4 || $request->Tipo_Documento_IntegranteM == 5 || $request->Tipo_Documento_IntegranteM == 6){
+				$var = '|alpha_num';
+			}else{
+				$var = '';
+			}
+    		$validator = Validator::make($request->all(), [
+    			'Nombre_IntegranteM' => 'required',
+    			'Tipo_Documento_IntegranteM' => 'required',
+    			'Documento_IntegranteM' => 'required'.$var,
+    			'Porcentaje_IntegranteM' => 'required|numeric',
+
+    			]);
+
+	        if ($validator->fails()){
+	            return response()->json(array('status' => 'error', 'errors' => $validator->errors()));
+	        }else{        			
+	        	return response()->json(array('status' => 'success', 'OK' => 'OK'));
 			}
 		}else{
 			return response()->json(["Sin acceso"]);
@@ -552,7 +687,8 @@ class GestorDatosController extends Controller
     			'Dias_SuspencionM' => 'required|numeric',
     			'FechaInicioSuspencionM' => 'required|date',
     			'FechaFinSuspencionM' => 'required|date',
-    			'FechaReinicioSuspencionM' => 'required|date'    			
+    			'FechaReinicioSuspencionM' => 'required|date',
+    			'FechaFinCTOSuspencionM' => 'required|date'        						
     			]);
 
 	        if ($validator->fails()){
@@ -622,11 +758,12 @@ class GestorDatosController extends Controller
 	            return response()->json(array('status' => 'error', 'errors' => $validator->errors()));
 	        }else{ 	        
 	        	$Contrato = Contrato::find($request->Id);
-	        	$Adicion = Adicion::where('Contrato_Id', $request->Id_Contrato)->delete();
-	        	$Prorroga = Prorroga::where('Contrato_Id', $request->Id_Contrato)->delete();
-	        	$Suspencion = Suspencion::where('Contrato_Id', $request->Id_Contrato)->delete();
-	        	$Cesion = Cesion::where('Contrato_Id', $request->Id_Contrato)->delete();
-	        	$Obligacion = Obligacion::where('Contrato_Id', $request->Id_Contrato)->delete();
+	        	$Integrante = Integrante::where('Contrato_Id', $Contrato->Id)->delete();
+	        	$Adicion = Adicion::where('Contrato_Id', $Contrato->Id)->delete();	        	
+	        	$Prorroga = Prorroga::where('Contrato_Id', $Contrato->Id)->delete();
+	        	$Suspencion = Suspencion::where('Contrato_Id', $Contrato->Id)->delete();
+	        	$Cesion = Cesion::where('Contrato_Id', $Contrato->Id)->delete();
+	        	$Obligacion = Obligacion::where('Contrato_Id', $Contrato->Id)->delete();
 
 	        	$Contrato->delete();
 	        	

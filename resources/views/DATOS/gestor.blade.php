@@ -158,6 +158,70 @@
                                         </div>
                                     </div>
                                 </li>
+                                <li class="list-group-item" id="Integrantes" name="Integrantes" style="display:none;">
+                                    <h4 class="modal-title" id="myModalLabel">Datos de los Integrantes</h4>
+                                    <br>
+                                    <div class="row">
+                                        <div class="form-group col-md-2">
+                                            <label for="inputEmail" class="control-label">Nombre del integrante</label>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <input type="text" class="form-control"  placeholder="Nombre del integrante" id="Nombre_Integrante" name="Nombre_Integrante">
+                                        </div>
+
+                                        <div class="form-group col-md-2">
+                                            <label for="inputEmail" class="control-label">Tipo de documento del integrante</label>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <select name="Tipo_Documento_Integrante" id="Tipo_Documento_Integrante" class="form-control">
+                                                <option value="">Seleccionar</option>   
+                                                @foreach($TipoDocumento as $TipoDocumentos)
+                                                    <option value="{{ $TipoDocumentos['Id_TipoDocumento'] }}">{{ $TipoDocumentos['Descripcion_TipoDocumento'] }}</option>                                                    
+                                                @endforeach                   
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="form-group col-md-2">
+                                            <label for="inputEmail" class="control-label">Documento del integrante</label>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <input type="text" class="form-control"  placeholder="Documento del integrante" id="Documento_Integrante" name="Documento_Integrante">                                            
+                                        </div>
+
+                                        <div class="form-group col-md-2">
+                                            <label for="inputEmail" class="control-label">% participación del integrante</label>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <input type="text" class="form-control"  placeholder="% participación del integrante" id="Porcentaje_Integrante" name="Porcentaje_Integrante">
+                                        </div>
+                                    </div>      
+                                    <div class="row">
+                                            <center>
+                                                <div class="form-group col-md-12">
+                                                    <button type="button" class="btn btn-primary" value="" name="AgregarIntegrante" id="AgregarIntegrante" >Agregar Integrante</button>
+                                                </div>
+                                            </center>   
+                                        </div>                                                   
+                                    <div class="row">
+                                        <div class="form-group col-md-1"></div>                                                
+                                        <div class="form-group col-md-10">
+                                            <table class="table table-bordered" id="TablaIntegrantes" style="display:none;">
+                                                <thead>
+                                                    <tr>
+                                                        <th>N°</th>
+                                                        <th>Nombre Integrante</th>
+                                                        <th>Documento Integrante</th>
+                                                        <th>% Participación</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="RegistrosIntegrantes"></tbody>
+                                            </table>
+                                        </div>
+                                        <div class="form-group col-md-1"></div>                                                
+                                    </div>
+                                </li>
                                 <li class="list-group-item" id="RepresentanteDiv" style="display:none;">
                                     <h4 class="modal-title" id="myModalLabel">Datos del Representante Legal</h4>
                                     <br>
@@ -474,6 +538,16 @@
                                                     <input id="FechaReinicioSuspencion" class="form-control " type="text" value="" name="FechaReinicioSuspencion" default="" data-date="" data-behavior="FechaReinicioSuspencion">
                                                 <span class="input-group-addon btn"><i class="glyphicon glyphicon-calendar"></i> </span>
                                                 </div>    
+                                            </div>            
+
+                                            <div class="form-group col-md-2">
+                                                <label for="inputEmail" class="control-label">Fecha Fin CTO Suspención</label>
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <div class="input-group date form-control" id="FechaFinCTOSuspencionDate" style="border: none;">
+                                                    <input id="FechaFinCTOSuspencion" class="form-control " type="text" value="" name="FechaFinCTOSuspencion" default="" data-date="" data-behavior="FechaFinCTOSuspencion">
+                                                <span class="input-group-addon btn"><i class="glyphicon glyphicon-calendar"></i> </span>
+                                                </div>    
                                             </div>                                    
                                         </div>
                                         <div class="row">
@@ -496,6 +570,7 @@
                                                             <th>Fecha de Inicio</th>
                                                             <th>Fecha de Fin</th>
                                                             <th>Fecha de Reincio</th>
+                                                            <th>Fecha de Fin CTO</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody id="RegistrosSuspencion"></tbody>
@@ -733,6 +808,32 @@
                                         </div>
                                     </div>
                                 </li>
+                                <li class="list-group-item">
+                                    <div class="row">                                        
+                                        <div class="form-group col-md-2">
+                                            <h4 class="modal-title" id="myModalLabel">Integrantes</h4>
+                                        </div>
+                                    </div>
+                                    <div id="NuevaIntegrantesDV" style="display:none;"> 
+                                        <div class="row">
+                                            <div class="form-group col-md-1"></div>                                                
+                                            <div class="form-group col-md-10">
+                                                <table class="table table-bordered" id="TablaIntegrantesV" style="display:none;">
+                                                    <thead>
+                                                        <tr>
+                                                           <th>N°</th>
+                                                            <th>Nombre Integrante</th>
+                                                            <th>Documento Integrante</th>
+                                                            <th>% Participación</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="RegistrosIntegrantesV"></tbody>
+                                                </table>
+                                            </div>
+                                            <div class="form-group col-md-1"></div>                                                
+                                        </div>
+                                    </div>                                    
+                                </li>
                                 <li class="list-group-item" id="RepresentanteDivV" style="display:none;">
                                     <h4 class="modal-title" id="myModalLabel">Datos del Representante Legal</h4>
                                     <br>
@@ -937,6 +1038,7 @@
                                                             <th>Fecha de Inicio</th>
                                                             <th>Fecha de Fin</th>
                                                             <th>Fecha de Reincio</th>
+                                                            <th>Fecha de Fin CTO</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody id="RegistrosSuspencionV"></tbody>
@@ -1080,6 +1182,71 @@
                                                 @endforeach                                                                                                   
                                             </select>                                            
                                         </div>
+                                    </div>
+                                </li>
+                                <li class="list-group-item" id="IntegrantesM" name="IntegrantesM" style="display:none;">
+                                    <h4 class="modal-title" id="myModalLabel">Datos de los Integrantes</h4>
+                                    <br>
+                                    <div class="row">
+                                        <div class="form-group col-md-2">
+                                            <label for="inputEmail" class="control-label">Nombre del integrante</label>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <input type="text" class="form-control"  placeholder="Nombre del integrante" id="Nombre_IntegranteM" name="Nombre_IntegranteM">
+                                        </div>
+
+                                        <div class="form-group col-md-2">
+                                            <label for="inputEmail" class="control-label">Tipo de documento del integrante</label>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <select name="Tipo_Documento_IntegranteM" id="Tipo_Documento_IntegranteM" class="form-control">
+                                                <option value="">Seleccionar</option>   
+                                                @foreach($TipoDocumento as $TipoDocumentos)
+                                                    <option value="{{ $TipoDocumentos['Id_TipoDocumento'] }}">{{ $TipoDocumentos['Descripcion_TipoDocumento'] }}</option>                                                    
+                                                @endforeach                   
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="form-group col-md-2">
+                                            <label for="inputEmail" class="control-label">Documento del integrante</label>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <input type="text" class="form-control"  placeholder="Documento del integrante" id="Documento_IntegranteM" name="Documento_IntegranteM">                                            
+                                        </div>
+
+                                        <div class="form-group col-md-2">
+                                            <label for="inputEmail" class="control-label">% participación del integrante</label>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <input type="text" class="form-control"  placeholder="% participación del integrante" id="Porcentaje_IntegranteM" name="Porcentaje_IntegranteM">
+                                        </div>
+                                    </div>      
+                                    <div class="row">
+                                            <center>
+                                                <div class="form-group col-md-12">
+                                                    <button type="button" class="btn btn-primary" value="" name="AgregarIntegranteM" id="AgregarIntegranteM" >Agregar Integrante</button>
+                                                </div>
+                                            </center>   
+                                        </div>                                                   
+                                    <div class="row">
+                                        <div class="form-group col-md-1"></div>                                                
+                                        <div class="form-group col-md-10">
+                                            <table class="table table-bordered" id="TablaIntegrantesM" style="display:none;">
+                                                <thead>
+                                                    <tr>
+                                                        <th>N°</th>
+                                                        <th>Nombre Integrante</th>
+                                                        <th>Documento Integrante</th>
+                                                        <th>% Participación</th>
+                                                        <th>Opción</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="RegistrosIntegrantesM"></tbody>
+                                            </table>
+                                        </div>
+                                        <div class="form-group col-md-1"></div>                                                
                                     </div>
                                 </li>
                                 <li class="list-group-item" id="RepresentanteDivM" style="display:none;">                                
@@ -1397,8 +1564,19 @@
                                                     <input id="FechaReinicioSuspencionM" class="form-control " type="text" value="" name="FechaReinicioSuspencionM" default="" data-date="" data-behavior="FechaReinicioSuspencionM">
                                                 <span class="input-group-addon btn"><i class="glyphicon glyphicon-calendar"></i> </span>
                                                 </div>    
+                                            </div>       
+
+                                            <div class="form-group col-md-2">
+                                                <label for="inputEmail" class="control-label">Fecha Fin CTO Suspención</label>
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <div class="input-group date form-control" id="FechaFinCTOSuspencionDateM" style="border: none;">
+                                                    <input id="FechaFinCTOSuspencionM" class="form-control " type="text" value="" name="FechaFinCTOSuspencionM" default="" data-date="" data-behavior="FechaFinCTOSuspencionM">
+                                                <span class="input-group-addon btn"><i class="glyphicon glyphicon-calendar"></i> </span>
+                                                </div>    
                                             </div>                                    
                                         </div>
+
                                         <div class="row">
                                             <center>
                                                 <div class="form-group col-md-12">
@@ -1419,6 +1597,7 @@
                                                             <th>Fecha de Inicio</th>
                                                             <th>Fecha de Fin</th>
                                                             <th>Fecha de Reincio</th>
+                                                            <th>Fecha de Fin CTO</th>
                                                             <th>Opción</th>
                                                         </tr>
                                                     </thead>

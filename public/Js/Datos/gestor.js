@@ -1,4 +1,75 @@
 $(function(){
+
+  $("#Nombre_Contratista").on('blur', function(){
+    cadena = $(this).val().toUpperCase();
+      if(/UNIÓN TEMPORAL/.test(cadena) || /UNION TEMPORAL/.test(cadena)|| /CONSORCIO/.test(cadena)){
+        $("#Integrantes").show('slow');
+      }else{
+        $("#Integrantes").hide('slow');
+      }
+  });
+
+  $("#Nombre_ContratistaM").on('blur', function(){
+    cadena = $(this).val().toUpperCase();
+      if(/UNIÓN TEMPORAL/.test(cadena) || /UNION TEMPORAL/.test(cadena)|| /CONSORCIO/.test(cadena)){
+        $("#IntegrantesM").show('slow');
+      }else{
+        $("#IntegrantesM").hide('slow');
+      }
+  });
+
+  $("#AgregarIntegrante").on('click', function(){;
+    if(Integrantes.length < 5){
+      var formData = new FormData($("#agregarContratoF")[0]);    
+      $.ajax({
+        url: 'revIntegrante',  
+        type: 'POST',
+        data: formData,          
+        contentType: false,
+        processData: false,
+        dataType: "json",
+        success: function (xhr) {
+          if(xhr.status == 'error'){
+            validador_errores(xhr.errors);
+          }
+          else if(xhr.status == 'success'){
+              $('#agregarContratoF .form-group').removeClass('has-error');
+              Integrantes.push({ "Nombre_Integrante": $("input[name=Nombre_Integrante]").val(),
+                                 "Tipo_Documento_Integrante": $("#Tipo_Documento_Integrante").val(),
+                                 "Documento_Integrante": $("input[name=Documento_Integrante]").val(),
+                                 "Porcentaje_Integrante": $("input[name=Porcentaje_Integrante]").val()
+                              });
+
+              $("input[name=Nombre_Integrante]").val('');
+              $("#Tipo_Documento_Integrante").val('');
+              $("input[name=Documento_Integrante]").val('');
+              $("input[name=Porcentaje_Integrante]").val('');
+
+              var html = '';
+              $.each(Integrantes, function(i, e){
+                 html += '<tr>'+
+                            '<td>'+(i+1)+'</td>'+
+                            '<td>'+e['Nombre_Integrante']+'</td>'+
+                            '<td>'+e['Documento_Integrante']+'</td>'+
+                            '<td>'+e['Porcentaje_Integrante']+'</td>'+
+                          '</tr>';        
+              });
+
+              $("#RegistrosIntegrantes").empty();
+              $("#RegistrosIntegrantes").html(html);
+              $("#TablaIntegrantes").show('slow');
+          }
+        },
+        error: function (xhr){
+          validador_errores(xhr.responseJSON);
+        }
+      });
+    }else{
+      alert('No se pueden agregar más de cinco integrantes!.');
+    }
+  });
+
+  
       $('#AnioConsulta').on('change', function(){            
           if($(this).val() != ''){
             $('#TablaDat').hide('slow');
@@ -46,6 +117,7 @@ $(function(){
     var Suspencion = new Array();
     var Cesion = new Array();
     var Obligacion = new Array();
+    var Integrantes = new Array();
 
   $.datepicker.setDefaults($.datepicker.regional["es"]);
   $('#FechaFirmaDate').datepicker({format: 'yyyy-mm-dd', autoclose: true,});
@@ -61,6 +133,9 @@ $(function(){
   $('#FechaCesionDate').datepicker({format: 'yyyy-mm-dd', autoclose: true,});
 
 
+  $('#FechaFinCTOSuspencion').datepicker({format: 'yyyy-mm-dd', autoclose: true,}); 
+
+
 
   $('#FechaFinCtoProrrogaDateM').datepicker({format: 'yyyy-mm-dd', autoclose: true,});
   $('#FechaInicioSuspencionDateM').datepicker({format: 'yyyy-mm-dd', autoclose: true,});
@@ -72,9 +147,12 @@ $(function(){
   $('#FechaInicioDateM').datepicker({format: 'yyyy-mm-dd', autoclose: true,});
   $('#FechaFinAnticipadoDateM').datepicker({format: 'yyyy-mm-dd', autoclose: true,});
   $('#FechaFinDateM').datepicker({format: 'yyyy-mm-dd', autoclose: true,});
+  $('#FechaFinCTOSuspencionDateM').datepicker({format: 'yyyy-mm-dd', autoclose: true,});
+  
 
 
     $("#Agregar_Contrato").on('click', function(){
+         document.getElementById("agregarContratoF").reset();
         $("#AgregarContratoD").modal('show');
         $('#agregarContratoF .form-group').removeClass('has-error');
         Adicion = new Array();
@@ -82,6 +160,7 @@ $(function(){
         Suspencion = new Array();
         Cesion = new Array();
         Obligacion = new Array();
+        Integrantes = new Array();
         $("#NuevaAdicionD").hide('slow');
         $("#RegistrosAdicion").empty();
         $("#TablaAdicion").hide('slow');
@@ -224,6 +303,7 @@ $(function(){
                                "FechaInicioSuspencion" : $("input[name=FechaInicioSuspencion]").val(),
                                "FechaFinSuspencion" : $("input[name=FechaFinSuspencion]").val(),
                                "FechaReinicioSuspencion" : $("input[name=FechaReinicioSuspencion]").val(),
+                               "FechaFinCTOSuspencion" : $("input[name=FechaFinCTOSuspencion]").val(),                               
                               });
 
                 //$("textarea[name=Objeto_Suspencion]").val('');
@@ -232,6 +312,7 @@ $(function(){
                 $("input[name=FechaInicioSuspencion]").val('');
                 $("input[name=FechaFinSuspencion]").val('');
                 $("input[name=FechaReinicioSuspencion]").val('');
+                $("input[name=FechaFinCTOSuspencion]").val('');                
 
                 var html = '';
                 $.each(Suspencion, function(i, e){
@@ -243,6 +324,7 @@ $(function(){
                             '<td>'+e['FechaInicioSuspencion']+'</td>'+
                             '<td>'+e['FechaFinSuspencion']+'</td>'+
                             '<td>'+e['FechaReinicioSuspencion']+'</td>'+
+                            '<td>'+e['FechaFinCTOSuspencion']+'</td>'+                            
                           '</tr>';                
                 });
 
@@ -350,6 +432,10 @@ $(function(){
 
       $("#AgregarContrato").on('click', function(){
         var formData = new FormData($("#agregarContratoF")[0]);   
+
+        var json_vector_integrantes = JSON.stringify(Integrantes);
+        formData.append("Integrantes",json_vector_integrantes);
+
         var json_vector_adicion = JSON.stringify(Adicion);
         formData.append("Adicion",json_vector_adicion);
 
@@ -390,15 +476,17 @@ $(function(){
                             xhr.Nombre,
                             xhr.Numero,
                             xhr.Fecha,
-                            '<button type="button" class="btn btn-info" data-funcion="verContrato" value="'+xhr.Id+'" >'+
+                            xhr.Nombre_Cesionario,
+                            xhr.Cedula_Cesionario,
+                            '<button type="button" class="btn-sm btn-info" data-funcion="verContrato" value="'+xhr.Id+'" >'+
                                 '<span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span>'+
                             '</button>'+
-                            '<button type="button" class="btn btn-primary" data-funcion="modificarContrato" value="'+xhr.Id+'" >'+
+                            '<button type="button" class="btn-sm btn-primary" data-funcion="modificarContrato" value="'+xhr.Id+'" >'+
                                 '<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>'+
                             '</button>'+
-                            '<button type="button" class="btn btn-danger"  data-funcion="eliminarContrato" value="'+xhr.Id+'" >'+
+                            '<button type="button" class="btn-sm btn-danger"  data-funcion="eliminarContrato" value="'+xhr.Id+'" >'+
                                 '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>'+
-                            '</button>',
+                            '</button>',                            
                         ] ).draw( false );
                 /*$.get("getContrato", function (ContratosDatos) { 
                     var t = $('#datosTabla').DataTable();
@@ -442,12 +530,14 @@ $(function(){
       $("#RegistrosSuspensionV").empty();
       $("#RegistrosCesionV").empty();
       $("#RegistrosObligacionV").empty();
+      $("#RegistrosIntegrantesV").empty();
 
       $("#TablaAdicionV").hide('slow');
       $("#TablaProrrogaV").hide('slow');
       $("#TablaSuspencionV").hide('slow');
       $("#TablaCesionV").hide('slow');
       $("#TablaObligacionV").hide('slow');
+      $("#TablaAdicionV").hide('slow');
 
       $.get("getContratoOne/"+$(this).val(), function (Contrato) { 
         if(Contrato){
@@ -472,6 +562,23 @@ $(function(){
           $("#Valor_InicialV").val(Contrato['Valor_Inicial']);
           $("#Valor_MensualV").val(Contrato['Valor_Mensual']);
           $("#FechaFinContratoV").val(Contrato['fecha_Final_CTO']);
+
+          if(Contrato.integrante.length > 0){
+            $("#NuevaIntegrantesDV").show('slow');
+             var html = '';
+              $.each(Contrato.integrante, function(i, e){
+                html += '<tr>'+
+                            '<td>'+(i+1)+'</td>'+
+                            '<td>'+e['Nombre_Integrante']+'</td>'+
+                            '<td>'+e['Documento_Integrante']+'</td>'+
+                            '<td>'+e['Porcentaje_Integrante']+'</td>'+
+                          '</tr>'; 
+              });
+              $("#RegistrosIntegrantesV").empty();
+              $("#RegistrosIntegrantesV").html(html);
+              $("#TablaIntegrantesV").show('slow');
+          }
+
           if(Contrato.adicion.length > 0){
             $("#NuevaAdicionDV").show('slow');
              var html = '';
@@ -512,6 +619,7 @@ $(function(){
                           '<td>'+e['Fecha_Inicio']+'</td>'+
                           '<td>'+e['Fecha_Fin']+'</td>'+
                           '<td>'+e['Fecha_Reinicio']+'</td>'+
+                          '<td>'+e['Fecha_Fin_CTO']+'</td>'+
                         '</tr>';                
               });
 
@@ -558,11 +666,13 @@ $(function(){
     }); 
 
   $('body').delegate('button[data-funcion="modificarContrato"]','click',function (e) {  
+    document.getElementById("modificarContratoF").reset();
     Adicion = new Array();
     Prorroga = new Array();
     Suspencion = new Array();
     Cesion = new Array();
     Obligacion = new Array();
+    Integrantes = new Array();
 
     $("#RegistrosAdicionM").empty();
     $("#RegistrosProrrogaM").empty();
@@ -600,6 +710,37 @@ $(function(){
         $("#Valor_InicialM").val(Contrato['Valor_Inicial']);
         $("#Valor_MensualM").val(Contrato['Valor_Mensual']);
         $("#FechaFinContratoM").val(Contrato['fecha_Final_CTO']);
+
+
+      cadena = $("#Nombre_ContratistaM").val().toUpperCase();
+      if(/UNIÓN TEMPORAL/.test(cadena) || /UNION TEMPORAL/.test(cadena)|| /CONSORCIO/.test(cadena)){
+        $("#IntegrantesM").show('slow');
+        if(Contrato.integrante.length > 0){
+          $("#NuevaIntegrantesDM").show('slow');
+           var html = '';
+            $.each(Contrato.integrante, function(i, e){
+
+              Integrantes.push({ "Nombre_Integrante": e['Nombre_Integrante'],
+                                 "Tipo_Documento_Integrante": e['Tipo_Documento_Integrante_Id'],
+                                 "Documento_Integrante": e['Documento_Integrante'],
+                                 "Porcentaje_Integrante": e['Porcentaje_Integrante']
+                              });
+              console.log(Integrantes);
+               html += '<tr>'+
+                            '<td>'+(i+1)+'</td>'+
+                            '<td>'+e['Nombre_Integrante']+'</td>'+
+                            '<td>'+e['Documento_Integrante']+'</td>'+
+                            '<td>'+e['Porcentaje_Integrante']+'</td>'+
+                            '<td><button type="button" data-funcion="EliminarIntegrante" class="btn btn-danger" value="'+i+'">Eliminar</button></td>'+
+                          '</tr>';                 
+            });
+            $("#RegistrosIntegrantesM").empty();
+            $("#RegistrosIntegrantesM").html(html);
+            $("#TablaIntegrantesM").show('slow');
+        }
+      }else{
+        $("#IntegrantesM").hide('slow');
+      }
 
         if(Contrato.adicion.length > 0){
           $("#NuevaAdicionDM").show('slow');
@@ -651,6 +792,7 @@ $(function(){
                               "FechaInicioSuspencion" : e['Fecha_Inicio'],
                               "FechaFinSuspencion" : e['Fecha_Fin'],
                               "FechaReinicioSuspencion" : e['Fecha_Reinicio'],
+                              "FechaFinCTOSuspencion" : e['Fecha_Fin_CTO'],
                             });
                 html += '<tr>'+
                           '<td>'+e['Numero_Suspencion']+'</td>'+
@@ -660,6 +802,7 @@ $(function(){
                           '<td>'+e['Fecha_Inicio']+'</td>'+
                           '<td>'+e['Fecha_Fin']+'</td>'+
                           '<td>'+e['Fecha_Reinicio']+'</td>'+
+                          '<td>'+e['Fecha_Fin_CTO']+'</td>'+
                           '<td><button type="button" data-funcion="EliminarSuspencion" class="btn btn-danger" value="'+i+'">Eliminar</button></td>'+
                         '</tr>';                
               });
@@ -736,6 +879,58 @@ $(function(){
     $("#NuevaObligacionM").on('click', function(){
         $("#NuevaObligacionDM").show('slow');
     });
+
+    $("#AgregarIntegranteM").on('click', function(){;
+    if(Integrantes.length < 5){
+      var formData = new FormData($("#modificarContratoF")[0]);    
+      $.ajax({
+        url: 'revIntegranteM',  
+        type: 'POST',
+        data: formData,          
+        contentType: false,
+        processData: false,
+        dataType: "json",
+        success: function (xhr) {
+          if(xhr.status == 'error'){
+            validador_erroresM(xhr.errors);
+          }
+          else if(xhr.status == 'success'){
+              $('#modificarContratoF .form-group').removeClass('has-error');
+              Integrantes.push({ "Nombre_Integrante": $("input[name=Nombre_IntegranteM]").val(),
+                                 "Tipo_Documento_Integrante": $("#Tipo_Documento_IntegranteM").val(),
+                                 "Documento_Integrante": $("input[name=Documento_IntegranteM]").val(),
+                                 "Porcentaje_Integrante": $("input[name=Porcentaje_IntegranteM]").val()
+                              });
+
+              $("input[name=Nombre_IntegranteM]").val('');
+              $("#Tipo_Documento_IntegranteM").val('');
+              $("input[name=Documento_IntegranteM]").val('');
+              $("input[name=Porcentaje_IntegranteM]").val('');
+
+              var html = '';
+              $.each(Integrantes, function(i, e){
+                 html += '<tr>'+
+                            '<td>'+(i+1)+'</td>'+
+                            '<td>'+e['Nombre_Integrante']+'</td>'+
+                            '<td>'+e['Documento_Integrante']+'</td>'+
+                            '<td>'+e['Porcentaje_Integrante']+'</td>'+
+                            '<td><button type="button" data-funcion="EliminarIntegrante" class="btn btn-danger" value="'+i+'">Eliminar</button></td>'+
+                          '</tr>';        
+              });
+
+              $("#RegistrosIntegrantesM").empty();
+              $("#RegistrosIntegrantesM").html(html);
+              $("#TablaIntegrantesM").show('slow');
+          }
+        },
+        error: function (xhr){
+          validador_erroresM(xhr.responseJSON);
+        }
+      });
+    }else{
+      alert('No se pueden agregar más de cinco integrantes!.');
+    }
+  });
 
     $("#AgregarAdicionM").on('click', function(){
         var formData = new FormData($("#modificarContratoF")[0]);    
@@ -846,6 +1041,7 @@ $(function(){
                                "FechaInicioSuspencion" : $("input[name=FechaInicioSuspencionM]").val(),
                                "FechaFinSuspencion" : $("input[name=FechaFinSuspencionM]").val(),
                                "FechaReinicioSuspencion" : $("input[name=FechaReinicioSuspencionM]").val(),
+                               "FechaFinCTOSuspencion" : $("input[name=FechaFinCTOSuspencionM]").val(),
                               });
 
                 //$("textarea[name=Objeto_SuspencionM]").val('');
@@ -854,6 +1050,7 @@ $(function(){
                 $("input[name=FechaInicioSuspencionM]").val('');
                 $("input[name=FechaFinSuspencionM]").val('');
                 $("input[name=FechaReinicioSuspencionM]").val('');
+                $("input[name=FechaFinCTOSuspencionM]").val('');
 
                 var html = '';
                 $.each(Suspencion, function(i, e){
@@ -865,6 +1062,7 @@ $(function(){
                             '<td>'+e['FechaInicioSuspencion']+'</td>'+
                             '<td>'+e['FechaFinSuspencion']+'</td>'+
                             '<td>'+e['FechaReinicioSuspencion']+'</td>'+
+                            '<td>'+e['FechaFinCTOSuspencion']+'</td>'+
                             '<td><button type="button" data-funcion="EliminarSuspencion" class="btn btn-danger" value="'+i+'">Eliminar</button></td>'+
                           '</tr>';                
                 });
@@ -976,6 +1174,10 @@ $("#AgregarCesionM").on('click', function(){
 
     $("#Modificar").on('click', function(){
         var formData = new FormData($("#modificarContratoF")[0]);   
+
+        var json_vector_integrantes = JSON.stringify(Integrantes);
+        formData.append("Integrantes",json_vector_integrantes);
+
         var json_vector_adicion = JSON.stringify(Adicion);
         formData.append("Adicion",json_vector_adicion);
 
@@ -1091,6 +1293,7 @@ $("#AgregarCesionM").on('click', function(){
                   '<td>'+e['FechaInicioSuspencion']+'</td>'+
                   '<td>'+e['FechaFinSuspencion']+'</td>'+
                   '<td>'+e['FechaReinicioSuspencion']+'</td>'+
+                  '<td>'+e['FechaFinCTOSuspencion']+'</td>'+
                   '<td><button type="button" data-funcion="EliminarSuspencion" class="btn btn-danger" value="'+i+'">Eliminar</button></td>'+
                 '</tr>';                
       });

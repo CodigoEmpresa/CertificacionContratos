@@ -2,13 +2,13 @@ body {
 	font-family: Arial, Helvetica, Verdana;
 }
 
-.Objeto{
+.Objeto, .Integrantes{
   margin-left:500px;
   padding-bottom: 10px;
 }
 
 div .TableDiv{
-  background-color: #00ff00;
+ /*background-color: #00ff00;*/
 
 }
 
@@ -22,6 +22,17 @@ div .TableDiv{
 	margin:0px 0px 0px 90px;
 	font-size: 8;
 }
+
+.Integrantes2{
+	margin:0px 0px 0px 0px;
+	font-size: 8;
+}
+
+.Integrantes{
+	margin:0px 0px 0px 40px;
+	font-size: 8;
+}
+
 .TableDiv{
 	font-size: 8;
 }

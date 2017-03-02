@@ -43,4 +43,8 @@ class Contrato extends Model
     public function ExpedicionContrato(){
         return $this->hasMany('App\Models\ExpedicionContrato', 'Contrato_Id');
     }
+
+    public function Integrante(){
+        return $this->hasMany('App\Models\Integrante', 'Contrato_Id');
+    }
 }

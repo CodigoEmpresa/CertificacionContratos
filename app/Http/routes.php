@@ -45,6 +45,7 @@ Route::group(['middleware' => ['web']], function () {
 	/********************Asignación de personas***************************/
 	Route::get('gestor_tabla','GestorDatosController@index');
 
+	Route::post('revIntegrante', 'GestorDatosController@RevisionIntegrante');
 	Route::post('revAdicion', 'GestorDatosController@RevisionAdicion');
 	Route::post('revProrroga', 'GestorDatosController@RevisionProrroga');
 	Route::post('revSuspencion', 'GestorDatosController@RevisionSuspencion');
@@ -57,6 +58,7 @@ Route::group(['middleware' => ['web']], function () {
 
 	Route::get('getContrato','GestorDatosController@GetContrato');	
 
+	Route::post('revIntegranteM', 'GestorDatosController@RevisionIntegranteM');
 	Route::post('revAdicionM', 'GestorDatosController@RevisionAdicionM');
 	Route::post('revProrrogaM', 'GestorDatosController@RevisionProrrogaM');
 	Route::post('revSuspencionM', 'GestorDatosController@RevisionSuspencionM');

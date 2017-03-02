@@ -79,9 +79,9 @@
         </div>
 
         <div class="table-row">
-          <div class="table-cell Neg">FECHA DE TERMINACIÓN</div>
+          <div class="table-cell Neg">FECHA DE TERMINACIÓN INICIAL</div>
           <div class="table-cell Vino">
-            {{$data['Fecha_Fin']}}
+            {{$data['Fecha_Fin_Contrato_Inicial']}}
           </div>
         </div>
 
@@ -93,6 +93,13 @@
               </div>
             </div>
           @endif
+
+          <div class="table-row">
+            <div class="table-cell Neg">FECHA DE TERMINACIÓN FINAL</div>
+            <div class="table-cell Vino">
+              {{$data['Fecha_Fin']}}
+            </div>
+          </div>
 
           @if($data['CountAdiciones'] > 0)
             <div class="table-row">
