@@ -166,6 +166,8 @@ return [
 
         Barryvdh\DomPDF\ServiceProvider::class,
 
+        'Maatwebsite\Excel\ExcelServiceProvider'
+
     ],
 
     /*
@@ -216,6 +218,8 @@ return [
         'Html' => Collective\Html\HtmlFacade::class, 
 
         'PDF' => Barryvdh\DomPDF\Facade::class,
+
+        'Excel' => 'Maatwebsite\Excel\Facades\Excel',
 
     ],
 

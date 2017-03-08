@@ -157,7 +157,7 @@
           @if($data['CountSuspenciones'] > 0)
             <div class="table-row">
               <div class="table-tit Neg Cesion">
-                SUSPENCIONES
+                SUSPENSIONES
               </div>
               <div class="table-cell Vino">
                 <div class="tableO">

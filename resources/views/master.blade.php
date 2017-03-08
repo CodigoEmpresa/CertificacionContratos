@@ -112,7 +112,10 @@
               @endif
               @if(isset($_SESSION['Usuario'])) 
                 <li class=”{{ Request::is( 'generador') ? 'active' : '' }}”><a href="{{ URL::to( 'generador') }}">Generador de PDF</a></li>
-                @endif
+              @endif
+              @if(isset($_SESSION['Usuario'])) 
+                <li class=”{{ Request::is( 'cargaMasiva') ? 'active' : '' }}”><a href="{{ URL::to( 'cargaMasiva') }}">Carga Masiva</a></li>
+              @endif
              
             </ul>
 

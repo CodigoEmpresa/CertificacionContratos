@@ -64,5 +64,11 @@ Route::group(['middleware' => ['web']], function () {
 	Route::post('revSuspencionM', 'GestorDatosController@RevisionSuspencionM');
 	Route::post('revCesionM', 'GestorDatosController@RevisionCesionM');
 	Route::post('revObligacionM', 'GestorDatosController@RevisionObligacionM');
+
+
+
+	/********************ADMINISTRACION***************************/
+	Route::get('cargaMasiva','CargaMasivaController@index');
+	Route::post('CargaArchivo', 'CargaMasivaController@CargaArchivo');
 	
 });
