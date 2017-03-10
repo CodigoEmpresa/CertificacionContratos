@@ -37,26 +37,6 @@ class CargaMasivaController extends Controller
 	}
 	public function CargaArchivo(Request $request){
 
-		/*$dbhost = 'http://www.idrd.gov.co';
-		$dbname = 'idrdgov_simgeneral_prueba';
-		$dbuser = 'idrdgov_dep2016';
-		$dbpass = 'W_L[[c)_J*xp';
-		 
-		$backup_file = $dbname. "-" .date("Y-m-d-H-i-s"). ".sql";
-		 
-		// comandos a ejecutar
-		$commands = array(
-		        "mysqldump --opt -h $dbhost -u $dbuser -p$dbpass -v $dbname > $backup_file",
-		      "bzip2 $backup_file"
-		);
-		 
-		// ejecución y salida de éxito o errores
-		foreach ( $commands as $command ) {
-		        system($command,$output);
-		        var_dump($commands);
-		        echo $output;
-		}*/
-
 		$validator = Validator::make($request->all(),
             [                
                 'ArchivoCM' => 'required|mimes:xls',
@@ -73,7 +53,7 @@ class CargaMasivaController extends Controller
         	}
 
         	$resultadoContratoSI = '';
-        	$resultadoContrato = '';
+        	$resultadoContrato = '';        	
 
         	$ListaErrorContrato = '';
         	$ListaErrorAdicion = '';
@@ -305,7 +285,7 @@ class CargaMasivaController extends Controller
 			        	}else{
 			        		$N_Contratista = $DatosArchivo->contratista;
 			        	}
-        			 	$ListaErrorContrato .= '-El contrato número: '.$N_Contrato.' con documento de contratista número: '.$N_Cedula.', con el contratista: '.$N_Contratista.', Ya se encuentra en la base de datos.<br>';
+        			 	$ListaErrorContrato .= '<tr><td>'.$N_Cedula.'</td><td>'.$N_Contrato.'</td><td>Ya se encuentra en la base de datos.</td></tr>';
         			 }
 
 		        } catch (\Illuminate\Database\QueryException $e) {
@@ -326,13 +306,22 @@ class CargaMasivaController extends Controller
 		        	}else{
 		        		$N_Contratista = $DatosArchivo->contratista;
 		        	}
-		        	$ListaErrorContrato .= '-El contrato número: '.$N_Contrato.' con documento de contratista número: '.$N_Cedula.', con el contratista: '.$N_Contratista.'<br>';
+		        	$ListaErrorContrato .= '<tr><td>'.$N_Cedula.'</td><td>'.$N_Contrato.'</td><td>No pudo ser insertado en la base de datos</td></tr>';
 		        	continue;
 		        }	
 
 	        }	        
 	        if($ListaErrorContrato != ''){
-	        	return response()->json(array('status' => 'errorCarga', 'mensaje' => $ListaErrorContrato));           
+	        	$tabla = "<table id='datosTabla' name='datosTabla'>
+			        <thead>
+			            <tr>
+							<th>NÚMERO DE DOCUMENTO</th>
+							<th>NÚMERO DE CONTRATO</th>
+							<th>DETALLE DEL ERROR</th>
+						</tr>
+					</thead>
+						<tbody>".$ListaErrorContrato."</tbody></table>";
+	        	return response()->json(array('status' => 'errorCarga', 'mensaje' => $ListaErrorContrato, 'vector' => $tabla));
 	        }else{	        
         		return response()->json(array('status' => 'ok', 'mensaje' => 'No hay'));           
         	}          

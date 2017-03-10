@@ -37,7 +37,9 @@
             </div>
             <div class="col-xs-12">
                 <div id="mensaje_carga"></div>
-            </div>            
+            </div> 
+            <div class="panel-body" id="TablaDat">            
+            </div>           
         </form>              
     </div>
 </div>                        

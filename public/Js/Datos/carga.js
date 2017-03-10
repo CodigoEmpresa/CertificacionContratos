@@ -3,6 +3,7 @@ $(function(){
     var formData = new FormData($("#CargaMasivaF")[0]);
     $("#Esperar").show('slow');
     $('#mensaje_carga').hide('slow');
+    $("#TablaDat").hide('slow');
     $("#agregarArchivo").hide('slow');
     $("#ArchivoCM").hide('slow');
     $('#CargaMasivaF .form-group').removeClass('has-error');
@@ -13,13 +14,31 @@ $(function(){
             contentType: false,
             processData: false,
             dataType: "json",
-            success: function(data){                  
-       
+            success: function(data){  
               if(data.status == 'errorCarga'){
                 $("#agregarArchivo").show('slow');
                 $("#ArchivoCM").show('slow');
-                $('#mensaje_carga').html('<div class="alert alert-dismissible alert-danger" ><strong>Registros que presentan error:</strong><br>'+data.mensaje+'</div>');
+                $('#mensaje_carga').html('<div class="alert alert-dismissible alert-danger" ><strong>Registros que presentan error:</div>');
                 $('#mensaje_carga').show('slow');
+                $('#TablaDat').hide('slow');
+                $('#TablaDat').html(data.vector);
+                $('#datosTabla').DataTable({
+                    retrieve: true,
+                    buttons: [
+                        'copy', 'csv', 'excel', 'pdf', 'print'
+                    ],
+                    dom: 'Bfrtip',
+                    select: true,
+                    "responsive": true,
+                    "ordering": true,
+                    "info": true,
+                    "pageLength": 10,
+                    "language": {
+                        url: 'public/DataTables/Spanish.json',
+                        searchPlaceholder: "Buscar"
+                    }
+                });
+                $('#TablaDat').show('slow');
                 $("#NuevaCarga").hide('slow');
               }
               else if(data.status == 'ok'){
@@ -35,7 +54,7 @@ $(function(){
                 $('#mensaje_carga').show(60);
                 $('#mensaje_carga').delay(1500).hide(1500);    
               }
-            }
+            }            
 
         }).done(function(){
           $("#Esperar").hide('slow');          
@@ -56,6 +75,8 @@ $(function(){
     $("#ArchivoCM").show('slow');
     $('#mensaje_carga').empty();
     $('#mensaje_carga').hide('slow');
+    $("#TablaDat").empty();
+    $("#TablaDat").hide('slow');
   });
 
 });

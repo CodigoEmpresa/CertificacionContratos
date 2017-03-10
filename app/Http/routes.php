@@ -65,10 +65,12 @@ Route::group(['middleware' => ['web']], function () {
 	Route::post('revCesionM', 'GestorDatosController@RevisionCesionM');
 	Route::post('revObligacionM', 'GestorDatosController@RevisionObligacionM');
 
-
-
-	/********************ADMINISTRACION***************************/
+	/********************CARGA MASIVA***************************/
 	Route::get('cargaMasiva','CargaMasivaController@index');
 	Route::post('CargaArchivo', 'CargaMasivaController@CargaArchivo');
+
+	/********************REPORTE EXPEDICION***************************/
+	Route::get('reporte_expedicion', 'ReportesController@index');
+	Route::post('getReporteExpedicion','ReportesController@ReporteExpedicion');		
 	
 });
