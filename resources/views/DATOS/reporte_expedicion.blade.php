@@ -55,20 +55,7 @@
                             <br>
                             <div id="mensaje"></div>
                             <br>
-                            <div class="row" id="VariosD" style="display:none;">
-                                <table id="TablaVarios" class="display nowrap" cellspacing="0" width="100%">
-                                    <thead>
-                                        <tr>
-                                            <th>CÉDULA</th>                        
-                                            <th>CONTRATISTA</th>
-                                            <th>N° DE CONTRATO</th>
-                                            <th>AÑO DE CONTRATO</th>
-                                            <th>DESCARGAR</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="RegistrosVarios">                                                    
-                                    </tbody> 
-                                </table>
+                            <div class="row" id="VariosD" style="display:none;">                              
                             </div>
                         </li>
                     </ul>                    

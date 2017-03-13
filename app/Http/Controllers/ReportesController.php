@@ -10,6 +10,7 @@ use Idrd\Usuarios\Repo\PersonaInterface;
 use Validator;
 use Exception;
 
+use App\Models\ExpedicionContrato;
 class ReportesController extends Controller
 {
 	public function __construct(PersonaInterface $repositorio_personas)
@@ -33,10 +34,33 @@ class ReportesController extends Controller
     			'FechaFin' => 'required|date|after:FechaInicio',
     			]);
 
+			$html = '';
+
 	        if ($validator->fails()){
 	            return response()->json(array('status' => 'error', 'errors' => $validator->errors()));
-	        }else{        			
-	        	return response()->json(array('status' => 'success', 'OK' => 'OK'));
+	        }else{        		
+	        	$ExpedicionContrato = ExpedicionContrato::with('contrato')->whereBetween('created_at', array($request->FechaInicio, $request->FechaFin))->get();
+	        	if(count($ExpedicionContrato) > 0){
+	        		foreach ($ExpedicionContrato as $key => $Datos) {
+	        			$html .= '<tr>
+	        						<td>'.$Datos->contrato->Cedula.'</td>
+	        						<td>'.$Datos->Nombre_Expedicion.'</td>
+	        						<td>'.$Datos->created_at.'</td>
+	        					</tr>';
+	        		}
+	        		$Resultado = "<table id='datosTabla' name='datosTabla'>
+			        <thead>
+			            <tr>
+							<th>CÉDULA</th>                        
+	                        <th>CÓDIGO</th>
+	                        <th>FECHA DE DESCARGA</th>
+						</tr>
+					</thead>
+						<tbody>".$html."</tbody></table>";
+	        		return response()->json(array('status' => 'success', 'datos' => $Resultado));	
+	        	}else{
+	        		return response()->json(array('status' => 'No hay datos', 'datos' => 'No hay datos'));
+	        	}
 			}
 		}else{
 			return response()->json(["Sin acceso"]);
