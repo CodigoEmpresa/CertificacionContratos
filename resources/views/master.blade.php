@@ -93,51 +93,56 @@
           </div>
           <div class="navbar-collapse collapse" id="navbar-main">            
             <ul class="nav navbar-nav">
-              <li class="dropdown">
+              <!--<li class="dropdown">
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="themes">Administración <span class="caret"></span></a>
-                <!--<ul class="dropdown-menu" aria-labelledby="themes">
+                <ul class="dropdown-menu" aria-labelledby="themes">
                   <li><a href="#" style="color:#1995dc">Gestor de personas</a></li>
                   <li class="divider"></li>
                   
-                      <li class=”{{ Request::is( 'personas') ? 'active' : '' }}”><a href="{{ URL::to( 'personas') }}">Gestión de personas</a></li>                  
-                  
-                      <li class=”{{ Request::is( 'persona_tipo') ? 'active' : '' }}”><a href="{{ URL::to( 'persona_tipo') }}">Asignación tipo persona</a></li>                  
-                  
-                      <li class=”{{ Request::is( 'persona_permiso') ? 'active' : '' }}”><a href="{{ URL::to( 'persona_permiso') }}">Asignación de permisos</a></li>                  
-                  
-                      <li class=”{{ Request::is( 'metodologo_agrupacion') ? 'active' : '' }}”><a href="{{ URL::to( 'metodologo_agrupacion') }}">Administración Metodólogos</a></li>                  
-                  
-                </ul>-->
-              </li>
-             <!-- <li>
-                <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="themes">SIAB <span class="caret"></span></a>
-                <ul class="dropdown-menu" aria-labelledby="themes">
-                  
-                      <li><a href="{{ URL::to( 'rud') }}">Registro único de deportistas</a></li>
-                  
-                      <li><a href="{{ URL::to( 'psico') }}">Valoración psicosocial</a></li>
-                  
-                      <li><a href="{{ URL::to( 'domicilio') }}">Visita domiciliaria</a></li>
-                  
-                      <li><a href="{{ URL::to( 'actividad') }}">Actividades de intervención</a></li>
-                  
-                      <li><a href="{{ URL::to( 'suministros') }}">Suministros, apoyos y servicios</a></li>
+                      <li class=”{{ Request::is( 'gestor_tabla') ? 'active' : '' }}”><a href="{{ URL::to( 'gestor_tabla') }}">Gestión de datos</a></li>
+
+                      <li class=”{{ Request::is( 'generador') ? 'active' : '' }}”><a href="{{ URL::to( 'generador') }}">Generador de PDF</a></li>
                   
                 </ul>
               </li>-->
+              @if(isset($_SESSION['Usuario'])) 
+                @if($_SESSION['Usuario'][1] == 1) 
+                  <li class=”{{ Request::is( 'gestor_tabla') ? 'active' : '' }}”><a href="{{ URL::to( 'gestor_tabla') }}">Gestión de datos</a></li>
+                @endif
+              @endif
+              @if(isset($_SESSION['Usuario'])) 
+                <li class=”{{ Request::is( 'generador') ? 'active' : '' }}”><a href="{{ URL::to( 'generador') }}">Generador de PDF</a></li>
+              @endif
+              @if(isset($_SESSION['Usuario'])) 
+                <li class=”{{ Request::is( 'cargaMasiva') ? 'active' : '' }}”><a href="{{ URL::to( 'cargaMasiva') }}">Carga Masiva</a></li>
+              @endif
+              @if($_SESSION['Usuario'][1] == 1) 
+                  <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="themes">Reportes <span class="caret"></span></a>
+                    <ul class="dropdown-menu" aria-labelledby="themes">
+                      <li><a href="#" style="color:#1995dc">Reportes</a></li>
+                      <li class="divider"></li>                      
+                          <li class=”{{ Request::is( 'reporte_expedicion') ? 'active' : '' }}”><a href="{{ URL::to( 'reporte_expedicion') }}">Reporte de expedición de certificados</a></li>
+                    </ul>
+                  </li>                  
+                @endif
              
             </ul>
 
             <form class="navbar-form navbar-left" role="search">
-                <div class="form-group">
-                  <input type="text" class="form-control" placeholder="Buscar">
-                </div>                
-                <button type="submit" class="btn btn-default">Ir</button>
+                @if(isset($_SESSION['Usuario'])) 
+                  <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Buscar">
+                  </div>                
+                  <button type="submit" class="btn btn-default">Ir</button>
+                @endif
             </form>
 
             <ul class="nav navbar-nav navbar-right">
               <li><a href="http://www.idrd.gov.co/sitio/idrd/" target="_blank">I.D.R.D</a></li>
-              <li><a href="#">Cerrar Sesión</a></li>
+                @if(isset($_SESSION['Usuario'])) 
+                <li><a href="#">Cerrar Sesión</a></li>
+                @endif
             </ul>
 
           </div>
@@ -148,19 +153,21 @@
       <!-- Contenedor información módulo -->
       </br></br>
       <div class="container">
-          <div class="page-header" id="banner">
-            <div class="row">
+          <div class="page-header" id="banner">            
+            <div class="row">                
               <div class="col-lg-8 col-md-7 col-sm-6">
-                <h1>APLICATIVO CERTIFICACIÓN DE CONTRATISTAS</h1>
-                <p class="lead"><h1>Área de Apoyo a la contratación</h1></p>
-              </div>
+                @if(isset($_SESSION['Usuario'])) 
+                  <h1>APLICATIVO DE GESTIÓN DE CERTIFICADOS A CONTRATISTAS</h1>                
+                  <p class="lead"><h1>Área de Apoyo a la contratación</h1></p>
+                @endif
+              </div>                
               <div class="col-lg-4 col-md-5 col-sm-6">
                  <div align="right"> 
                     <img src="public/Img/IDRD.JPG" width="50%" heigth="40%"/>
                  </div>                    
               </div>
             </div>
-          </div>        
+          </div>     
       </div>
       <!-- FIN Contenedor información módulo -->
 

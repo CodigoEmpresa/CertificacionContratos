@@ -1,0 +1,181 @@
+body {
+	font-family: Arial, Helvetica, Verdana;
+}
+
+.Objeto, .Integrantes{
+  margin-left:500px;
+  padding-bottom: 10px;
+}
+
+div .TableDiv{
+ /*background-color: #00ff00;*/
+
+}
+
+.TextoInicio{
+	margin:0px 40px 0px 40px;
+	font-size: 10;
+	text-align: justify;
+}
+
+.Objeto{
+	margin:0px 0px 0px 90px;
+	font-size: 8;
+}
+
+.Integrantes2{
+	margin:0px 0px 0px 0px;
+	font-size: 8;
+}
+
+.Integrantes{
+	margin:0px 0px 0px 40px;
+	font-size: 8;
+}
+
+.TableDiv{
+	font-size: 8;
+}
+
+p{
+	font-size: 8;
+}
+.Cesion, .TituloTable{
+	background-color: #A4A4A4;
+}
+
+.Neg{
+	font-weight: 800;
+	width: 40%;
+}
+.Mayus{
+	text-transform: uppercase;
+}
+
+.Minus{
+	text-transform: lowercase;
+}
+
+.TableInt td, tr, th, table  {
+    text-align: left; 
+}
+
+.Numero{
+
+    text-align: left; 
+    width: 2%;
+}
+
+.Obligacion{
+    text-align: left; 
+    width: 98%;
+}
+.Vino{
+	color: #610D0D;
+}
+
+.table {
+	display: table; width: 100%; 
+	border-collapse: collapse; 
+	font-size: 8;
+    width: 90%;
+    margin: 0 auto;
+}
+
+.table-row {
+	display: table-row;
+}
+
+.table-tit{
+	display: table-cell; 
+	border: 1px solid black; 
+	background-color: #A4A4A4;
+	font-weight: 800;
+	padding-left: 5px;
+	width:210px !important;
+}
+
+.table-cell {
+	display: table-cell; 
+	border: 1px solid black; 
+	padding-left: 5px;
+}
+
+.tableOX{
+	width: 90%;
+	margin: 0 auto;
+	border-left: 1px solid black; 
+}
+
+.tableO {
+	display: table; width: 100%; 
+	border-collapse: collapse; 
+	font-size: 8;    
+    
+}
+
+.table-rowO {
+	display: table-row;
+	border-bottom: none; 
+}
+
+.table-titO{
+	display: table-cell; 
+	padding-left: 5px;
+	width:211px !important;
+	color:#ffffff;
+	font-weight: 800;
+	border: 1px solid black; 
+}
+
+.table-cellO {
+	display: table-cell; 
+	
+}
+.table-cellOT {
+	display: table-cell; 
+	width: 5%;
+}
+
+
+.header,
+/*.footer*/ {
+    
+    text-align: center;
+    
+
+.header {
+	width: 100%;
+	position: fixed;
+    top: -30px;
+    font-size: 6;    
+}
+.pagenum:before {
+    content: counter(page);
+}
+
+ footer {
+  position: fixed;
+  left: 0px;
+  bottom: -10px;
+  right: 0px;
+  height: 40px;
+  text-align: center;
+}
+footer .page:after {
+  content: counter(page);
+}
+footer table {
+  width: 100%;
+}
+footer p {
+  text-align: right;
+}
+footer .izq {
+  text-align: left;
+}
+
+.PiePag{
+	height: 70px;
+	width: 700px;
+}

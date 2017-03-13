@@ -25,6 +25,14 @@ session_start();
 	Route::post('/personas/service/procesar/', '\Idrd\Usuarios\Controllers\PersonaController@procesar');	
 	/************************************/
 
+	Route::get('generador','GeneradorController@index');
+	Route::post('getContratoExp','GeneradorController@GetContratoExp');
+	Route::post('getContratoUnico','GeneradorController@GetContratoUnico');
+	Route::get('descargarContrato/{Contrato_Id}','GeneradorController@DescargarContrato');
+	Route::get('datos/{tipo_documento}/{documento}/{anio}','GeneradorController@Datos');
+	Route::get('getContratoOne/{id_contrato}','GestorDatosController@GetContratoOne');		
+	Route::get('getContratoDate/{anio}','GestorDatosController@GetContratoDate');		
+
 
 
 
@@ -35,8 +43,34 @@ Route::group(['middleware' => ['web']], function () {
 	/********************ADMINISTRACION***************************/
 
 	/********************Asignación de personas***************************/
-//	Route::get('persona_tipo','AdministracionController@index');
-//	Route::post('AddPersonaTipo', 'AdministracionController@AgregarPersonaTipo');
+	Route::get('gestor_tabla','GestorDatosController@index');
 
+	Route::post('revIntegrante', 'GestorDatosController@RevisionIntegrante');
+	Route::post('revAdicion', 'GestorDatosController@RevisionAdicion');
+	Route::post('revProrroga', 'GestorDatosController@RevisionProrroga');
+	Route::post('revSuspencion', 'GestorDatosController@RevisionSuspencion');
+	Route::post('revCesion', 'GestorDatosController@RevisionCesion');
+	Route::post('revObligacion', 'GestorDatosController@RevisionObligacion');
 
+	Route::post('AddContrato', 'GestorDatosController@AgregarContrato');
+	Route::post('EditContrato', 'GestorDatosController@ModificarContrato');
+	Route::post('DeleteContrato', 'GestorDatosController@EliminarContrato');	
+
+	Route::get('getContrato','GestorDatosController@GetContrato');	
+
+	Route::post('revIntegranteM', 'GestorDatosController@RevisionIntegranteM');
+	Route::post('revAdicionM', 'GestorDatosController@RevisionAdicionM');
+	Route::post('revProrrogaM', 'GestorDatosController@RevisionProrrogaM');
+	Route::post('revSuspencionM', 'GestorDatosController@RevisionSuspencionM');
+	Route::post('revCesionM', 'GestorDatosController@RevisionCesionM');
+	Route::post('revObligacionM', 'GestorDatosController@RevisionObligacionM');
+
+	/********************CARGA MASIVA***************************/
+	Route::get('cargaMasiva','CargaMasivaController@index');
+	Route::post('CargaArchivo', 'CargaMasivaController@CargaArchivo');
+
+	/********************REPORTE EXPEDICION***************************/
+	Route::get('reporte_expedicion', 'ReportesController@index');
+	Route::post('getReporteExpedicion','ReportesController@ReporteExpedicion');		
+	
 });
