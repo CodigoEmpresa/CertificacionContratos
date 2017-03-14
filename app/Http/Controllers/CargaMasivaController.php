@@ -58,10 +58,14 @@ class CargaMasivaController extends Controller
         	$ListaErrorContrato = '';
         	$ListaErrorAdicion = '';
 
-
         	foreach ($DatosArchivos as $key => $DatosArchivo) {        		
         		try {        			
-        			 $ContratoEx = Contrato::where('Cedula', $DatosArchivo->cedula)->where('Numero_Contrato', $DatosArchivo->n0_contrato)->get();        		
+        			$lista = explode('-', $DatosArchivo->fecha_firma_del_contrato);
+
+        			 $ContratoEx = Contrato::where('Cedula', $DatosArchivo->cedula)
+        			 					   ->where('Numero_Contrato', $DatosArchivo->n0_contrato)
+        			 					   ->whereYear('Fecha_Firma','=', $lista[0])
+        			 					   ->get();        		
 
         			 if(count($ContratoEx) == 0){
 		        		$Contrato = new Contrato;

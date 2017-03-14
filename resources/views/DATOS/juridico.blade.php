@@ -31,9 +31,6 @@
     Que revisada la documentación que reposa en los archivos de  la entidad, se establece que el IDRD suscribió EL <span class="Mayus Vino">{{$data['Tipo_Contrato']}}</span>, que se relaciona a continuación, con <span class="Mayus Vino">{{$data['Nombre_Contratista']}}</span> identificado (a) con <span class="Mayus Vino">{{$data['Tipo_Documento']}}</span> No. <span class="Mayus Vino">{{$data['Cedula']}} - {{$data['Dv']}}</span>, representada legalmente por <span class="Mayus Vino">{{$data['Nombre_Representante']}}</span>, con <span class="Mayus Vino">{{$data['Tipo_Documento_Representante']}}</span> No. <span class="Mayus Vino">{{$data['Cedula_Representante']}}</span>, con las siguientes características:
   </p>   
     <br>
-    <div class="Objeto">
-      OBJETO:  <span class="Mayus Vino">{{$data['Objeto']}}</span>
-    </div> 
     <div class="TableDiv">
       <div class="table">
         <div class="table-row titulo">
@@ -43,6 +40,14 @@
              de 
             <span class="Mayus Vino">{{$data['Anio']}}</span></div>
         </div>
+
+        
+        <div class="table-row">
+            <div class="table-cell Neg">
+              OBJETO</span>
+            </div>
+            <div class="table-cell Vino Mayus">{{$data['Objeto']}}</div>
+          </div>
 
         <div class="table-row">
           <div class="table-cell">
