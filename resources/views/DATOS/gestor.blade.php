@@ -24,66 +24,94 @@
                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Agregar contrato
             </button>
         </div>
-        <br><br>  
-        <div class="row">                                        
-         <div class="form-group col-md-4">
-                 <label for="inputEmail" class="control-label">Seleccione un año:</label>
-             </div>
-             <div class="form-group col-md-8">
-             <select name="AnioConsulta" id="AnioConsulta" class="form-control">
-                <option value="">Seleccionar</option>      
-                <option value="1990">1990</option>      
-                <option value="1991">1991</option>   
-                <option value="1992">1992</option>      
-                <option value="1993">1993</option>      
-                <option value="1994">1994</option>      
-                <option value="1995">1995</option>      
-                <option value="1996">1996</option>                            
-                <option value="1997">1997</option>
-                <option value="1998">1998</option>      
-                <option value="1999">1999</option>   
-                <option value="2000">2000</option>      
-                <option value="2001">2001</option>      
-                <option value="2002">2002</option>      
-                <option value="2003">2003</option>      
-                <option value="2004">2004</option>                            
-                <option value="2005">2005</option>
-                <option value="2006">2006</option>      
-                <option value="2007">2007</option>   
-                <option value="2008">2008</option>      
-                <option value="2009">2009</option>      
-                <option value="2010">2010</option>      
-                <option value="2011">2011</option>      
-                <option value="2012">2012</option>   
-                <option value="2013">2013</option>      
-                <option value="2014">2014</option>      
-                <option value="2015">2015</option>      
-                <option value="2016">2016</option>      
-                <option value="2017">2017</option>                                        
-         </select>          
+        <br>
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Buscador</h3>
+            </div>
+            <div class="panel-body">
+                <li class="list-group-item">
+                    <div class="row">                                        
+                         <div class="form-group col-md-4">
+                                 <label for="inputEmail" class="control-label">Seleccione un año:</label>
+                             </div>
+                             <div class="form-group col-md-8">
+                             <select name="AnioConsulta" id="AnioConsulta" class="form-control">
+                                <option value="">Seleccionar</option>      
+                                <option value="1990">1990</option>      
+                                <option value="1991">1991</option>   
+                                <option value="1992">1992</option>      
+                                <option value="1993">1993</option>      
+                                <option value="1994">1994</option>      
+                                <option value="1995">1995</option>      
+                                <option value="1996">1996</option>                            
+                                <option value="1997">1997</option>
+                                <option value="1998">1998</option>      
+                                <option value="1999">1999</option>   
+                                <option value="2000">2000</option>      
+                                <option value="2001">2001</option>      
+                                <option value="2002">2002</option>      
+                                <option value="2003">2003</option>      
+                                <option value="2004">2004</option>                            
+                                <option value="2005">2005</option>
+                                <option value="2006">2006</option>      
+                                <option value="2007">2007</option>   
+                                <option value="2008">2008</option>      
+                                <option value="2009">2009</option>      
+                                <option value="2010">2010</option>      
+                                <option value="2011">2011</option>      
+                                <option value="2012">2012</option>   
+                                <option value="2013">2013</option>      
+                                <option value="2014">2014</option>      
+                                <option value="2015">2015</option>      
+                                <option value="2016">2016</option>      
+                                <option value="2017">2017</option>                                        
+                         </select>          
+                        </div>
+                    </div>   
+                </li>             
+                <li class="list-group-item">
+                    <div class="row">                                        
+                        <div class="form-group col-md-4">
+                            <label for="inputEmail" class="control-label">Digite el número de documento:</label>
+                        </div>
+                        <div id="DocumentoD" class="form-group col-md-4">       
+                            <input type="text" class="form-control"  placeholder="Número de documento" id="Documento" name="Documento">                        
+                        </div>
+                        <div class="form-group col-md-4">                               
+                            <button type="button" class="btn btn-info" name="BuscarDocumento" id="BuscarDocumento">
+                                <span class="glyphicon glyphicon-search" aria-hidden="true"></span>Buscar por número de documento
+                            </button>
+                        </div>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <div class="row">                                        
+                        <div class="form-group col-md-4">
+                            <label for="inputEmail" class="control-label">Digite el nombre del contratista:</label>
+                        </div>
+                        <div id="ContratistaNombreD" class="form-group col-md-4">       
+                            <input type="text" class="form-control"  placeholder="Nombre del contratista" id="ContratistaNombre" name="ContratistaNombre">                        
+                        </div>
+                        <div class="form-group col-md-4">                               
+                            <button type="button" class="btn btn-primary" name="BuscarContratista" id="BuscarContratista">
+                                <span class="glyphicon glyphicon-search" aria-hidden="true"></span>Buscar por nombre de contratista
+                            </button>
+                        </div>
+                    </div>    
+                </li>
+            </div>        
         </div>
-    </div>
-        <div class="panel-body" id="Esperar" style="display:none;">
-        <div class="container" id="loading" >
-            <center><button class="btn btn-lg btn-default"><span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> Espere...</button></center>
+        <div class="panel panel-primary">
+            <div class="panel-body" id="Esperar" style="display:none;">
+                <div class="container" id="loading" >
+                    <center><button class="btn btn-lg btn-default"><span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> Espere...</button></center>
+                </div>
+            </div>
+            <div class="panel-body" id="TablaDat" style="display:none;"></div>      
         </div>
-       </div>
-        <div class="panel-body" id="TablaDat">
-           <!-- <table id="datosTabla" class="display nowrap" cellspacing="0" width="100%">
-                <thead>
-                    <tr>
-                        <th>CÉDULA</th>                        
-                        <th>CONTRATISTA</th>
-                        <th>N° DE CONTRATO</th>
-                        <th>AÑO DE CONTRATO</th>
-                        <th>OPCIONES</th>
-                    </tr>
-                </thead>
-                <tbody id="BDatosTabla">                                  
-                </tbody> 
-            </table>-->
-        </div>
-    </div>
+
+        
 
     <!-- ------------------------------ MODAL REGISTRO DE CONTRATOS ----------------------------------------- -->
     <div class="modal fade bs-example-modal-lg" id="AgregarContratoD" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">

@@ -33,7 +33,8 @@ session_start();
 	Route::get('getContratoOne/{id_contrato}','GestorDatosController@GetContratoOne');		
 	Route::get('getContratoDate/{anio}','GestorDatosController@GetContratoDate');		
 
-
+	Route::get('getContratoDocumento/{documento}','GestorDatosController@GetContratoDocumento');		
+	Route::get('getContratoContratista/{contratista}','GestorDatosController@GetContratoContratista');		
 
 
 //rutas con filtro de autenticación

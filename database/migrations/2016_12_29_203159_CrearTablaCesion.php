@@ -21,7 +21,7 @@ class CrearTablaCesion extends Migration
             $table->string('Tipo_Documento_Cesionario');
             $table->string('Cedula_Cesionario');
             $table->integer('Dv_Cesion')->nullable();
-            $table->integer('Valor_Cedido');
+            $table->bigInteger('Valor_Cedido');
             //$table->integer('Dias');
             $table->date('Fecha_Cesion');
             $table->timestamps();

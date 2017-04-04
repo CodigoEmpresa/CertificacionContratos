@@ -39,14 +39,17 @@ class ReportesController extends Controller
 	        if ($validator->fails()){
 	            return response()->json(array('status' => 'error', 'errors' => $validator->errors()));
 	        }else{        		
-	        	$ExpedicionContrato = ExpedicionContrato::with('contrato')->whereBetween('created_at', array($request->FechaInicio, $request->FechaFin))->get();
+	        	$ExpedicionContrato = ExpedicionContrato::with('contrato')->whereBetween('created_at', array($request->FechaInicio.' 00:00:00', $request->FechaFin.' 23:59:59'))->get();
 	        	if(count($ExpedicionContrato) > 0){
 	        		foreach ($ExpedicionContrato as $key => $Datos) {
-	        			$html .= '<tr>
+
+	        			if(isset($Datos->contrato->Cedula)){
+	        				$html .= '<tr>
 	        						<td>'.$Datos->contrato->Cedula.'</td>
 	        						<td>'.$Datos->Nombre_Expedicion.'</td>
 	        						<td>'.$Datos->created_at.'</td>
 	        					</tr>';
+	        			}
 	        		}
 	        		$Resultado = "<table id='datosTabla' name='datosTabla'>
 			        <thead>

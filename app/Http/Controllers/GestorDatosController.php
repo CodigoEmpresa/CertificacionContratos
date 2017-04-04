@@ -39,6 +39,106 @@ class GestorDatosController extends Controller
 				->with(compact('TipoDocumento'))
 				;
 	}
+
+	public function GetContratoDocumento(Request $request, $documento){
+		$Contrato = Contrato::with('Cesion')->where('Cedula', $documento)->get();
+		$html ="";
+
+		foreach ($Contrato as $key) {
+			$Cedula = "<td>".$key->Cedula."</td>";
+			$Nombre_Contratista = "<td>".$key->Nombre_Contratista."</td>";
+			$Numero_Contrato = "<td>".$key->Numero_Contrato."</td>";
+			$Fecha_Inicio = "<td>".$key->Fecha_Inicio."</td>";
+
+			$Botones = '<td><button type="button" class="btn-sm btn-info" data-funcion="verContrato" value="'.$key->Id.'" >
+                                  <span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span>
+                              </button>
+                              <button type="button" class="btn-sm btn-primary" data-funcion="modificarContrato" value="'.$key->Id.'" >
+                                  <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                              </button>
+                              <button type="button" class="btn-sm btn-danger"  data-funcion="eliminarContrato" value="'.$key->Id.'" >
+                                  <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                              </button></td>';
+
+            
+            if(count($key->Cesion)>0){
+            	$NombreCesionario ="<td>".$key->Cesion[0]['Nombre_Cesionario']."</td>";
+            	$DocumentoCesionario ="<td>".$key->Cesion[0]['Cedula_Cesionario']."</td>";
+            }else{
+            	$NombreCesionario="<td>No aplica</td>";
+            	$DocumentoCesionario="<td>No aplica</td>";
+            }
+            
+
+			$h = '<tr style=" font-size: 12px;">'.$Cedula.$Nombre_Contratista.$Numero_Contrato.$Fecha_Inicio.$NombreCesionario.$DocumentoCesionario.$Botones.'</tr>';
+
+			$html = $html.$h;
+		}
+		$Resultado = "<table id='datosTabla' name='datosTabla'>
+			        <thead>
+			            <tr>
+							<th>CÉDULA</th>                        
+	                        <th>CONTRATISTA</th>
+	                        <th>N° DE CONTRATO</th>
+	                        <th>AÑO DE CONTRATO</th>
+	                        <th>NOMBRE CESIONARIO</th>
+	                        <th>DOCUMENTO CESIONARIO</th>
+	                        <th>OPCIONES</th>							
+						</tr>
+					</thead>
+						<tbody>".$html."</tbody></table>";
+		return ($Resultado);
+	}
+
+	public function GetContratoContratista(Request $request, $contratista){
+		$Contrato = Contrato::with('Cesion')->where('Nombre_Contratista', 'like', '%'.$contratista.'%')
+		->get();
+		$html ="";
+		foreach ($Contrato as $key) {
+			$Cedula = "<td>".$key->Cedula."</td>";
+			$Nombre_Contratista = "<td>".$key->Nombre_Contratista."</td>";
+			$Numero_Contrato = "<td>".$key->Numero_Contrato."</td>";
+			$Fecha_Inicio = "<td>".$key->Fecha_Inicio."</td>";
+
+			$Botones = '<td><button type="button" class="btn-sm btn-info" data-funcion="verContrato" value="'.$key->Id.'" >
+                                  <span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span>
+                              </button>
+                              <button type="button" class="btn-sm btn-primary" data-funcion="modificarContrato" value="'.$key->Id.'" >
+                                  <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                              </button>
+                              <button type="button" class="btn-sm btn-danger"  data-funcion="eliminarContrato" value="'.$key->Id.'" >
+                                  <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                              </button></td>';
+
+            
+            if(count($key->Cesion)>0){
+            	$NombreCesionario ="<td>".$key->Cesion[0]['Nombre_Cesionario']."</td>";
+            	$DocumentoCesionario ="<td>".$key->Cesion[0]['Cedula_Cesionario']."</td>";
+            }else{
+            	$NombreCesionario="<td>No aplica</td>";
+            	$DocumentoCesionario="<td>No aplica</td>";
+            }
+            
+
+			$h = '<tr style=" font-size: 12px;">'.$Cedula.$Nombre_Contratista.$Numero_Contrato.$Fecha_Inicio.$NombreCesionario.$DocumentoCesionario.$Botones.'</tr>';
+
+			$html = $html.$h;
+		}
+		$Resultado = "<table id='datosTabla' name='datosTabla'>
+			        <thead>
+			            <tr>
+							<th>CÉDULA</th>                        
+	                        <th>CONTRATISTA</th>
+	                        <th>N° DE CONTRATO</th>
+	                        <th>AÑO DE CONTRATO</th>
+	                        <th>NOMBRE CESIONARIO</th>
+	                        <th>DOCUMENTO CESIONARIO</th>
+	                        <th>OPCIONES</th>							
+						</tr>
+					</thead>
+						<tbody>".$html."</tbody></table>";
+		return ($Resultado);
+	}
 	
 	public function GetContratoDate(Request $request, $anio){
 		$Contrato = Contrato::with('Cesion')->whereBetween('Fecha_Firma', array($anio.'-01-01', $anio.'-12-31'))

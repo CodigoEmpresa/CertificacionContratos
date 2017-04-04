@@ -32,7 +32,7 @@ class CrearTablaContrato extends Migration
             $table->integer('Meses_Duracion');
             $table->integer('Dias_Duracion');
             $table->string('Otra_Duracion')->nullable();
-            $table->integer('Valor_Inicial');
+            $table->bigInteger('Valor_Inicial');
             $table->string('Valor_Mensual');
             //$table->date('fecha_Final_CTO');
             $table->timestamps();

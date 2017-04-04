@@ -1,5 +1,73 @@
 $(function(){
 
+  $('#BuscarDocumento').on('click', function(){   
+    $("#ContratistaNombre").val('');
+    $('#AnioConsulta').val('');
+    if($("#Documento").val() != ''){
+      $('#DocumentoD').removeClass('has-error');
+      $('#TablaDat').hide('slow');
+      $('#Esperar').show('slow');
+      $.get("getContratoDocumento/"+$("#Documento").val(), function (ContratoDocumento) {
+        $('#TablaDat').html(ContratoDocumento);
+         $('#datosTabla').DataTable({
+            retrieve: true,
+              buttons: [
+                  'copy', 'csv', 'excel', 'pdf', 'print'
+              ],
+              dom: 'Bfrtip',
+              select: true,
+              "responsive": true,
+              "ordering": true,
+              "info": true,
+              "pageLength": 10,
+              "language": {
+                  url: 'public/DataTables/Spanish.json',
+                  searchPlaceholder: "Buscar"
+              }
+          });
+      }).done(function(){
+        $('#TablaDat').show('slow');
+        $('#Esperar').hide('slow');   
+      });
+    }else{
+      $('#DocumentoD').addClass('has-error');
+    }
+  });
+
+  $('#BuscarContratista').on('click', function(){   
+    $("#Documento").val('');
+    $('#AnioConsulta').val('');
+    if($("#ContratistaNombre").val() != ''){
+      $('#ContratistaNombreD').removeClass('has-error');
+      $('#TablaDat').hide('slow');
+      $('#Esperar').show('slow');
+      $.get("getContratoContratista/"+$("#ContratistaNombre").val(), function (ContratoDocumento) {
+        $('#TablaDat').html(ContratoDocumento);
+         $('#datosTabla').DataTable({
+            retrieve: true,
+              buttons: [
+                  'copy', 'csv', 'excel', 'pdf', 'print'
+              ],
+              dom: 'Bfrtip',
+              select: true,
+              "responsive": true,
+              "ordering": true,
+              "info": true,
+              "pageLength": 10,
+              "language": {
+                  url: 'public/DataTables/Spanish.json',
+                  searchPlaceholder: "Buscar"
+              }
+          });
+      }).done(function(){
+        $('#TablaDat').show('slow');
+        $('#Esperar').hide('slow');   
+      });
+    }else{
+      $('#ContratistaNombreD').addClass('has-error');
+    }
+  });
+
   $("#Nombre_Contratista").on('blur', function(){
     cadena = $(this).val().toUpperCase();
       if(/UNIÓN TEMPORAL/.test(cadena) || /UNION TEMPORAL/.test(cadena)|| /CONSORCIO/.test(cadena)){
@@ -70,34 +138,36 @@ $(function(){
   });
 
   
-      $('#AnioConsulta').on('change', function(){            
-          if($(this).val() != ''){
-            $('#TablaDat').hide('slow');
-            $('#Esperar').show('slow');
-            $.get("getContratoDate/"+$(this).val(), function (ContratoDate) {
-              $('#TablaDat').html(ContratoDate);
-               $('#datosTabla').DataTable({
-                  retrieve: true,
-                    buttons: [
-                        'copy', 'csv', 'excel', 'pdf', 'print'
-                    ],
-                    dom: 'Bfrtip',
-                    select: true,
-                    "responsive": true,
-                    "ordering": true,
-                    "info": true,
-                    "pageLength": 10,
-                    "language": {
-                        url: 'public/DataTables/Spanish.json',
-                        searchPlaceholder: "Buscar"
-                    }
-                });
-            }).done(function(){
-              $('#TablaDat').show('slow');
-              $('#Esperar').hide('slow');   
-            });
-          }
-      });
+    $('#AnioConsulta').on('change', function(){     
+    $("#ContratistaNombre").val('');
+    $('#Documento').val('');       
+        if($(this).val() != ''){
+          $('#TablaDat').hide('slow');
+          $('#Esperar').show('slow');
+          $.get("getContratoDate/"+$(this).val(), function (ContratoDate) {
+            $('#TablaDat').html(ContratoDate);
+             $('#datosTabla').DataTable({
+                retrieve: true,
+                  buttons: [
+                      'copy', 'csv', 'excel', 'pdf', 'print'
+                  ],
+                  dom: 'Bfrtip',
+                  select: true,
+                  "responsive": true,
+                  "ordering": true,
+                  "info": true,
+                  "pageLength": 10,
+                  "language": {
+                      url: 'public/DataTables/Spanish.json',
+                      searchPlaceholder: "Buscar"
+                  }
+              });
+          }).done(function(){
+            $('#TablaDat').show('slow');
+            $('#Esperar').hide('slow');   
+          });
+        }
+    });
         
       var table = $('#datosTabla').DataTable();
    
@@ -110,7 +180,6 @@ $(function(){
               $(this).addClass('selected');
           }
       } );
-   
   
     var Adicion = new Array();
     var Prorroga = new Array();
