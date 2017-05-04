@@ -73,5 +73,12 @@ Route::group(['middleware' => ['web']], function () {
 	/********************REPORTE EXPEDICION***************************/
 	Route::get('reporte_expedicion', 'ReportesController@index');
 	Route::post('getReporteExpedicion','ReportesController@ReporteExpedicion');		
+
+	/********************REPORTE CODIGO***************************/
+	Route::get('reporte_codigo', 'ReportesController@indexCodigo');
+	Route::post('getReporteCodigo','ReportesController@GetReporteCodigo');		
+	//
+
+	
 	
 });

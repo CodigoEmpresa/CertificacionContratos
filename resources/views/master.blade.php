@@ -117,15 +117,16 @@
                 <li class=”{{ Request::is( 'cargaMasiva') ? 'active' : '' }}”><a href="{{ URL::to( 'cargaMasiva') }}">Carga Masiva</a></li>
               @endif
               @if($_SESSION['Usuario'][1] == 1) 
-                  <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="themes">Reportes <span class="caret"></span></a>
-                    <ul class="dropdown-menu" aria-labelledby="themes">
-                      <li><a href="#" style="color:#1995dc">Reportes</a></li>
-                      <li class="divider"></li>                      
-                          <li class=”{{ Request::is( 'reporte_expedicion') ? 'active' : '' }}”><a href="{{ URL::to( 'reporte_expedicion') }}">Reporte de expedición de certificados</a></li>
-                    </ul>
-                  </li>                  
-                @endif
+                <li class="dropdown">
+                  <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="themes">Reportes <span class="caret"></span></a>
+                  <ul class="dropdown-menu" aria-labelledby="themes">
+                    <li><a href="#" style="color:#1995dc">Reportes</a></li>
+                    <li class="divider"></li>                      
+                        <li class=”{{ Request::is( 'reporte_expedicion') ? 'active' : '' }}”><a href="{{ URL::to( 'reporte_expedicion') }}">Reporte de expedición de certificados</a></li>
+                        <li class=”{{ Request::is( 'reporte_codigo') ? 'active' : '' }}”><a href="{{ URL::to( 'reporte_codigo') }}">Reporte por código de expedición</a></li>
+                  </ul>
+                </li>                  
+              @endif
              
             </ul>
 

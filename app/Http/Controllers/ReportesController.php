@@ -69,4 +69,60 @@ class ReportesController extends Controller
 			return response()->json(["Sin acceso"]);
 		}
 	}
+
+	public function indexCodigo(Request $request){
+		return view('DATOS/reporte_codigo');
+	}
+
+	public function GetReporteCodigo (Request $request){
+		//dd($request->all());
+		if ($request->ajax()) { 
+			$validator = Validator::make($request->all(), [
+    			//'Codigo' => 'required|regex:/^[(0-9\-)]+$/u',
+    			'Codigo1' => 'required|numeric',
+    			'Codigo2' => 'required|numeric',
+    			'Codigo3' => 'required|numeric',
+    			]);
+
+			$html = '';
+
+	        if ($validator->fails()){
+	            return response()->json(array('status' => 'error', 'errors' => $validator->errors()));
+	        }else{
+	        	//Codigo para realizar consulta de expedicion de contratos
+	        	$ExpedicionContrato = ExpedicionContrato::where('Nombre_Expedicion', $request->Codigo1.'-'.$request->Codigo2.'-'.$request->Codigo3)->get();
+
+	        	dd($ExpedicionContrato);
+
+	        	//$ExpedicionContrato = ExpedicionContrato::where('')->get();
+	        	/*$ExpedicionContrato = ExpedicionContrato::with('contrato')->whereBetween('created_at', array($request->FechaInicio.' 00:00:00', $request->FechaFin.' 23:59:59'))->get();
+	        	if(count($ExpedicionContrato) > 0){
+	        		foreach ($ExpedicionContrato as $key => $Datos) {
+
+	        			if(isset($Datos->contrato->Cedula)){
+	        				$html .= '<tr>
+	        						<td>'.$Datos->contrato->Cedula.'</td>
+	        						<td>'.$Datos->Nombre_Expedicion.'</td>
+	        						<td>'.$Datos->created_at.'</td>
+	        					</tr>';
+	        			}
+	        		}
+	        		$Resultado = "<table id='datosTabla' name='datosTabla'>
+			        <thead>
+			            <tr>
+							<th>CÉDULA</th>                        
+	                        <th>CÓDIGO</th>
+	                        <th>FECHA DE DESCARGA</th>
+						</tr>
+					</thead>
+						<tbody>".$html."</tbody></table>";
+	        		return response()->json(array('status' => 'success', 'datos' => $Resultado));	
+	        	}else{
+	        		return response()->json(array('status' => 'No hay datos', 'datos' => 'No hay datos'));
+	        	}*/
+			}
+		}else{
+			return response()->json(["Sin acceso"]);
+		}
+	}
 }
