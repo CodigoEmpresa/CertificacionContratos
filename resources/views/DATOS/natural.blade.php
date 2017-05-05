@@ -196,7 +196,7 @@
 
         </div>
     </div>
-
+    @if($data['ObservacionesCheck'] == '1')
       @if($data['CountObligaciones'] > 0)      
       <div class="TableDiv">
         <div class="table"> 
@@ -246,6 +246,7 @@
           </div>
         </div>  
       @endif
+    @endif
       <br><br><br>
       <div class="TextoInicio">
         <span>

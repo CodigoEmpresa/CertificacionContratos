@@ -28,13 +28,15 @@ session_start();
 	Route::get('generador','GeneradorController@index');
 	Route::post('getContratoExp','GeneradorController@GetContratoExp');
 	Route::post('getContratoUnico','GeneradorController@GetContratoUnico');
-	Route::get('descargarContrato/{Contrato_Id}','GeneradorController@DescargarContrato');
+	Route::get('descargarContrato/{Contrato_Id}/{ObservacionesCheck}','GeneradorController@DescargarContrato');
 	Route::get('datos/{tipo_documento}/{documento}/{anio}','GeneradorController@Datos');
 	Route::get('getContratoOne/{id_contrato}','GestorDatosController@GetContratoOne');		
 	Route::get('getContratoDate/{anio}','GestorDatosController@GetContratoDate');		
 
 	Route::get('getContratoDocumento/{documento}','GestorDatosController@GetContratoDocumento');		
 	Route::get('getContratoContratista/{contratista}','GestorDatosController@GetContratoContratista');		
+	Route::post('addSolicitud','GeneradorController@AgregarSolicitud');
+	
 
 
 //rutas con filtro de autenticación

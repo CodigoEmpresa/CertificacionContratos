@@ -36,6 +36,7 @@ $(function(){
       processData: false,
       dataType: "json",
       success: function (xhr) {
+        //console.log(xhr);
         if(xhr.status == 'error'){
           validador_errores(xhr.errors);
         }
@@ -43,7 +44,7 @@ $(function(){
           $('#generarPdf .form-group').removeClass('has-error');
           if(xhr.Contrato == 'Unico'){
             window.open(
-              'descargarContrato/'+xhr.Id,
+              'descargarContrato/'+xhr.Id+'/'+xhr.ObservacionesCheck,
               '_blank'
             );  
           }else if(xhr.Contrato == 'Varios'){
@@ -135,4 +136,48 @@ $(function(){
         }
       });
     });
+
+    $("#Solicitud").on('click', function(){
+      $("#AgregarSolicitudD").modal('show');
+    });
+
+    $("#EnviarSolicitud").on('click', function(){
+      var formData = new FormData($("#agregarSolicitudF")[0]);    
+      $.ajax({
+        url: 'addSolicitud',  
+        type: 'POST',
+        data: formData,          
+        contentType: false,
+        processData: false,
+        dataType: "json",
+        success: function (xhr) {
+          console.log(xhr);
+          if(xhr.status == 'error'){
+            validador_errores2(xhr.errors);
+          }else if(xhr.status == 'success'){
+            $('#agregarSolicitudF .form-group').removeClass('has-error');
+            document.getElementById("agregarSolicitudF").reset(); 
+            $('#mensajeSoporte').html('<div class="alert alert-dismissible alert-success" ><strong>Exito!</strong>'+xhr.Mensaje+'</div>');
+            $('#mensajeSoporte').show(60);
+            $('#mensajeSoporte').delay(1500).hide(600); 
+          }
+          else if(xhr.status == 'ErrorS'){
+            $('#mensajeSoporte').html('<div class="alert alert-dismissible alert-danger" ><strong>Error!</strong>'+xhr.Mensaje+'</div>');
+            $('#mensajeSoporte').show(60);
+            $('#mensajeSoporte').delay(1500).hide(600); 
+          }
+        },
+        error: function (xhr){
+          validador_errores2(xhr.responseJSON);
+          console.log(xhr.responseJSON);
+        }
+      });
+    });
+
+    var validador_errores2 = function(data){
+      $('#agregarSolicitudF .form-group').removeClass('has-error');
+      $.each(data, function(i, e){
+        $("#"+i).closest('.form-group').addClass('has-error');
+      });
+    }
 });

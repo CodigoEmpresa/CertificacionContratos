@@ -31,6 +31,11 @@
                                     </p>
                                 </justify>
                             </div>
+                            <div class="row" align="right">
+                                <button type="button" class="btn btn-warning" name="Solicitud" id="Solicitud">
+                                    <span class="glyphicon glyphicon-transfer" aria-hidden="true"></span>Realizar solicitud
+                                </button>
+                            </div>
                             <br><br>
                             <div class="row">                                        
                                 <div class="form-group col-md-1">
@@ -62,8 +67,17 @@
                                     </div>  
                                 </div>
                             </div>                            
-                            <br>
-                            <div align="right">
+                            <div class="row">                                                                                                        
+                                <div class="form-group col-md-10">
+                                    <div class="radio">
+                                        <label>
+                                            <input type="checkbox" name="ObligacionesCheck" id="ObligacionesCheck" value="1">
+                                            Desea descargar la certificación con las obligaciones específicas.
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>    
+                            <div class="row" align="center">
                                 <button type="button" class="btn btn-primary" name="Expedir" id="Expedir">
                                     <span class="glyphicon glyphicon-circle-arrow-down" aria-hidden="true"></span> Expedir virtualmente
                                 </button>
@@ -90,6 +104,79 @@
                 </div>
             </div>
         </form>
+    </div>
+    <!-- ------------------------------ MODAL REGISTRO DE SOLICITUDES ----------------------------------------- -->
+    <div class="modal fade bs-example-modal-lg" id="AgregarSolicitudD" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h3 class="modal-title" id="myModalLabel">CREAR SOLICITUD</h3>
+                 </div>
+                <form id="agregarSolicitudF" name="agregarSolicitudF">  
+                    <div class="content">
+                        <div class="panel">                                               
+                            <ul class="list-group" id="seccion_uno" name="seccion_uno">
+                               <li class="list-group-item">
+                                    <h4 class="modal-title" id="myModalLabel">Datos Básicos para realizar la solicitud</h4>
+                                    <br>
+                                    <div class="row">                                        
+                                        <div class="form-group col-md-2">
+                                            <label for="inputEmail" class="control-label">Nombres completos</label>
+                                        </div>
+                                        <div class="form-group col-md-4">    
+                                            <input class="form-control" placeholder="Nombres completos" type="text" name="Nombres" id="Nombres">
+                                        </div>
+                                        <div class="form-group col-md-2">
+                                            <label for="inputEmail" class="control-label">Tipo de documento</label>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <select name="Tipo_DocumentoS" id="Tipo_DocumentoS" class="form-control">
+                                                <option value="">Seleccionar</option>   
+                                                @foreach($TipoDocumento as $TipoDocumentos)
+                                                    <option value="{{ $TipoDocumentos['Id_TipoDocumento'] }}">{{ $TipoDocumentos['Descripcion_TipoDocumento'] }}</option>
+                                                @endforeach                   
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row">                                        
+                                        <div class="form-group col-md-2">
+                                            <label for="inputEmail" class="control-label">Número de documento</label>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <input class="form-control" placeholder="Número de documento" type="text" name="DocumentoS" id="DocumentoS">
+                                        </div>
+                                        <div class="form-group col-md-2">
+                                            <label for="inputEmail" class="control-label">Correo electrónico</label>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <input class="form-control" placeholder="Correo electrónico" type="text" name="Correo" id="Correo">
+                                        </div>
+                                    </div>
+                                    <div class="row">                                        
+                                        <div class="form-group col-md-2">
+                                            <label for="inputEmail" class="control-label">Descripción de la solicitud</label>
+                                        </div>
+                                        <div class="form-group col-md-10">  
+                                            <textarea class="form-control" placeholder="Describa la solicitud que desea realizar para el certificado de su contrato" type="text" name="Descripcion" id="Descripcion"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="row" align="center">                                        
+                                        <div class="form-group col-md-12">
+                                            <button type="button" class="btn btn-warning" name="EnviarSolicitud" id="EnviarSolicitud">
+                                                <span class="glyphicon glyphicon-send" aria-hidden="true"></span>Enviar solicitud
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="row" id="mensajeSoporte" name="mensajeSoporte">
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 </div>                        
 @stop

@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\TipoDocumento;
 use App\Models\Contrato;
 use App\Models\ExpedicionContrato;
+use App\Models\Soporte;
 
 class GeneradorController extends Controller
 {
@@ -38,7 +39,8 @@ class GeneradorController extends Controller
 				;
 	}
 
-	public function GetContratoExp(Request $request){		
+	public function GetContratoExp(Request $request){	
+    //dd($request->all())	;
 		if ($request->ajax()) { 
 			$var = 'required';
 			if($request->Tipo_Documento == 1 || $request->Tipo_Documento == 2 || $request->Tipo_Documento == 3 || $request->Tipo_Documento == 7){
@@ -57,7 +59,8 @@ class GeneradorController extends Controller
 
 	        if ($validator->fails()){
 	            return response()->json(array('status' => 'error', 'errors' => $validator->errors()));
-	        }else{        			
+	        }else{
+
 	        	$Contrato = Contrato::where('Tipo_Documento', $request->Tipo_Documento)
 	        						->where('Cedula', $request->Documento)
 	        						->whereYear('Fecha_Firma','=', $request->Anio)
@@ -65,9 +68,9 @@ class GeneradorController extends Controller
 				if(count($Contrato) == 0){
 					return response()->json(array('status' => 'success', "Contrato" => "No hay"));
 				}else if(count($Contrato) == 1){
-					return response()->json(array('status' => 'success', "Contrato" => "Unico", "Id" => $Contrato[0]->Id));
+					return response()->json(array('status' => 'success', "Contrato" => "Unico", "Id" => $Contrato[0]->Id, "ObservacionesCheck" => $request->ObligacionesCheck));
 				}else if(count($Contrato) > 1){
-					return response()->json(array('status' => 'success', "Contrato" => "Varios", "DatosContrato" => $Contrato));
+					return response()->json(array('status' => 'success', "Contrato" => "Varios", "DatosContrato" => $Contrato, "ObservacionesCheck" => $request->ObligacionesCheck));
 				}				
 			}
 		}else{
@@ -91,9 +94,10 @@ class GeneradorController extends Controller
 		}
 	}
 
-	public function DescargarContrato(Request $request, $Contrato_Id){
+	public function DescargarContrato(Request $request, $Contrato_Id, $ObservacionesCheck){
+        //dd($ObservacionesCheck);
 
-		$data = $this->getData($Contrato_Id);	
+		$data = $this->getData($Contrato_Id, $ObservacionesCheck);	
 		$Contrato = Contrato::find($Contrato_Id);	
 
 
@@ -124,7 +128,7 @@ class GeneradorController extends Controller
         }
 	}
 
-	public function getData($Contrato_Id){
+	public function getData($Contrato_Id, $ObservacionesCheck){
 		$Contrato = Contrato::with('TipoDocumento', 'Tipocontrato', 'Adicion', 'Prorroga', 'Suspencion', 'Cesion', 'Obligacion', 'Integrante')->find($Contrato_Id);
         //dd($Contrato);
 		$lista = explode('-', $Contrato['Fecha_Firma']);
@@ -315,12 +319,45 @@ class GeneradorController extends Controller
             'CountSuspenciones' => count($Suspenciones),
             'ValorFinal' => number_format( ($valorAdiciones + $Contrato['Valor_Inicial']), 0, '.', '.' ),
             'Expedicion' => $ExpedicionContrato->Nombre_Expedicion,
-            'Fecha_Fin_Contrato_Inicial' => $Fecha_Fin_Contrato_Inicial
+            'Fecha_Fin_Contrato_Inicial' => $Fecha_Fin_Contrato_Inicial,
+            'ObservacionesCheck' => $ObservacionesCheck,
         ];
-
-//        dd($data);
         return $data;
 	}
+
+    public function AgregarSolicitud(Request $request){
+       // dd($request->all());
+        if ($request->ajax()) { 
+            $validator = Validator::make($request->all(), [
+                "Nombres" => "required",
+                "Tipo_DocumentoS" => "required",
+                "DocumentoS" => "required|numeric",
+                "Correo" => "required|email",
+                "Descripcion" => "required",
+                ]);
+
+            $html = '';
+
+            if ($validator->fails()){
+                return response()->json(array('status' => 'error', 'errors' => $validator->errors()));
+            }else{              
+                $Soporte = new Soporte;
+                $Soporte->Tipo_Documento_Solicitante_Id = $request->Tipo_DocumentoS;
+                $Soporte->Nombre_Solicitante = $request->Nombres;
+                $Soporte->Documento_Solicitante = $request->DocumentoS;
+                $Soporte->Correo_Solicitante = $request->Correo;
+                $Soporte->Descripcion_Solicitud = $request->Descripcion;
+                $Soporte->Estado = 1;
+                if($Soporte->save()){
+                    return response()->json(array('status' => 'success', 'Mensaje' => 'Su solicitud ha sido registrada, la respuesta a la misma será enviada al correo inscrito.'));
+                }else{
+                    return response()->json(array('status' => 'ErrorS', 'Mensaje' => 'No se logró el registro de su solicitud, por favor inténtelo nuevamente.'));
+                }
+            }
+        }else{
+            return response()->json(["Sin acceso"]);
+        }
+    }
 }
 
 class ConvertirClass 

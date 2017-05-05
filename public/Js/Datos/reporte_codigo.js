@@ -1,5 +1,7 @@
 $(function(){
     $("#GenerarReporte").on('click', function(){
+        $('#VariosD').hide('slow');
+        $('#VariosD').empty();
         var formData = new FormData($("#reporteCodigoF")[0]);    
         $.ajax({
           url: 'getReporteCodigo',  
@@ -14,20 +16,14 @@ $(function(){
               validador_errores(xhr.errors);
             }
             else if(xhr.status == 'success'){
-                $('#agregarContratoF .form-group').removeClass('has-error');
-                Adicion.push({ "Valor_Adicion": $("input[name=Valor_Adicion]").val()});
+                $('#reporteCodigoF .form-group').removeClass('has-error');
+                $('#VariosD').html(xhr.datosContrato);
+                $('#VariosD').show('slow');
 
-                $("input[name=Valor_Adicion]").val('');
-
-                var html = '';
-                $.each(Adicion, function(i, e){
-                  html += '<tr><td>'+(i+1)+'</td><td>'+e['Valor_Adicion']+'</td></tr>';                
-                });
-
-                $("#RegistrosAdicion").empty();
-                $("#RegistrosAdicion").html(html);
-                $("#TablaAdicion").show('slow');
-
+            }else if(xhr.status == 'Error'){
+                $('#VariosD').html('<div class="alert alert-dismissible alert-danger" ><strong>Error!</strong>'+xhr.Mensaje+'</div>');
+                $('#VariosD').show(60);
+                $('#VariosD').delay(1500).hide(600);    
             }
           },
           error: function (xhr){

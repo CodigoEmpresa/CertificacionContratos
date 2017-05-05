@@ -1,17 +1,8 @@
 @extends('master')
-
 @section('script')
     @parent
-    <script src="{{ asset('public/Js/Datos/reporte_codigo.js') }}"></script> 
-    <script src="{{ asset('public/Js/bootstrap-datepicker.js') }}"></script>   
-    {{Html::style('public/Css/bootstrap-datepicker3.css')}}   
-    
-    <style type="text/css">
-        .botonX {width:150px;}
-    </style>
-
+    <script src="{{ asset('public/Js/Datos/reporte_codigo.js') }}"></script>
     @stop
-
 @section('content')
 <input type="hidden" name="_token" value="{{csrf_token()}}" id="token"/>
 <div id="main_persona" class="row" data-url="{{ url(config('usuarios.prefijo_ruta')) }}">  
@@ -29,17 +20,17 @@
                                <div class="form-group col-md-2">
                                     <label for="inputEmail" class="control-label">Código de Expedición:</label>
                                 </div>
-                                <div class="form-group col-md-2">
+                                <div class="form-group col-md-3">
                                     <input type="text" class="form-control"  placeholder="Parte 1" id="Codigo1" name="Codigo1">
                                 </div> 
-                                <div class="form-group col-md-2">
+                                <div class="form-group col-md-3">
                                     <input type="text" class="form-control"  placeholder="Parte 2" id="Codigo2" name="Codigo2">
                                 </div> 
-                                <div class="form-group col-md-2">
+                                <div class="form-group col-md-3">
                                     <input type="text" class="form-control"  placeholder="Parte 3" id="Codigo3" name="Codigo3">
                                 </div> 
 
-                                <div class="form-group col-md-4">
+                                <div class="form-group col-md-1" align="center">
                                     <button type="button" class="btn btn-primary" name="GenerarReporte" id="GenerarReporte">
                                         <span class="glyphicon glyphicon-search" aria-hidden="true"></span>Buscar
                                     </button>

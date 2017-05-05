@@ -192,54 +192,55 @@
 
         </div>
       </div>
-
-      @if($data['CountObligaciones'] > 0)      
-      <div class="TableDiv">
-        <div class="table">             
-          <div class="table-row">
-            <div class="table-tit Neg">
-              OBLIGACIONES ESPECÍFICAS
-            </div>
-            <div class="table-cell Vino">
-              <div class="tableO"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-        @foreach($data['Obligaciones'] as $Obligaciones) 
+      @if($data['ObservacionesCheck'] == '1')
+        @if($data['CountObligaciones'] > 0)      
         <div class="TableDiv">
-          <div class="tableOX">            
-              <div class="tableO">     
-                <div class="table-rowO">   
-                  <div class="table-titO Neg">OBLIGACIONES ESPECÍFICAS</div>
-                  <div class="table-cell Vino">                     
-                    <div class="tableO">
-                      <div class="table-rowO">
-                        <div class="table-cellOT Neg">
-                          {{ $Obligaciones['Numero']}}.
-                        </div>
-                        <div class="table-cellO Vino">
-                          {{ $Obligaciones['Obligacion'] }}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>  
-              </div>   
-            </div>
-        </div>    
-        @endforeach
-        <div class="TableDiv" style="">
-          <div class="table">          
+          <div class="table">             
             <div class="table-row">
               <div class="table-tit Neg">
+                OBLIGACIONES ESPECÍFICAS
               </div>
               <div class="table-cell Vino">
                 <div class="tableO"></div>
               </div>
             </div>
           </div>
-        </div>  
+        </div>
+          @foreach($data['Obligaciones'] as $Obligaciones) 
+          <div class="TableDiv">
+            <div class="tableOX">            
+                <div class="tableO">     
+                  <div class="table-rowO">   
+                    <div class="table-titO Neg">OBLIGACIONES ESPECÍFICAS</div>
+                    <div class="table-cell Vino">                     
+                      <div class="tableO">
+                        <div class="table-rowO">
+                          <div class="table-cellOT Neg">
+                            {{ $Obligaciones['Numero']}}.
+                          </div>
+                          <div class="table-cellO Vino">
+                            {{ $Obligaciones['Obligacion'] }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>  
+                </div>   
+              </div>
+          </div>    
+          @endforeach
+          <div class="TableDiv" style="">
+            <div class="table">          
+              <div class="table-row">
+                <div class="table-tit Neg">
+                </div>
+                <div class="table-cell Vino">
+                  <div class="tableO"></div>
+                </div>
+              </div>
+            </div>
+          </div>  
+        @endif
       @endif
     <br><br><br>
     <div class="TextoInicio">
