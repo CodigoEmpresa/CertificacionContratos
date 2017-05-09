@@ -79,8 +79,14 @@ Route::group(['middleware' => ['web']], function () {
 	/********************REPORTE CODIGO***************************/
 	Route::get('reporte_codigo', 'ReportesController@indexCodigo');
 	Route::post('getReporteCodigo','ReportesController@GetReporteCodigo');		
-	//
 
+
+	/********************gestor_solicitud***************************/
+	Route::get('gestor_soporte','GestorSoporteController@index');
+	Route::get('getSoportes','GestorSoporteController@GetSoportes');
+	Route::get('getSoporteOnly/{id_soporte}','GestorSoporteController@GetSoportesOnly');
+	Route::post('resSoporte','GestorSoporteController@ResponderSoporte');		
 	
-	
+
 });
+

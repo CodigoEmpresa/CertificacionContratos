@@ -21,6 +21,7 @@ class CrearTablaSoporte extends Migration
             $table->string('Correo_Solicitante');
             $table->longText('Descripcion_Solicitud');
             $table->string('Estado'); //1->Abierto // 2->Solucionado
+            $table->longText('Solucion');
             $table->timestamps();
 
         });

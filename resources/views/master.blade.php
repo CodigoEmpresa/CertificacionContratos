@@ -127,17 +127,20 @@
                   </ul>
                 </li>                  
               @endif
+              @if($_SESSION['Usuario'][1] == 1) 
+                  <li class=”{{ Request::is( 'gestor_soporte') ? 'active' : '' }}”><a href="{{ URL::to( 'gestor_soporte') }}">Gestión de soportes</a></li>
+                @endif
              
             </ul>
 
-            <form class="navbar-form navbar-left" role="search">
+            <!--<form class="navbar-form navbar-left" role="search">
                 @if(isset($_SESSION['Usuario'])) 
                   <div class="form-group">
                     <input type="text" class="form-control" placeholder="Buscar">
                   </div>                
                   <button type="submit" class="btn btn-default">Ir</button>
                 @endif
-            </form>
+            </form>-->
 
             <ul class="nav navbar-nav navbar-right">
               <li><a href="http://www.idrd.gov.co/sitio/idrd/" target="_blank">I.D.R.D</a></li>
