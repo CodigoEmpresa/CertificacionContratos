@@ -164,11 +164,21 @@
                                     <div class="row" align="center">                                        
                                         <div class="form-group col-md-12">
                                             <button type="button" class="btn btn-warning" name="EnviarSolicitud" id="EnviarSolicitud">
-                                                <span class="glyphicon glyphicon-send" aria-hidden="true"></span>Enviar solicitud
+                                                <span class="glyphicon glyphicon-send" aria-hidden="true"></span >Enviar solicitud
                                             </button>
                                         </div>
                                     </div>
                                     <div class="row" id="mensajeSoporte" name="mensajeSoporte">
+                                    </div>
+                                    <div class="row" id="Esperar" style="display: none;">
+                                        <div id="loading" >
+                                            <center>
+                                                <button class="btn btn-lg btn-default">
+                                                    <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span>
+                                                     Espere...
+                                                </button>
+                                            </center>
+                                        </div>
                                     </div>
                                 </li>
                             </ul>

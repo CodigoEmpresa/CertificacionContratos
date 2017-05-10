@@ -21,6 +21,8 @@ use App\Models\Contrato;
 use App\Models\ExpedicionContrato;
 use App\Models\Soporte;
 
+use Mail;
+
 class GeneradorController extends Controller
 {
 
@@ -40,7 +42,6 @@ class GeneradorController extends Controller
 	}
 
 	public function GetContratoExp(Request $request){	
-    //dd($request->all())	;
 		if ($request->ajax()) { 
 			$var = 'required';
 			if($request->Tipo_Documento == 1 || $request->Tipo_Documento == 2 || $request->Tipo_Documento == 3 || $request->Tipo_Documento == 7){
@@ -61,16 +62,18 @@ class GeneradorController extends Controller
 	            return response()->json(array('status' => 'error', 'errors' => $validator->errors()));
 	        }else{
 
-	        	$Contrato = Contrato::where('Tipo_Documento', $request->Tipo_Documento)
+	        	$Contrato = Contrato::with('Obligacion')
+                                    ->where('Tipo_Documento', $request->Tipo_Documento)
 	        						->where('Cedula', $request->Documento)
 	        						->whereYear('Fecha_Firma','=', $request->Anio)
 	        						->get();
+
 				if(count($Contrato) == 0){
 					return response()->json(array('status' => 'success', "Contrato" => "No hay"));
 				}else if(count($Contrato) == 1){
-					return response()->json(array('status' => 'success', "Contrato" => "Unico", "Id" => $Contrato[0]->Id, "ObservacionesCheck" => $request->ObligacionesCheck));
+					return response()->json(array('status' => 'success', "Contrato" => "Unico", "Id" => $Contrato[0]->Id, "ObligacionesCheck" => $request->ObligacionesCheck, 'ConteoObligacion' => count($Contrato[0]->Obligacion)));
 				}else if(count($Contrato) > 1){
-					return response()->json(array('status' => 'success', "Contrato" => "Varios", "DatosContrato" => $Contrato, "ObservacionesCheck" => $request->ObligacionesCheck));
+					return response()->json(array('status' => 'success', "Contrato" => "Varios", "DatosContrato" => $Contrato, "ObligacionesCheck" => $request->ObligacionesCheck));
 				}				
 			}
 		}else{
@@ -86,8 +89,8 @@ class GeneradorController extends Controller
 	        if ($validator->fails()){
 	            return response()->json(array('status' => 'error', 'errors' => $validator->errors()));
 	        }else{        			
-	        	$Contrato = Contrato::find($request['Id']);
-				return response()->json(array('status' => 'success', "Contrato" => "Unico", "Id" => $Contrato->Id));				
+	        	$Contrato = Contrato::with('Obligacion')->find($request['Id']);
+				return response()->json(array('status' => 'success', "Contrato" => "Unico", "Id" => $Contrato->Id, 'ConteoObligacion' => count($Contrato->Obligacion), 'ObligacionesCheck' => $request->ObligacionesCheck));				
 			}
 		}else{
 			return response()->json(["Sin acceso"]);
@@ -95,7 +98,6 @@ class GeneradorController extends Controller
 	}
 
 	public function DescargarContrato(Request $request, $Contrato_Id, $ObservacionesCheck){
-        //dd($ObservacionesCheck);
 
 		$data = $this->getData($Contrato_Id, $ObservacionesCheck);	
 		$Contrato = Contrato::find($Contrato_Id);	
@@ -130,7 +132,6 @@ class GeneradorController extends Controller
 
 	public function getData($Contrato_Id, $ObservacionesCheck){
 		$Contrato = Contrato::with('TipoDocumento', 'Tipocontrato', 'Adicion', 'Prorroga', 'Suspencion', 'Cesion', 'Obligacion', 'Integrante')->find($Contrato_Id);
-        //dd($Contrato);
 		$lista = explode('-', $Contrato['Fecha_Firma']);
 		$Anio = $lista[0];
 		$conversor = new ConvertirClass();
@@ -326,7 +327,6 @@ class GeneradorController extends Controller
 	}
 
     public function AgregarSolicitud(Request $request){
-       // dd($request->all());
         if ($request->ajax()) { 
             $validator = Validator::make($request->all(), [
                 "Nombres" => "required",
@@ -349,6 +349,8 @@ class GeneradorController extends Controller
                 $Soporte->Descripcion_Solicitud = $request->Descripcion;
                 $Soporte->Estado = 1;
                 if($Soporte->save()){
+                    $this->sendEmail('jared.forero@idrd.gov.co', 'Se ha creado un nuevo soporte con el identificador número: '.$Soporte->Id, 'DATOS.correoNuevoSoporte', $Soporte->Descripcion_Solicitud, 'Se ha creado un nuevo soporte REF # '.$Soporte->Id, $Soporte->Correo_Solicitante);
+
                     return response()->json(array('status' => 'success', 'Mensaje' => 'Su solicitud ha sido registrada, la respuesta a la misma será enviada al correo inscrito.'));
                 }else{
                     return response()->json(array('status' => 'ErrorS', 'Mensaje' => 'No se logró el registro de su solicitud, por favor inténtelo nuevamente.'));
@@ -357,6 +359,20 @@ class GeneradorController extends Controller
         }else{
             return response()->json(["Sin acceso"]);
         }
+    }
+
+    public function sendEmail($correo, $mensaje, $plantilla, $descripcion, $subject, $correo_solicitante){
+        $datos[0] = $correo;
+        $datos[1] = $mensaje;
+        $datos[2] = $plantilla;
+        $datos[3] = $descripcion;
+        $datos[4] = $subject;
+        $datos[5] = $correo_solicitante;
+        Mail::send($datos[2], ['mensaje' => $datos[1], 'descripcion' => $datos[3]], function($message) use ($datos){            
+            $message->to($datos[0], 'IDRD')
+                    ->to($datos[5], 'IDRD')
+                    ->subject($datos[4]);
+        });
     }
 }
 

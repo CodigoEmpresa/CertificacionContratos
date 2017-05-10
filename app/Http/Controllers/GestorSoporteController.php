@@ -13,6 +13,7 @@ use Exception;
 use Mail;
 
 use App\Models\Soporte;
+use App\Models\Persona;
 
 class GestorSoporteController extends Controller
 {
@@ -96,7 +97,7 @@ class GestorSoporteController extends Controller
 	        	$Soporte->Estado = 2;
 	        	$Soporte->Solucion = $request->SolucionText;
 	        	if($Soporte->save()){
-	        		$this->sendEmail($Soporte->Correo_Solicitante, $request->SolucionText, 'DATOS.correo', $Soporte->Descripcion_Solicitud);
+	        		$this->sendEmail($Soporte->Correo_Solicitante, $request->SolucionText, 'DATOS.correo', $Soporte->Descripcion_Solicitud, $Soporte->Id, $Soporte->created_at, $Soporte->Nombre_Solicitante);
 	        		return response()->json(array('status' => 'success', 'Mensaje' => 'La solución  se ha almacenado correctamente!'));
 	        	}else{
 	        		return response()->json(array('status' => 'error2', 'Mensaje' => 'Ocurrio un error en el almacenamiento, por favor intentelo nuevamente!'));
@@ -107,14 +108,21 @@ class GestorSoporteController extends Controller
 		}
 	}
 
-	public function sendEmail($correo, $mensaje, $plantilla, $descripcion){
+	public function sendEmail($correo, $mensaje, $plantilla, $descripcion, $soporte_id, $fecha_solicitud, $nombres){
     	$datos[0] = $correo;
     	$datos[1] = $mensaje;
     	$datos[2] = $plantilla;
     	$datos[3] = $descripcion;
-    	Mail::send($datos[2], ['mensaje' => $datos[1], 'descripcion' => $datos[3]], function($message) use ($datos){			
+        $datos[4] = $soporte_id;
+        $datos[5] = $fecha_solicitud;
+        $datos[6] = $nombres;
+        $datos[7] = $soporte_id.'-'.date('Y');
+
+        $Persona = Persona::find($_SESSION['Usuario'][0]);
+        $datos[8] = $Persona['Primer_Nombre'].' '.$Persona['Segundo_Nombre'].' '.$Persona['Primer_Apellido'].' '.$Persona['Segundo_Apellido'];
+    	Mail::send($datos[2], ['mensaje' => $datos[1], 'descripcion' => $datos[3], "nombres" => $datos[6], "referencia" => $datos[7], "nombreFuncionario" => $datos[8]], function($message) use ($datos){			
 		    $message->to($datos[0], 'IDRD')
-		    		->subject('Solución a su soporte de certificación de contratos!');
+		    		->subject('Solicitud No. '.$datos[4].'-'.date('Y').' ('.$datos[5].').');
 		});
     }
 }

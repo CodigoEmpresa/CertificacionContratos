@@ -36,17 +36,18 @@ $(function(){
       processData: false,
       dataType: "json",
       success: function (xhr) {
-        //console.log(xhr);
         if(xhr.status == 'error'){
           validador_errores(xhr.errors);
         }
         else if(xhr.status == 'success'){
           $('#generarPdf .form-group').removeClass('has-error');
           if(xhr.Contrato == 'Unico'){
-            window.open(
-              'descargarContrato/'+xhr.Id+'/'+xhr.ObservacionesCheck,
-              '_blank'
-            );  
+            if(xhr.ObligacionesCheck == 1 && xhr.ConteoObligacion == 0){
+              alert('Este contrato aún no cuenta con las obligaciones específicas, si desea descargarla con las mismas, por favor diríjase al botón naranja "Realizar Solicitud", y envié un soporte para que estas sean agregadas.');
+            }else{
+              window.open('descargarContrato/'+xhr.Id+'/'+xhr.ObligacionesCheck,'_blank');    
+            }
+            
           }else if(xhr.Contrato == 'Varios'){
             $("#RegistrosVarios").empty();                            
             var t = $('#TablaVarios').DataTable();
@@ -88,10 +89,16 @@ $(function(){
     }
 
     $('#TablaVarios').delegate('button[data-funcion="descargar"]','click',function (e) {
+      if (document.getElementById('ObligacionesCheck').checked) {
+        m = 1;
+    }
+    else {
+        m = null;
+    }
       $.ajax({
         url: 'getContratoUnico',  
         type: 'POST',
-        data: {Id: $(this).val()},          
+        data: {Id: $(this).val(), ObligacionesCheck: m},          
         dataType: "json",
         success: function (xhr) {
           if(xhr.status == 'error'){
@@ -100,10 +107,11 @@ $(function(){
           else if(xhr.status == 'success'){
             $('#generarPdf .form-group').removeClass('has-error');
             if(xhr.Contrato == 'Unico'){
-              window.open(
-                'descargarContrato/'+xhr.Id,
-                '_blank'
-              );  
+              if(m == 1 && xhr.ConteoObligacion == 0){
+                alert('Este contrato aún no cuenta con las obligaciones específicas, si desea descargarla con las mismas, por favor diríjase al botón naranja "Realizar Solicitud", y envié un soporte para que estas sean agregadas.');
+              }else{
+                window.open('descargarContrato/'+xhr.Id+'/'+m,'_blank');    
+              }
             }else if(xhr.Contrato == 'Varios'){
               $("#RegistrosVarios").empty();                            
               var t = $('#TablaVarios').DataTable();
@@ -150,8 +158,13 @@ $(function(){
         contentType: false,
         processData: false,
         dataType: "json",
+        beforeSend: function(){
+          $("#Esperar").show('slow');
+          $("#EnviarSolicitud").hide('slow');
+        },
         success: function (xhr) {
-          console.log(xhr);
+          $("#Esperar").hide('slow');
+          $("#EnviarSolicitud").show('slow');
           if(xhr.status == 'error'){
             validador_errores2(xhr.errors);
           }else if(xhr.status == 'success'){
@@ -169,7 +182,8 @@ $(function(){
         },
         error: function (xhr){
           validador_errores2(xhr.responseJSON);
-          console.log(xhr.responseJSON);
+          $("#Esperar").hide('slow');
+          $("#EnviarSolicitud").show('slow');
         }
       });
     });
