@@ -116,6 +116,7 @@
               @if(isset($_SESSION['Usuario'])) 
                 <li class=”{{ Request::is( 'cargaMasiva') ? 'active' : '' }}”><a href="{{ URL::to( 'cargaMasiva') }}">Carga Masiva</a></li>
               @endif
+              @if(isset($_SESSION['Usuario'])) 
               @if($_SESSION['Usuario'][1] == 1) 
                 <li class="dropdown">
                   <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="themes">Reportes <span class="caret"></span></a>
@@ -129,7 +130,8 @@
               @endif
               @if($_SESSION['Usuario'][1] == 1) 
                   <li class=”{{ Request::is( 'gestor_soporte') ? 'active' : '' }}”><a href="{{ URL::to( 'gestor_soporte') }}">Gestión de soportes</a></li>
-                @endif
+               @endif
+              @endif
              
             </ul>
 
