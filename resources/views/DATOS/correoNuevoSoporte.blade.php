@@ -53,6 +53,15 @@
                               <?php echo $descripcion; ?>
                             </label>
                         </div>
+
+                        <div class="form-group col-md-12">
+                            <h4>Enviado por:</h4>
+                          </div>
+                          <div class="form-group col-md-12">
+                            <label for="inputEmail" class="control-label" >
+                              <?php echo $nombre_solicitante; ?> con número de documento <?php echo $documento_solicitante; ?>
+                            </label>
+                        </div>
                     </li>
                 </ul>
             </div>

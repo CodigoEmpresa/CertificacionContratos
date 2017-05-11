@@ -349,7 +349,7 @@ class GeneradorController extends Controller
                 $Soporte->Descripcion_Solicitud = $request->Descripcion;
                 $Soporte->Estado = 1;
                 if($Soporte->save()){
-                    $this->sendEmail('jared.forero@idrd.gov.co', 'Se ha creado un nuevo soporte con el identificador número: '.$Soporte->Id, 'DATOS.correoNuevoSoporte', $Soporte->Descripcion_Solicitud, 'Se ha creado un nuevo soporte REF # '.$Soporte->Id, $Soporte->Correo_Solicitante);
+                    $this->sendEmail('jared.forero@idrd.gov.co', 'Se ha creado un nuevo soporte con el identificador número: '.$Soporte->Id, 'DATOS.correoNuevoSoporte', $Soporte->Descripcion_Solicitud, 'Se ha creado un nuevo soporte REF # '.$Soporte->Id, $Soporte->Correo_Solicitante, $Soporte->Nombre_Solicitante, $Soporte->Documento_Solicitante);
 
                     return response()->json(array('status' => 'success', 'Mensaje' => 'Su solicitud ha sido registrada, la respuesta a la misma será enviada al correo inscrito.'));
                 }else{
@@ -361,14 +361,16 @@ class GeneradorController extends Controller
         }
     }
 
-    public function sendEmail($correo, $mensaje, $plantilla, $descripcion, $subject, $correo_solicitante){
+    public function sendEmail($correo, $mensaje, $plantilla, $descripcion, $subject, $correo_solicitante, $nombre_solicitante, $documento_solicitante){
         $datos[0] = $correo;
         $datos[1] = $mensaje;
         $datos[2] = $plantilla;
         $datos[3] = $descripcion;
         $datos[4] = $subject;
         $datos[5] = $correo_solicitante;
-        Mail::send($datos[2], ['mensaje' => $datos[1], 'descripcion' => $datos[3]], function($message) use ($datos){            
+        $datos[6] = $nombre_solicitante;
+        $datos[7] = $documento_solicitante;
+        Mail::send($datos[2], ['mensaje' => $datos[1], 'descripcion' => $datos[3], "nombre_solicitante" => $datos[6], "documento_solicitante" => $datos[7]], function($message) use ($datos){            
             $message->to($datos[0], 'IDRD')
                     ->to($datos[5], 'IDRD')
                     ->subject($datos[4]);
