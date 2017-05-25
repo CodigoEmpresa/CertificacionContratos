@@ -127,7 +127,7 @@ class GestorSoporteController extends Controller
 		});
     }
 
-     public function indexSolucionado()
+    public function indexSolucionado()
     {
         return view('DATOS/gestor_soporte_solucionado');
     }
