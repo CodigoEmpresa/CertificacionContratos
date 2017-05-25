@@ -31,11 +31,12 @@ class GestorSoporteController extends Controller
 	}
 
 	public function GetSoportes(Request $request){
-		$Soporte = Soporte::all();
+		$Soporte = Soporte::where('Estado', 1)->get();
 		$html = '';
 		$html .= '<table id="TablaDatos" name="TablaDatos" class="display nowrap" cellspacing="0" width="100%">'.
                     '<thead>'.
                         '<tr>'.
+                            '<th>Número de soporte</th>'.
                             '<th>Nombre Solicitante</th>'.
                             '<th>Documento Solicitante</th>'.
                             '<th>Estado</th>'.
@@ -47,6 +48,7 @@ class GestorSoporteController extends Controller
 
          foreach ($Soporte as $key => $value) {
          	$html .= '<tr>';
+            $html .= '<td>'.$value['Id'].'</td>';
          	$html .= '<td>'.$value['Nombre_Solicitante'].'</td>';
          	$html .= '<td>'.$value['Documento_Solicitante'].'</td>';
          	if($value['Estado'] == 1){
@@ -75,7 +77,6 @@ class GestorSoporteController extends Controller
 
         $html .= '</tbody>';
         $html .= '</table>';
-		//return $Soporte;
         return $html;
 	}
 
@@ -125,5 +126,59 @@ class GestorSoporteController extends Controller
 		    		->subject('Solicitud No. '.$datos[4].'-'.date('Y').' ('.$datos[5].').');
 		});
     }
-}
 
+     public function indexSolucionado()
+    {
+        return view('DATOS/gestor_soporte_solucionado');
+    }
+
+    public function GetSoportesSolucionados(Request $request){
+        $Soporte = Soporte::where('Estado', 2)->get();
+        $html = '';
+        $html .= '<table id="TablaDatos" name="TablaDatos" class="display nowrap" cellspacing="0" width="100%">'.
+                    '<thead>'.
+                        '<tr>'.
+                            '<th>Número de soporte</th>'.
+                            '<th>Nombre Solicitante</th>'.
+                            '<th>Documento Solicitante</th>'.
+                            '<th>Estado</th>'.
+                            '<th>Fecha de Solicitud</th>'.
+                            '<th>Opciones</th>'.
+                        '</tr>'.
+                    '</thead>'.
+                    '<tbody>';
+
+         foreach ($Soporte as $key => $value) {
+            $html .= '<tr>';
+            $html .= '<td>'.$value['Id'].'</td>';
+            $html .= '<td>'.$value['Nombre_Solicitante'].'</td>';
+            $html .= '<td>'.$value['Documento_Solicitante'].'</td>';
+            if($value['Estado'] == 1){
+                $html .= '<td>Abierto</td>';
+            }elseif($value['Estado'] == 2){
+                $html .= '<td>Solucionado</td>';
+            }           
+            $html .= '<td>'.$value['created_at'].'</td>';
+
+            if($value['Estado'] == 1){
+                $html .= '<td>'.
+                        '<button type="button" class="btn-sm btn-warning" data-function="solucionSoporte" value="'.$value->Id.'" >
+                            <span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span> Responder soporte
+                        </button>'.
+                     '</td>';
+            }elseif($value['Estado'] == 2){
+                $html .= '<td>'.
+                        '<button type="button" class="btn-sm btn-info" data-function="verSoporte" value="'.$value->Id.'" >
+                            <span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span> Ver soporte
+                        </button>'.
+                     '</td>';
+            }
+            
+            $html .= '</tr>';
+         }
+
+        $html .= '</tbody>';
+        $html .= '</table>';
+        return $html;
+    }
+}

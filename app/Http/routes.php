@@ -85,7 +85,10 @@ Route::group(['middleware' => ['web']], function () {
 	Route::get('gestor_soporte','GestorSoporteController@index');
 	Route::get('getSoportes','GestorSoporteController@GetSoportes');
 	Route::get('getSoporteOnly/{id_soporte}','GestorSoporteController@GetSoportesOnly');
-	Route::post('resSoporte','GestorSoporteController@ResponderSoporte');		
+	Route::post('resSoporte','GestorSoporteController@ResponderSoporte');
+
+	Route::get('gestor_soporte_solucionado','GestorSoporteController@indexSolucionado');
+	Route::get('getSoportesSolucionados','GestorSoporteController@GetSoportesSolucionados');		
 	
 
 });
