@@ -21,10 +21,12 @@ use App\Models\Contrato;
 use App\Models\ExpedicionContrato;
 use App\Models\Soporte;
 
+use Mail;
+
 class GeneradorController extends Controller
 {
 
-	private $pdf;
+    private $pdf;
 
     /*public function __construct(Pdf $pdf)
     {
@@ -32,73 +34,73 @@ class GeneradorController extends Controller
     }*/
 
     public function index()
-	{
-		$TipoDocumento = TipoDocumento::all();
-		return view('DATOS/generadorPdf')
-			   ->with(compact('TipoDocumento'))
-				;
-	}
+    {
+        $TipoDocumento = TipoDocumento::all();
+        return view('DATOS/generadorPdf')
+               ->with(compact('TipoDocumento'))
+                ;
+    }
 
-	public function GetContratoExp(Request $request){	
-    //dd($request->all())	;
-		if ($request->ajax()) { 
-			$var = 'required';
-			if($request->Tipo_Documento == 1 || $request->Tipo_Documento == 2 || $request->Tipo_Documento == 3 || $request->Tipo_Documento == 7){
-				$var = 'required|numeric|digits_between:1,15';
-			}elseif($request->Tipo_Documento == 4 || $request->Tipo_Documento == 5 || $request->Tipo_Documento == 6){
-				$var = 'required|alpha_num';
-			}else{
-				$var = 'required';
-			}
+    public function GetContratoExp(Request $request){   
+        if ($request->ajax()) { 
+            $var = 'required';
+            if($request->Tipo_Documento == 1 || $request->Tipo_Documento == 2 || $request->Tipo_Documento == 3 || $request->Tipo_Documento == 7){
+                $var = 'required|numeric|digits_between:1,15';
+            }elseif($request->Tipo_Documento == 4 || $request->Tipo_Documento == 5 || $request->Tipo_Documento == 6){
+                $var = 'required|alpha_num';
+            }else{
+                $var = 'required';
+            }
 
-    		$validator = Validator::make($request->all(), [
-    			'Tipo_Documento' => 'required',
-    			'Documento' => $var,
-    			'Anio' => 'required'
-    			]);
+            $validator = Validator::make($request->all(), [
+                'Tipo_Documento' => 'required',
+                'Documento' => $var,
+                'Anio' => 'required'
+                ]);
 
-	        if ($validator->fails()){
-	            return response()->json(array('status' => 'error', 'errors' => $validator->errors()));
-	        }else{
+            if ($validator->fails()){
+                return response()->json(array('status' => 'error', 'errors' => $validator->errors()));
+            }else{
 
-	        	$Contrato = Contrato::where('Tipo_Documento', $request->Tipo_Documento)
-	        						->where('Cedula', $request->Documento)
-	        						->whereYear('Fecha_Firma','=', $request->Anio)
-	        						->get();
-				if(count($Contrato) == 0){
-					return response()->json(array('status' => 'success', "Contrato" => "No hay"));
-				}else if(count($Contrato) == 1){
-					return response()->json(array('status' => 'success', "Contrato" => "Unico", "Id" => $Contrato[0]->Id, "ObservacionesCheck" => $request->ObligacionesCheck));
-				}else if(count($Contrato) > 1){
-					return response()->json(array('status' => 'success', "Contrato" => "Varios", "DatosContrato" => $Contrato, "ObservacionesCheck" => $request->ObligacionesCheck));
-				}				
-			}
-		}else{
-			return response()->json(["Sin acceso"]);
-		}
-	}
+                $Contrato = Contrato::with('Obligacion')
+                                    ->where('Tipo_Documento', $request->Tipo_Documento)
+                                    ->where('Cedula', $request->Documento)
+                                    ->whereYear('Fecha_Firma','=', $request->Anio)
+                                    ->get();
 
-	public function GetContratoUnico(Request $request){	
-		if ($request->ajax()) { 
-    		$validator = Validator::make($request->all(), [    			
-    			]);
+                if(count($Contrato) == 0){
+                    return response()->json(array('status' => 'success', "Contrato" => "No hay"));
+                }else if(count($Contrato) == 1){
+                    return response()->json(array('status' => 'success', "Contrato" => "Unico", "Id" => $Contrato[0]->Id, "ObligacionesCheck" => $request->ObligacionesCheck, 'ConteoObligacion' => count($Contrato[0]->Obligacion)));
+                }else if(count($Contrato) > 1){
+                    return response()->json(array('status' => 'success', "Contrato" => "Varios", "DatosContrato" => $Contrato, "ObligacionesCheck" => $request->ObligacionesCheck));
+                }               
+            }
+        }else{
+            return response()->json(["Sin acceso"]);
+        }
+    }
 
-	        if ($validator->fails()){
-	            return response()->json(array('status' => 'error', 'errors' => $validator->errors()));
-	        }else{        			
-	        	$Contrato = Contrato::find($request['Id']);
-				return response()->json(array('status' => 'success', "Contrato" => "Unico", "Id" => $Contrato->Id));				
-			}
-		}else{
-			return response()->json(["Sin acceso"]);
-		}
-	}
+    public function GetContratoUnico(Request $request){ 
+        if ($request->ajax()) { 
+            $validator = Validator::make($request->all(), [             
+                ]);
 
-	public function DescargarContrato(Request $request, $Contrato_Id, $ObservacionesCheck){
-        //dd($ObservacionesCheck);
+            if ($validator->fails()){
+                return response()->json(array('status' => 'error', 'errors' => $validator->errors()));
+            }else{                  
+                $Contrato = Contrato::with('Obligacion')->find($request['Id']);
+                return response()->json(array('status' => 'success', "Contrato" => "Unico", "Id" => $Contrato->Id, 'ConteoObligacion' => count($Contrato->Obligacion), 'ObligacionesCheck' => $request->ObligacionesCheck));                
+            }
+        }else{
+            return response()->json(["Sin acceso"]);
+        }
+    }
 
-		$data = $this->getData($Contrato_Id, $ObservacionesCheck);	
-		$Contrato = Contrato::find($Contrato_Id);	
+    public function DescargarContrato(Request $request, $Contrato_Id, $ObservacionesCheck){
+
+        $data = $this->getData($Contrato_Id, $ObservacionesCheck);  
+        $Contrato = Contrato::find($Contrato_Id);   
 
 
         $cadena = strtoupper($Contrato->Nombre_Contratista);
@@ -126,36 +128,35 @@ class GeneradorController extends Controller
                 return $pdf->download('CertificadoPersonaNatural.pdf');
             }
         }
-	}
+    }
 
-	public function getData($Contrato_Id, $ObservacionesCheck){
-		$Contrato = Contrato::with('TipoDocumento', 'Tipocontrato', 'Adicion', 'Prorroga', 'Suspencion', 'Cesion', 'Obligacion', 'Integrante')->find($Contrato_Id);
-        //dd($Contrato);
-		$lista = explode('-', $Contrato['Fecha_Firma']);
-		$Anio = $lista[0];
-		$conversor = new ConvertirClass();
+    public function getData($Contrato_Id, $ObservacionesCheck){
+        $Contrato = Contrato::with('TipoDocumento', 'Tipocontrato', 'Adicion', 'Prorroga', 'Suspencion', 'Cesion', 'Obligacion', 'Integrante')->find($Contrato_Id);
+        $lista = explode('-', $Contrato['Fecha_Firma']);
+        $Anio = $lista[0];
+        $conversor = new ConvertirClass();
 
-		$Meses_Letra = $conversor->to_word($Contrato['Meses_Duracion']);
-		$Dias_Letra = $conversor->to_word($Contrato['Dias_Duracion']);
+        $Meses_Letra = $conversor->to_word($Contrato['Meses_Duracion']);
+        $Dias_Letra = $conversor->to_word($Contrato['Dias_Duracion']);
 
-		setlocale(LC_ALL,"es_ES");
-		$Fecha_Actual = date("F-d-m-Y");
-		$listaFecha = explode('-', $Fecha_Actual);
+        setlocale(LC_ALL,"es_ES");
+        $Fecha_Actual = date("F-d-m-Y");
+        $listaFecha = explode('-', $Fecha_Actual);
 
-		if($listaFecha[0] == 'January'){$Fecha_A = 'Enero';}
-		if($listaFecha[0] == 'February'){$Fecha_A = 'Febrero';}
-		if($listaFecha[0] == 'March'){$Fecha_A = 'Marzo';}
-		if($listaFecha[0] == 'April'){$Fecha_A = 'Abril';}
-		if($listaFecha[0] == 'May'){$Fecha_A = 'Mayo';}
-		if($listaFecha[0] == 'June'){$Fecha_A = 'Junio';}
-		if($listaFecha[0] == 'July'){$Fecha_A = 'Julio';}
-		if($listaFecha[0] == 'August'){$Fecha_A = 'Agosto';}
-		if($listaFecha[0] == 'September'){$Fecha_A = 'Septiembre';}
-		if($listaFecha[0] == 'October'){$Fecha_A = 'Octubre';}
-		if($listaFecha[0] == 'November'){$Fecha_A = 'Noviembre';}
-		if($listaFecha[0] == 'December'){$Fecha_A = 'Diciembre';}
+        if($listaFecha[0] == 'January'){$Fecha_A = 'Enero';}
+        if($listaFecha[0] == 'February'){$Fecha_A = 'Febrero';}
+        if($listaFecha[0] == 'March'){$Fecha_A = 'Marzo';}
+        if($listaFecha[0] == 'April'){$Fecha_A = 'Abril';}
+        if($listaFecha[0] == 'May'){$Fecha_A = 'Mayo';}
+        if($listaFecha[0] == 'June'){$Fecha_A = 'Junio';}
+        if($listaFecha[0] == 'July'){$Fecha_A = 'Julio';}
+        if($listaFecha[0] == 'August'){$Fecha_A = 'Agosto';}
+        if($listaFecha[0] == 'September'){$Fecha_A = 'Septiembre';}
+        if($listaFecha[0] == 'October'){$Fecha_A = 'Octubre';}
+        if($listaFecha[0] == 'November'){$Fecha_A = 'Noviembre';}
+        if($listaFecha[0] == 'December'){$Fecha_A = 'Diciembre';}
 
-		$Dia_Actual_Letra = $conversor->to_word($listaFecha[1]);
+        $Dia_Actual_Letra = $conversor->to_word($listaFecha[1]);
 
         $valorAdiciones = 0;
 
@@ -206,11 +207,11 @@ class GeneradorController extends Controller
         }
         /**********************************/
         $Obligaciones = array();
-		if(count($Contrato->Obligacion) > 0){			
-			foreach ($Contrato->Obligacion as $key => $Obligacion) {
-				array_push($Obligaciones, array("Numero"=>$Obligacion['Numero_Obligacion'], "Obligacion"=>$Obligacion['Objeto_Obligacion']));
-			}
-		}
+        if(count($Contrato->Obligacion) > 0){           
+            foreach ($Contrato->Obligacion as $key => $Obligacion) {
+                array_push($Obligaciones, array("Numero"=>$Obligacion['Numero_Obligacion'], "Obligacion"=>$Obligacion['Objeto_Obligacion']));
+            }
+        }
 
         $Integrantes = array();
         if(count($Contrato->Integrante) > 0){           
@@ -219,29 +220,29 @@ class GeneradorController extends Controller
             }
         }
 
-		if(count($Contrato->Cesion) > 0){
-			$Cesiones = array();			
-			$CesionesUlt =  $Contrato->Cesion->last();
-			array_push($Cesiones, array("Numero" => $CesionesUlt['Numero_Cesion'], 
-				                        "Nombre_Cesionario" => $CesionesUlt['Nombre_Cesionario'],
-										"Tipo_Documento_Cesionario" => $CesionesUlt->TipoDocumento['Descripcion_TipoDocumento'],
-										"Cedula_Cesionario" => number_format( $CesionesUlt['Cedula_Cesionario'], 0, '.', '.' ),
-										"Dv_Cesion" => $CesionesUlt['Nombre_Cesionario'],
-										"Valor_Cedido" => number_format( $CesionesUlt['Valor_Cedido'], 0, '.', '.' ),
-										"Dias" => $CesionesUlt['Dias'],
-										"Fecha_Cesion" => $CesionesUlt['Fecha_Cesion']));
+        if(count($Contrato->Cesion) > 0){
+            $Cesiones = array();            
+            $CesionesUlt =  $Contrato->Cesion->last();
+            array_push($Cesiones, array("Numero" => $CesionesUlt['Numero_Cesion'], 
+                                        "Nombre_Cesionario" => $CesionesUlt['Nombre_Cesionario'],
+                                        "Tipo_Documento_Cesionario" => $CesionesUlt->TipoDocumento['Descripcion_TipoDocumento'],
+                                        "Cedula_Cesionario" => number_format( $CesionesUlt['Cedula_Cesionario'], 0, '.', '.' ),
+                                        "Dv_Cesion" => $CesionesUlt['Nombre_Cesionario'],
+                                        "Valor_Cedido" => number_format( $CesionesUlt['Valor_Cedido'], 0, '.', '.' ),
+                                        "Dias" => $CesionesUlt['Dias'],
+                                        "Fecha_Cesion" => $CesionesUlt['Fecha_Cesion']));
 
             //$Fecha_Fin_Cesion =$CesionesUlt['Fec'];
-		}else{
-			$Cesiones = array();
-		}
+        }else{
+            $Cesiones = array();
+        }
 
-		if($Contrato['Tipo_Documento_Representante'] != ''){
-			$TipoDocumento = TipoDocumento::find($Contrato['Tipo_Documento_Representante']);
-			$Tipo_Documento_Representante = $TipoDocumento->Descripcion_TipoDocumento;	
-		}else{
-			$Tipo_Documento_Representante = 'No hay';
-		}
+        if($Contrato['Tipo_Documento_Representante'] != ''){
+            $TipoDocumento = TipoDocumento::find($Contrato['Tipo_Documento_Representante']);
+            $Tipo_Documento_Representante = $TipoDocumento->Descripcion_TipoDocumento;  
+        }else{
+            $Tipo_Documento_Representante = 'No hay';
+        }
 
         $Fecha_Fin_Contrato_Inicial = $Contrato['Fecha_Fin'];
 
@@ -251,7 +252,7 @@ class GeneradorController extends Controller
         }else{
             $Fecha_Terminacion_Anticipada = $Contrato['Fecha_Terminacion_Anticipada'];
             $Fecha_Fin_Contrato = $Contrato['Fecha_Terminacion_Anticipada'];
-        }		
+        }       
 
         if($Fecha_Fin_Contrato > $Fecha_Fin_Prorroga){
             $F1 = $Fecha_Fin_Contrato;
@@ -279,7 +280,7 @@ class GeneradorController extends Controller
             $valorMensual = $Contrato['Valor_Mensual'];
         };
 
-		$data =  [
+        $data =  [
             'Tipo_Contrato'      => $Contrato->TipoContrato['Nombre_Tipo_Contrato'] ,
             'Cedula'   => number_format( $Contrato['Cedula'], 0, '.', '.' ),
             'Nombre_Contratista'     =>$Contrato['Nombre_Contratista'],
@@ -323,10 +324,9 @@ class GeneradorController extends Controller
             'ObservacionesCheck' => $ObservacionesCheck,
         ];
         return $data;
-	}
+    }
 
     public function AgregarSolicitud(Request $request){
-       // dd($request->all());
         if ($request->ajax()) { 
             $validator = Validator::make($request->all(), [
                 "Nombres" => "required",
@@ -349,6 +349,8 @@ class GeneradorController extends Controller
                 $Soporte->Descripcion_Solicitud = $request->Descripcion;
                 $Soporte->Estado = 1;
                 if($Soporte->save()){
+                    $this->sendEmail('certificados.contratistas@idrd.gov.co', 'Se ha creado un nuevo soporte con el identificador número: '.$Soporte->Id, 'DATOS.correoNuevoSoporte', $Soporte->Descripcion_Solicitud, 'Se ha creado un nuevo soporte REF # '.$Soporte->Id, $Soporte->Correo_Solicitante, $Soporte->Nombre_Solicitante, $Soporte->Documento_Solicitante);
+
                     return response()->json(array('status' => 'success', 'Mensaje' => 'Su solicitud ha sido registrada, la respuesta a la misma será enviada al correo inscrito.'));
                 }else{
                     return response()->json(array('status' => 'ErrorS', 'Mensaje' => 'No se logró el registro de su solicitud, por favor inténtelo nuevamente.'));
@@ -358,11 +360,27 @@ class GeneradorController extends Controller
             return response()->json(["Sin acceso"]);
         }
     }
+
+    public function sendEmail($correo, $mensaje, $plantilla, $descripcion, $subject, $correo_solicitante, $nombre_solicitante, $documento_solicitante){
+        $datos[0] = $correo;
+        $datos[1] = $mensaje;
+        $datos[2] = $plantilla;
+        $datos[3] = $descripcion;
+        $datos[4] = $subject;
+        $datos[5] = $correo_solicitante;
+        $datos[6] = $nombre_solicitante;
+        $datos[7] = $documento_solicitante;
+        Mail::send($datos[2], ['mensaje' => $datos[1], 'descripcion' => $datos[3], "nombre_solicitante" => $datos[6], "documento_solicitante" => $datos[7]], function($message) use ($datos){            
+            $message->to($datos[0], 'IDRD')
+                    ->to($datos[5], 'IDRD')
+                    ->subject($datos[4]);
+        });
+    }
 }
 
 class ConvertirClass 
 {      
- 	private $UNIDADES = array(     '',
+    private $UNIDADES = array(     '',
         'UN ',
         'DOS ',
         'TRES ',

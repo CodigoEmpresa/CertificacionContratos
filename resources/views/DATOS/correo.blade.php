@@ -31,28 +31,49 @@
                 <h3>Respuesta a su solicitud</h3>
             </div>  
             <div class="panel">
-                <!-- Default panel contents -->
+                <!-- Default panel contents 
+                Estimado(a) "(Nombre Solicitante)",
+
+
+Cordial saludo.
+
+
+De acuerdo a su solicitud No. XXXX-2017, nos permitimos dar respuesta así:
+
+"(mensaje de respuesta)"
+
+
+Atentamente,
+
+
+Jared Jafet Forero Alvarez
+Área de Apoyo a la contratación.-->
                 <div class="panel-heading">                      </div>                 
                 <ul class="list-group" id="seccion_uno" name="seccion_uno">                    
                     <li class="list-group-item">
                         <div class="panel-body">
-                            <h4>Información importante!</h4>
+                            <h4>Estimado(a) <?php echo $nombres; ?>,</h4>
                         </div>
+                        <div class="form-group col-md-12">                            
+                          Cordial saludo.
+                          <br><br>
+                          De acuerdo a su solicitud No. <?php echo $referencia; ?>, nos permitimos dar respuesta así:
+                        </div>
+                        <br>
                         <div class="row">
-                          <div class="form-group col-md-12">
-                            <h4>Descripción del soporte:</h4>
-                          </div>
-                          <div class="form-group col-md-12">
-                            <label for="inputEmail" class="control-label" >
-                              <?php echo $descripcion; ?>
-                            </label>
-
-                          <div class="form-group col-md-12">
-                            <h4>Solución:</h4>
-                          </div>
                           <div class="form-group col-md-12">
                             <label for="inputEmail" class="control-label" >
                               <?php echo $mensaje; ?>
+                            </label>
+                          </div>
+                        </div>
+                        <br><br>
+                        <div class="row">
+                          <div class="form-group col-md-12">
+                            <label for="inputEmail" class="control-label" style="color:#5882FA; font-weight: 800;" >
+                              <?php echo $nombreFuncionario; ?>
+                              <br>
+                              Área de Apoyo a la contratación.
                             </label>
                           </div>
                         </div>

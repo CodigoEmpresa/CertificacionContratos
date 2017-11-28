@@ -21,7 +21,7 @@
     </p>
     <br>
     <span class="Neg">      
-      EL  SUSCRITO  RESPONSABLE DEL  ÁREA  APOYO  A  LA  CONTRATACIÓN DEL INSTITUTO DISTRITAL PARA LA RECREACIÓN Y EL DEPORTE. N.I.T. - IDRD: 860.061.099 - 1
+      EL  SUSCRITO  RESPONSABLE DE LA SUBDIRECCIÓN DE CONTRATACIÓN DEL INSTITUTO DISTRITAL PARA LA RECREACIÓN Y EL DEPORTE. N.I.T. - IDRD: 860.061.099 - 1
       <br><br>
       HACE CONSTAR
     </span>
@@ -226,8 +226,25 @@
 
         </div>
       </div>
+
+
+   
       @if($data['ObservacionesCheck'] == '1')
         @if($data['CountObligaciones'] > 0)      
+
+            <div style="page-break-after: always;"></div>
+
+        <center>
+    <p>
+      <img src="http://www.idrd.gov.co/SIM/CertificacionContratos/public/Img/cabecera.png">
+    </p>
+    <br>
+    <span class="Neg Titulos">      
+      EL  SUSCRITO  RESPONSABLE DE LA SUBDIRECCIÓN DE CONTRATACIÓN DEL INSTITUTO DISTRITAL PARA LA RECREACIÓN Y EL DEPORTE. N.I.T. - IDRD: 860.061.099 - 1
+      <br><br>
+      
+    </span>    
+  </center>
         <div class="TableDiv">
           <div class="table">             
             <div class="table-row">

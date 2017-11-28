@@ -34,7 +34,7 @@ div .TableDiv{
 }
 
 .TableDiv{
-	font-size: 8;
+	font-size: 10;
 }
 
 p{
@@ -72,6 +72,7 @@ p{
 }
 .Vino{
 	color: #610D0D;
+	font-size: 10;
 }
 
 .table {
