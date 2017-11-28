@@ -349,7 +349,7 @@ class GeneradorController extends Controller
                 $Soporte->Descripcion_Solicitud = $request->Descripcion;
                 $Soporte->Estado = 1;
                 if($Soporte->save()){
-                    $this->sendEmail('jared.forero@idrd.gov.co', 'Se ha creado un nuevo soporte con el identificador número: '.$Soporte->Id, 'DATOS.correoNuevoSoporte', $Soporte->Descripcion_Solicitud, 'Se ha creado un nuevo soporte REF # '.$Soporte->Id, $Soporte->Correo_Solicitante, $Soporte->Nombre_Solicitante, $Soporte->Documento_Solicitante);
+                    $this->sendEmail('paola.padilla@idrd.gov.co', 'Se ha creado un nuevo soporte con el identificador número: '.$Soporte->Id, 'DATOS.correoNuevoSoporte', $Soporte->Descripcion_Solicitud, 'Se ha creado un nuevo soporte REF # '.$Soporte->Id, $Soporte->Correo_Solicitante, $Soporte->Nombre_Solicitante, $Soporte->Documento_Solicitante);
 
                     return response()->json(array('status' => 'success', 'Mensaje' => 'Su solicitud ha sido registrada, la respuesta a la misma será enviada al correo inscrito.'));
                 }else{

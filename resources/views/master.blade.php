@@ -132,11 +132,7 @@
                 </li>                  
               @endif
               @if($_SESSION['Usuario'][1] == 1) 
-<<<<<<< HEAD
-                  <li class=”{{ Request::is( 'gestor_soporte') ? 'active' : '' }}”><a href="{{ URL::to( 'gestor_soporte') }}">Gestión de soportes</a></li>
-=======
-                  <li class=”{{ Request::is( 'gestor_soporte') ? 'active' : '' }}”><a href="{{ URL::to( 'gestor_soporte') }}">Gestión de soportes</a></li>                  
->>>>>>> 88aca80d75c64c3301b1dbb76d3cab9e7c975d08
+                  <li class=”{{ Request::is( 'gestor_soporte') ? 'active' : '' }}”><a href="{{ URL::to( 'gestor_soporte') }}">Gestión de soportes</a></li> 
                @endif
               @endif
              
