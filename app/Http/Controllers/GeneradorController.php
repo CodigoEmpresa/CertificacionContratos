@@ -34,73 +34,73 @@ class GeneradorController extends Controller
     }*/
 
     public function index()
-    {
-        $TipoDocumento = TipoDocumento::all();
-        return view('DATOS/generadorPdf')
-               ->with(compact('TipoDocumento'))
-                ;
-    }
+	{
+		$TipoDocumento = TipoDocumento::all();
+		return view('DATOS/generadorPdf')
+			   ->with(compact('TipoDocumento'))
+				;
+	}
 
-    public function GetContratoExp(Request $request){   
-        if ($request->ajax()) { 
-            $var = 'required';
-            if($request->Tipo_Documento == 1 || $request->Tipo_Documento == 2 || $request->Tipo_Documento == 3 || $request->Tipo_Documento == 7){
-                $var = 'required|numeric|digits_between:1,15';
-            }elseif($request->Tipo_Documento == 4 || $request->Tipo_Documento == 5 || $request->Tipo_Documento == 6){
-                $var = 'required|alpha_num';
-            }else{
-                $var = 'required';
-            }
+	public function GetContratoExp(Request $request){	
+		if ($request->ajax()) { 
+			$var = 'required';
+			if($request->Tipo_Documento == 1 || $request->Tipo_Documento == 2 || $request->Tipo_Documento == 3 || $request->Tipo_Documento == 7){
+				$var = 'required|numeric|digits_between:1,15';
+			}elseif($request->Tipo_Documento == 4 || $request->Tipo_Documento == 5 || $request->Tipo_Documento == 6){
+				$var = 'required|alpha_num';
+			}else{
+				$var = 'required';
+			}
 
-            $validator = Validator::make($request->all(), [
-                'Tipo_Documento' => 'required',
-                'Documento' => $var,
-                'Anio' => 'required'
-                ]);
+    		$validator = Validator::make($request->all(), [
+    			'Tipo_Documento' => 'required',
+    			'Documento' => $var,
+    			'Anio' => 'required'
+    			]);
 
-            if ($validator->fails()){
-                return response()->json(array('status' => 'error', 'errors' => $validator->errors()));
-            }else{
+	        if ($validator->fails()){
+	            return response()->json(array('status' => 'error', 'errors' => $validator->errors()));
+	        }else{
 
-                $Contrato = Contrato::with('Obligacion')
+	        	$Contrato = Contrato::with('Obligacion')
                                     ->where('Tipo_Documento', $request->Tipo_Documento)
-                                    ->where('Cedula', $request->Documento)
-                                    ->whereYear('Fecha_Firma','=', $request->Anio)
-                                    ->get();
+	        						->where('Cedula', $request->Documento)
+	        						->whereYear('Fecha_Firma','=', $request->Anio)
+	        						->get();
 
-                if(count($Contrato) == 0){
-                    return response()->json(array('status' => 'success', "Contrato" => "No hay"));
-                }else if(count($Contrato) == 1){
-                    return response()->json(array('status' => 'success', "Contrato" => "Unico", "Id" => $Contrato[0]->Id, "ObligacionesCheck" => $request->ObligacionesCheck, 'ConteoObligacion' => count($Contrato[0]->Obligacion)));
-                }else if(count($Contrato) > 1){
-                    return response()->json(array('status' => 'success', "Contrato" => "Varios", "DatosContrato" => $Contrato, "ObligacionesCheck" => $request->ObligacionesCheck));
-                }               
-            }
-        }else{
-            return response()->json(["Sin acceso"]);
-        }
-    }
+				if(count($Contrato) == 0){
+					return response()->json(array('status' => 'success', "Contrato" => "No hay"));
+				}else if(count($Contrato) == 1){
+					return response()->json(array('status' => 'success', "Contrato" => "Unico", "Id" => $Contrato[0]->Id, "ObligacionesCheck" => $request->ObligacionesCheck, 'ConteoObligacion' => count($Contrato[0]->Obligacion)));
+				}else if(count($Contrato) > 1){
+					return response()->json(array('status' => 'success', "Contrato" => "Varios", "DatosContrato" => $Contrato, "ObligacionesCheck" => $request->ObligacionesCheck));
+				}				
+			}
+		}else{
+			return response()->json(["Sin acceso"]);
+		}
+	}
 
-    public function GetContratoUnico(Request $request){ 
-        if ($request->ajax()) { 
-            $validator = Validator::make($request->all(), [             
-                ]);
+	public function GetContratoUnico(Request $request){	
+		if ($request->ajax()) { 
+    		$validator = Validator::make($request->all(), [    			
+    			]);
 
-            if ($validator->fails()){
-                return response()->json(array('status' => 'error', 'errors' => $validator->errors()));
-            }else{                  
-                $Contrato = Contrato::with('Obligacion')->find($request['Id']);
-                return response()->json(array('status' => 'success', "Contrato" => "Unico", "Id" => $Contrato->Id, 'ConteoObligacion' => count($Contrato->Obligacion), 'ObligacionesCheck' => $request->ObligacionesCheck));                
-            }
-        }else{
-            return response()->json(["Sin acceso"]);
-        }
-    }
+	        if ($validator->fails()){
+	            return response()->json(array('status' => 'error', 'errors' => $validator->errors()));
+	        }else{        			
+	        	$Contrato = Contrato::with('Obligacion')->find($request['Id']);
+				return response()->json(array('status' => 'success', "Contrato" => "Unico", "Id" => $Contrato->Id, 'ConteoObligacion' => count($Contrato->Obligacion), 'ObligacionesCheck' => $request->ObligacionesCheck));				
+			}
+		}else{
+			return response()->json(["Sin acceso"]);
+		}
+	}
 
-    public function DescargarContrato(Request $request, $Contrato_Id, $ObservacionesCheck){
+	public function DescargarContrato(Request $request, $Contrato_Id, $ObservacionesCheck){
 
-        $data = $this->getData($Contrato_Id, $ObservacionesCheck);  
-        $Contrato = Contrato::find($Contrato_Id);   
+		$data = $this->getData($Contrato_Id, $ObservacionesCheck);	
+		$Contrato = Contrato::find($Contrato_Id);	
 
 
         $cadena = strtoupper($Contrato->Nombre_Contratista);
@@ -128,35 +128,35 @@ class GeneradorController extends Controller
                 return $pdf->download('CertificadoPersonaNatural.pdf');
             }
         }
-    }
+	}
 
-    public function getData($Contrato_Id, $ObservacionesCheck){
-        $Contrato = Contrato::with('TipoDocumento', 'Tipocontrato', 'Adicion', 'Prorroga', 'Suspencion', 'Cesion', 'Obligacion', 'Integrante')->find($Contrato_Id);
-        $lista = explode('-', $Contrato['Fecha_Firma']);
-        $Anio = $lista[0];
-        $conversor = new ConvertirClass();
+	public function getData($Contrato_Id, $ObservacionesCheck){
+		$Contrato = Contrato::with('TipoDocumento', 'Tipocontrato', 'Adicion', 'Prorroga', 'Suspencion', 'Cesion', 'Obligacion', 'Integrante')->find($Contrato_Id);
+		$lista = explode('-', $Contrato['Fecha_Firma']);
+		$Anio = $lista[0];
+		$conversor = new ConvertirClass();
 
-        $Meses_Letra = $conversor->to_word($Contrato['Meses_Duracion']);
-        $Dias_Letra = $conversor->to_word($Contrato['Dias_Duracion']);
+		$Meses_Letra = $conversor->to_word($Contrato['Meses_Duracion']);
+		$Dias_Letra = $conversor->to_word($Contrato['Dias_Duracion']);
 
-        setlocale(LC_ALL,"es_ES");
-        $Fecha_Actual = date("F-d-m-Y");
-        $listaFecha = explode('-', $Fecha_Actual);
+		setlocale(LC_ALL,"es_ES");
+		$Fecha_Actual = date("F-d-m-Y");
+		$listaFecha = explode('-', $Fecha_Actual);
 
-        if($listaFecha[0] == 'January'){$Fecha_A = 'Enero';}
-        if($listaFecha[0] == 'February'){$Fecha_A = 'Febrero';}
-        if($listaFecha[0] == 'March'){$Fecha_A = 'Marzo';}
-        if($listaFecha[0] == 'April'){$Fecha_A = 'Abril';}
-        if($listaFecha[0] == 'May'){$Fecha_A = 'Mayo';}
-        if($listaFecha[0] == 'June'){$Fecha_A = 'Junio';}
-        if($listaFecha[0] == 'July'){$Fecha_A = 'Julio';}
-        if($listaFecha[0] == 'August'){$Fecha_A = 'Agosto';}
-        if($listaFecha[0] == 'September'){$Fecha_A = 'Septiembre';}
-        if($listaFecha[0] == 'October'){$Fecha_A = 'Octubre';}
-        if($listaFecha[0] == 'November'){$Fecha_A = 'Noviembre';}
-        if($listaFecha[0] == 'December'){$Fecha_A = 'Diciembre';}
+		if($listaFecha[0] == 'January'){$Fecha_A = 'Enero';}
+		if($listaFecha[0] == 'February'){$Fecha_A = 'Febrero';}
+		if($listaFecha[0] == 'March'){$Fecha_A = 'Marzo';}
+		if($listaFecha[0] == 'April'){$Fecha_A = 'Abril';}
+		if($listaFecha[0] == 'May'){$Fecha_A = 'Mayo';}
+		if($listaFecha[0] == 'June'){$Fecha_A = 'Junio';}
+		if($listaFecha[0] == 'July'){$Fecha_A = 'Julio';}
+		if($listaFecha[0] == 'August'){$Fecha_A = 'Agosto';}
+		if($listaFecha[0] == 'September'){$Fecha_A = 'Septiembre';}
+		if($listaFecha[0] == 'October'){$Fecha_A = 'Octubre';}
+		if($listaFecha[0] == 'November'){$Fecha_A = 'Noviembre';}
+		if($listaFecha[0] == 'December'){$Fecha_A = 'Diciembre';}
 
-        $Dia_Actual_Letra = $conversor->to_word($listaFecha[1]);
+		$Dia_Actual_Letra = $conversor->to_word($listaFecha[1]);
 
         $valorAdiciones = 0;
 
@@ -349,7 +349,7 @@ class GeneradorController extends Controller
                 $Soporte->Descripcion_Solicitud = $request->Descripcion;
                 $Soporte->Estado = 1;
                 if($Soporte->save()){
-                    $this->sendEmail('certificados.contratistas@idrd.gov.co', 'Se ha creado un nuevo soporte con el identificador número: '.$Soporte->Id, 'DATOS.correoNuevoSoporte', $Soporte->Descripcion_Solicitud, 'Se ha creado un nuevo soporte REF # '.$Soporte->Id, $Soporte->Correo_Solicitante, $Soporte->Nombre_Solicitante, $Soporte->Documento_Solicitante);
+                    $this->sendEmail('jared.forero@idrd.gov.co', 'Se ha creado un nuevo soporte con el identificador número: '.$Soporte->Id, 'DATOS.correoNuevoSoporte', $Soporte->Descripcion_Solicitud, 'Se ha creado un nuevo soporte REF # '.$Soporte->Id, $Soporte->Correo_Solicitante, $Soporte->Nombre_Solicitante, $Soporte->Documento_Solicitante);
 
                     return response()->json(array('status' => 'success', 'Mensaje' => 'Su solicitud ha sido registrada, la respuesta a la misma será enviada al correo inscrito.'));
                 }else{

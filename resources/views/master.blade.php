@@ -124,6 +124,7 @@
                     <li><a href="#" style="color:#1995dc">Reportes</a></li>
                     <li class="divider"></li>                      
                         <li class=”{{ Request::is( 'reporte_expedicion') ? 'active' : '' }}”><a href="{{ URL::to( 'reporte_expedicion') }}">Reporte de expedición de certificados</a></li>
+                        
                         <li class=”{{ Request::is( 'reporte_codigo') ? 'active' : '' }}”><a href="{{ URL::to( 'reporte_codigo') }}">Reporte por código de expedición</a></li>
 
                         <li class=”{{ Request::is( 'gestor_soporte_solucionado') ? 'active' : '' }}”><a href="{{ URL::to( 'gestor_soporte_solucionado') }}">Soportes Solucionados</a></li>
@@ -131,7 +132,11 @@
                 </li>                  
               @endif
               @if($_SESSION['Usuario'][1] == 1) 
+<<<<<<< HEAD
                   <li class=”{{ Request::is( 'gestor_soporte') ? 'active' : '' }}”><a href="{{ URL::to( 'gestor_soporte') }}">Gestión de soportes</a></li>
+=======
+                  <li class=”{{ Request::is( 'gestor_soporte') ? 'active' : '' }}”><a href="{{ URL::to( 'gestor_soporte') }}">Gestión de soportes</a></li>                  
+>>>>>>> 88aca80d75c64c3301b1dbb76d3cab9e7c975d08
                @endif
               @endif
              
